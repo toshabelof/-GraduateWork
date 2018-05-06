@@ -52,9 +52,9 @@
             this.Column2,
             this.Column3,
             this.Column4});
-            this.dataGridView1.Location = new System.Drawing.Point(12, 36);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 27);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(342, 213);
+            this.dataGridView1.Size = new System.Drawing.Size(377, 222);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
@@ -85,7 +85,7 @@
             this.сохранитьToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(366, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(401, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -120,14 +120,14 @@
             // 
             // Column3
             // 
-            this.Column3.HeaderText = "Редактировать";
+            this.Column3.HeaderText = "Редакт.";
             this.Column3.Image = global::HRSaveTime_Server.Properties.Resources.w512h5121380984696edit;
             this.Column3.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
             this.Column3.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column3.Width = 50;
+            this.Column3.Width = 60;
             // 
             // Column4
             // 
@@ -138,13 +138,13 @@
             this.Column4.ReadOnly = true;
             this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column4.Width = 50;
+            this.Column4.Width = 60;
             // 
             // SettingsRoom
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(366, 261);
+            this.ClientSize = new System.Drawing.Size(401, 261);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;

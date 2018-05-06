@@ -169,7 +169,7 @@ namespace HRSaveTime_Server
         {
             SettingsRoom sR = new SettingsRoom();
             sR.ShowDialog();
-            
+            GetLocationCB();
         }
 
     }
