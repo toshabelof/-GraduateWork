@@ -19,7 +19,9 @@ namespace HRSaveTime_Server
         }
 
         BDConnect con = new BDConnect();
-        SortedList<string, string> setting = new SortedList<string, string>();
+        SerialPorts sp = new SerialPorts();
+
+        public static SortedList<string, string> setting = new SortedList<string, string>();
         List<string> list = new List<string>();
 
         public void GetSetting()
@@ -83,7 +85,7 @@ namespace HRSaveTime_Server
             if (textBox5.Text != "")
             {
                 List<string> mas = new List<string>();
-                mas = con.SetLocation(textBox5.Text);
+                mas = con.SetLocationName(textBox5.Text);
                 comboBox1.Items.Clear();
                 foreach (string m in mas)
                 {
@@ -117,13 +119,14 @@ namespace HRSaveTime_Server
                     label9.Text = "Ошибка";
                     return;
                 }
-            }               
-        }
+            }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            AddNewRoom ANR = new AddNewRoom();
-            ANR.ShowDialog();
+            string[] val = sp.SearchPorts();
+            foreach (string v in val)
+            {
+                comboBox2.Items.Add(v);
+                comboBox3.Items.Add(v);
+            }
         }
 
         private void button8_Click(object sender, EventArgs e)
@@ -160,6 +163,13 @@ namespace HRSaveTime_Server
             {
                 textBox5.Text = Result;
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            SettingsRoom sR = new SettingsRoom();
+            sR.ShowDialog();
+            
         }
 
     }
