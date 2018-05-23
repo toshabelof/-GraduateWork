@@ -1,0 +1,12 @@
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\HRSaveTimeClient.exe
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\HRSaveTimeClient.pdb
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.csprojResolveAssemblyReference.cache
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MainWindow.baml
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MainWindow.g.cs
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\App.g.cs
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient_MarkupCompile.cache
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.g.resources
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.Properties.Resources.resources
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.csproj.GenerateResource.Cache
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.exe
+C:\Users\Антон\Desktop\Диплом\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.pdb
