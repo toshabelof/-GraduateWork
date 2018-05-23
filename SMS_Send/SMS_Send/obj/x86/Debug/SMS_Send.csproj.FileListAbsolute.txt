@@ -1,0 +1,6 @@
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\x86\Debug\SMS_Send.exe.config
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\x86\Debug\SMS_Send.exe
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\x86\Debug\SMS_Send.pdb
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\x86\Debug\SmsApi.dll
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\obj\x86\Debug\SMS_Send.exe
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\obj\x86\Debug\SMS_Send.pdb

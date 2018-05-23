@@ -1,0 +1,7 @@
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\obj\Debug\SMS_Send.csprojResolveAssemblyReference.cache
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\Debug\SMS_Send.exe.config
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\Debug\SMS_Send.exe
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\Debug\SMS_Send.pdb
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\bin\Debug\SmsApi.dll
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\obj\Debug\SMS_Send.exe
+C:\Users\Антон\Desktop\Диплом\SMS_Send\SMS_Send\obj\Debug\SMS_Send.pdb
