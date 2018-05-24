@@ -73,9 +73,39 @@ namespace HRSaveTimeClient.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap GCURT {
+            get {
+                object obj = ResourceManager.GetObject("GCURT", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GEXIT {
+            get {
+                object obj = ResourceManager.GetObject("GEXIT", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap LOGO21 {
             get {
                 object obj = ResourceManager.GetObject("LOGO21", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap noavatar {
+            get {
+                object obj = ResourceManager.GetObject("noavatar", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

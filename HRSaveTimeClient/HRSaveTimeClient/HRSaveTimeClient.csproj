@@ -47,6 +47,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="GlobalForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -54,6 +58,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GlobalForm.xaml.cs">
+      <DependentUpon>GlobalForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -89,6 +96,15 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\EXIT.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\GCURT.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\GEXIT.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\noavatar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

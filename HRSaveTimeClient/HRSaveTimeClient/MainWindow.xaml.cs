@@ -39,5 +39,13 @@ namespace HRSaveTimeClient
         {
             this.Close();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            GlobalForm gf = new GlobalForm();          
+            this.Visibility = Visibility.Hidden;
+            gf.ShowDialog();
+            this.Visibility = Visibility.Visible;
+        }
     }
 }

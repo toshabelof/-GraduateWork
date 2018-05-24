@@ -1,9 +1,9 @@
 ﻿<Window x:Class="HRSaveTimeClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="510" Width="410" WindowStyle="None" ResizeMode="NoResize"
-         MouseLeftButtonDown="Window_MouseLeftButtonDown">
-
+        Title="Auth" Height="510" Width="410" WindowStyle="None" ResizeMode="NoResize"
+         MouseLeftButtonDown="Window_MouseLeftButtonDown" WindowStartupLocation="CenterScreen">
+    
     <Grid>
         <Rectangle Grid.Row="2">
             <Rectangle.Fill>
@@ -18,7 +18,7 @@
         <TextBox Margin="55,220,55,260" FontSize="19"/>
         <TextBlock Text="ПАРОЛЬ" FontSize="18" Foreground="#9de1ff" Margin="54,260,265,225"/>      
         <TextBlock Text="Забыли пароль?" FontSize="15" Foreground="#9de1ff" Margin="150.06,392.191,148.06,97.858" VerticalAlignment="Center" HorizontalAlignment="Center" PreviewMouseDown="TextBlock_PreviewMouseDown"/>
-        <Button Background="Transparent" BorderBrush="#9de1ff" VerticalAlignment="Center" HorizontalAlignment="Center" Width="80" Height="30"  Margin="166.333,352,163.667,128">
+        <Button Background="Transparent" BorderBrush="#9de1ff" VerticalAlignment="Center" HorizontalAlignment="Center" Width="80" Height="30"  Margin="166.333,352,163.667,128" Click="Button_Click">
             <TextBlock Text="Вход" FontSize="18" Foreground="#9de1ff" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
         </Button>
         <Image HorizontalAlignment="Center" Height="100" Margin="155,50,155,0" VerticalAlignment="Top" Width="100" Source="Resources/LOGO2.png"/>
