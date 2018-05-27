@@ -25,3 +25,7 @@ D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\Mai
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\GlobalForm.baml
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\GlobalForm.g.cs
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\HRSaveTimeClient.exe.config
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MorePernrForm.baml
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MorePernrForm.g.cs
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\AddNameReports.baml
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\AddNameReports.g.cs

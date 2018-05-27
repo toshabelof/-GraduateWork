@@ -1,0 +1,20 @@
+﻿<Window x:Class="HRSaveTimeClient.MorePernrForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MorePernrForm" Height="400" Width="300" WindowStyle="None" ResizeMode="NoResize" BorderBrush="Aqua" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <DataGrid HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Height="355" Width="300" MouseDown="DataGrid_MouseDown" CanUserResizeRows="False" IsSynchronizedWithCurrentItem="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Табельный номер" Width="*"/>               
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid x:Name ="OkMorePernrReportsButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="52" Margin="0,0,10,10" MouseEnter="OkMorePernrReportsButton_MouseEnter" MouseLeave="OkMorePernrReportsButton_MouseLeave" PreviewMouseLeftButtonDown="OkMorePernrReportsButton_PreviewMouseLeftButtonDown" >
+            <Image Source="Resources/Reports/OK.png" />
+        </Grid>
+
+        <Grid x:Name ="CencelMorePernrReportsButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Margin="0,0,70,10" MouseEnter="CencelMorePernrReportsButton_MouseEnter" MouseLeave="CencelMorePernrReportsButton_MouseLeave" PreviewMouseLeftButtonDown="CencelMorePernrReportsButton_PreviewMouseLeftButtonDown">
+            <Image Source="Resources/People/Cancel.png"/>
+        </Grid>
+    </Grid>
+</Window>

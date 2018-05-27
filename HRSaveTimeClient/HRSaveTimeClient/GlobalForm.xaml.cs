@@ -217,6 +217,17 @@ namespace HRSaveTimeClient
             EditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
         }
 
+        private void MorePernrReportsGrid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MorePernrReportsImage.Width = 30;
+            MorePernrReportsImage.Height = 30;
+        }
+
+        private void MorePernrReportsGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MorePernrReportsImage.Width = 25;
+            MorePernrReportsImage.Height = 25;
+        }
 
 
         private void Search_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -336,8 +347,119 @@ namespace HRSaveTimeClient
             Title.Text = "Изменение запроса на отсутствие";
         }
 
+        private void NewReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            EditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
 
+        private void NewReportsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            EditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewReportsGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание нового отчёта";
+        }
+
+        private void MorePernrReportsGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MorePernrForm mpf = new MorePernrForm();
+            mpf.ShowDialog();
+        }
+
+        private void GenerateReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            GenerateReportsButton.Background = (Brush)bc.ConvertFrom("#00dc77");
+        }
+
+        private void GenerateReportsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            GenerateReportsButton.Background = (Brush)bc.ConvertFrom("#01a459");
+        }
+
+        private void GenerateReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void SaveReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveReportsButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveReportsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveReportsButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddNameReports anr = new AddNameReports();
+            anr.ShowDialog();
+
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = ReportsGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Сохраненные отчеты";
+        }
+
+        private void CencelReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelReportsButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelReportsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelReportsButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = ReportsGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Сохраненные отчеты";
+        }
+
+        private void Reports_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = ReportsGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Сохраненные отчеты";
+        }
+
+        private void Schedules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
         
+        private void Rules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = RulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список ролей";
+        }
+
+
+
 
 
 
