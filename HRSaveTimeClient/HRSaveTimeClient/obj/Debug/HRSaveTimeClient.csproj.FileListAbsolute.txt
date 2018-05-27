@@ -24,3 +24,4 @@ D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\Mai
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MainWindow.g.cs
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\GlobalForm.baml
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\GlobalForm.g.cs
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\HRSaveTimeClient.exe.config

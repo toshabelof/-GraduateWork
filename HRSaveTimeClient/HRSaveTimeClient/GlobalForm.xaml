@@ -13,32 +13,41 @@
                 </Rectangle.Fill>
             </Rectangle>
 
+            <!--Поиск-->
             <Grid VerticalAlignment="Top" Height="50">
                 <TextBox x:Name ="Search" Height="30" Width="270" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Поиск" FontSize="15" FontStyle="Italic" Foreground="#9de1ff" Background="#105ef9" BorderBrush="Transparent" AllowDrop="True" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="Search_PreviewMouseLeftButtonDown"/>
             </Grid>
-            
+
+            <!--Меню-->
             <Grid Margin="0,70,0,230">
-                <Grid x:Name ="People" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" PreviewMouseMove="people_PreviewMouseMove" MouseEnter="people_MouseEnter" MouseLeave="people_MouseLeave">
-                    <TextBlock Text ="Сотрудники" FontSize="20" Foreground="#9de1ff" Margin="55,0,0,0" VerticalAlignment="Center" ></TextBlock>
+                <Grid x:Name ="People" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" MouseEnter="people_MouseEnter" MouseLeave="people_MouseLeave" PreviewMouseLeftButtonDown="People_PreviewMouseLeftButtonDown">
+                    <TextBlock Text ="Сотрудники" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center" ></TextBlock>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/People.png"/>
                 </Grid>
 
-                <Grid x:Name ="Inquiry" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" PreviewMouseMove="people_PreviewMouseMove" Margin="15,60,15,0" MouseLeave="Inquiry_MouseLeave" MouseEnter="Inquiry_MouseEnter">
-                    <TextBlock Text ="Создать запрос" FontSize="20" Foreground="#9de1ff" Margin="55,0,0,0" VerticalAlignment="Center"></TextBlock>
+                <Grid x:Name ="Inquiry" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" Margin="15,60,15,0" MouseLeave="Inquiry_MouseLeave" MouseEnter="Inquiry_MouseEnter" PreviewMouseLeftButtonDown="Inquiry_PreviewMouseLeftButtonDown">
+                    <TextBlock Text ="Запросы" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/Inq.png" />
                 </Grid>
-                <Grid x:Name ="Reports" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" PreviewMouseMove="people_PreviewMouseMove" Margin="15,118,15,0" MouseLeave="Reports_MouseLeave" MouseEnter="Reports_MouseEnter">
-                    <TextBlock Text ="Отчёты" FontSize="20" Foreground="#9de1ff" Margin="55,0,0,0" VerticalAlignment="Center"></TextBlock>
-                </Grid>                
-                <Grid x:Name ="Schedules" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" PreviewMouseMove="people_PreviewMouseMove" Margin="15,176,15,0" MouseEnter="Schedules_MouseEnter" MouseLeave="Schedules_MouseLeave">
-                    <TextBlock Text ="Графики" FontSize="20" Foreground="#9de1ff" Margin="55,0,0,0" VerticalAlignment="Center"></TextBlock>
+                <Grid x:Name ="Reports" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" Margin="15,118,15,0" MouseLeave="Reports_MouseLeave" MouseEnter="Reports_MouseEnter">
+                    <TextBlock Text ="Отчёты" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/Repor.png" />
                 </Grid>
-                <Grid x:Name ="Rules" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" PreviewMouseMove="people_PreviewMouseMove" Margin="15,234,15,0" MouseEnter="Rules_MouseEnter" MouseLeave="Rules_MouseLeave">
-                    <TextBlock Text ="Роли" FontSize="20" Foreground="#9de1ff" Margin="55,0,0,0" VerticalAlignment="Center"></TextBlock>
+                <Grid x:Name ="Schedules" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" Margin="15,176,15,0" MouseEnter="Schedules_MouseEnter" MouseLeave="Schedules_MouseLeave">
+                    <TextBlock Text ="Графики" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/Calen.png" />
                 </Grid>
-                <Grid x:Name ="Monitoring" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent" PreviewMouseMove="people_PreviewMouseMove" Margin="15,292,15,0" MouseEnter="Monitoring_MouseEnter" MouseLeave="Monitoring_MouseLeave">
-                    <TextBlock Text ="Мониторинг" FontSize="20" Foreground="#9de1ff" Margin="55,0,0,0" VerticalAlignment="Center"></TextBlock>
-                </Grid>                
+                <Grid x:Name ="Rules" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent"  Margin="15,234,15,0" MouseEnter="Rules_MouseEnter" MouseLeave="Rules_MouseLeave">
+                    <TextBlock Text ="Роли" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/Rules.png" />
+                </Grid>
+                <Grid x:Name ="Monitoring" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent"  Margin="15,292,15,0" MouseEnter="Monitoring_MouseEnter" MouseLeave="Monitoring_MouseLeave">
+                    <TextBlock Text ="Мониторинг" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
+                    <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/monitor.png"/>
+                </Grid>
             </Grid>
-            
+
+            <!--Логин-->
             <Grid VerticalAlignment="Bottom" Height="50">
                 <Grid Background="#9de1ff" VerticalAlignment="Top" HorizontalAlignment="Right"  Width="300" Height="2" MouseLeftButtonDown="Grid_MouseLeftButtonDown" ></Grid>
                 <Grid VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="300" Height="48">
@@ -46,16 +55,194 @@
                     <TextBlock Text="Login" FontSize ="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#9de1ff" Margin="65,10,184,10"></TextBlock>
                 </Grid>
             </Grid>
-        </Grid>  
-        
+        </Grid>
+
+        <!--Заголовок Page-->
         <Grid Background="#eaeaea" HorizontalAlignment="Right" VerticalAlignment="Top" Width="980" Height="50" MouseLeftButtonDown="Grid_MouseLeftButtonDown" >
-            <TextBlock Text="GlobalForm" Foreground="#7d7d7d" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"></TextBlock>
+            <TextBlock x:Name ="Title" Text="GlobalForm" Foreground="#7d7d7d" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"></TextBlock>
             <Grid Background="#d0d0d0" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Width="980" Height="5" MouseLeftButtonDown="Grid_MouseLeftButtonDown" ></Grid>
             <Image x:Name="GExit" VerticalAlignment="Center" HorizontalAlignment="Right" Width="15" Source="Resources/GEXIT.png" Margin="0,12.5,10,12.5" PreviewMouseDown="GExit_PreviewMouseDown" MouseEnter="GExit_MouseEnter" MouseLeave="GExit_MouseLeave" />
-            <Image x:Name="GCurt" VerticalAlignment="Center" HorizontalAlignment="Right" Height = "15" Source="Resources/GCURT.png" Margin="0,17.5,35,17.5" PreviewMouseDown="GCurt_PreviewMouseDown" MouseLeave="GCurt_MouseLeave"/>
+            <Image x:Name="GCurt" VerticalAlignment="Center" HorizontalAlignment="Right" Height = "15" Source="Resources/GCURT.png" Margin="0,17.5,35,17.5" PreviewMouseDown="GCurt_PreviewMouseDown"/>
+        </Grid>
+
+        <!--Page-->
+        <!-- Сотурдники -->
+        <Grid x:Name ="PersGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <Grid x:Name ="NewProfileButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" PreviewMouseLeftButtonDown="NewProfileButton_PreviewMouseLeftButtonDown" MouseEnter="NewProfileButton_MouseEnter" MouseLeave="NewProfileButton_MouseLeave">
+                <Image Source="Resources/People/Create.png" />
+            </Grid>
+        </Grid>
+
+        <!-- Создание профиля -->
+        <Grid x:Name ="NewProfileGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="RFID" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,355"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,145,0,0" TextWrapping="Wrap" Text="Данные для входа" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left" Margin="221.667,185,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Логин" HorizontalAlignment="Left" Margin="35,185,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,225,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Пароль" HorizontalAlignment="Left" Margin="35,225,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,35"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,305,0,0" TextWrapping="Wrap" Text="Информация о сотруднике" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left" Margin="221.667,339,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Фамилия" HorizontalAlignment="Left" Margin="35,339,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,379,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Имя" HorizontalAlignment="Left" Margin="35,379,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,419,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Отчество" HorizontalAlignment="Left" Margin="35,419,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,459,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Должность" HorizontalAlignment="Left" Margin="35,459,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox x:Name="ORGComboBox" HorizontalAlignment="Left" Margin="221.667,499,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" Background="Transparent"/>
+            <Label Content="Орг.присвоение" HorizontalAlignment="Left" Margin="35,499,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <ComboBox x:Name="SchedulesComboBox" HorizontalAlignment="Left" Margin="221.667,539,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" Background="Transparent"/>
+            <Label Content="ГрафРабВр" HorizontalAlignment="Left" Margin="35,539,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <ComboBox x:Name="RulesComboBox"  HorizontalAlignment="Left" Margin="221.667,579,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" Background="Transparent"/>
+
+            <Label Content="Роль" HorizontalAlignment="Left" Margin="35,579,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <TextBox HorizontalAlignment="Right" Margin="0,339,35,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Личн.мобильный" HorizontalAlignment="Left" Margin="500,339,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Right" Margin="0,379,35,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Рабоч.мобильный" HorizontalAlignment="Left" Margin="500,379,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Right" Margin="0,419,35,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Рабоч.телефон" HorizontalAlignment="Left" Margin="500,419,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Right" Margin="0,459,35,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Личный Email" HorizontalAlignment="Left" Margin="500,459,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Right" Margin="0,499,35,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Рабочий Email" HorizontalAlignment="Left" Margin="500,499,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid x:Name ="SaveProfileButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" MouseEnter="SaveProfileButton_MouseEnter" MouseLeave="SaveProfileButton_MouseLeave" PreviewMouseLeftButtonDown="SaveProfileButton_PreviewMouseLeftButtonDown">
+                <Image Source="Resources/People/Save.png" />
+            </Grid>
+
+            <Grid x:Name ="CencelProfileButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,150,10" MouseLeave="CencelProfileButton_MouseLeave" MouseEnter="CencelProfileButton_MouseEnter" PreviewMouseLeftButtonDown="CencelProfileButton_PreviewMouseLeftButtonDown">
+                <Image Source="Resources/People/Cancel.png" MouseLeave="NewProfileButton_MouseLeave" MouseEnter="NewProfileButton_MouseLeave" />
+            </Grid>
+        </Grid>
+
+        <!-- Запрос на отсутствие -->
+        <Grid x:Name ="InquiryGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <Grid x:Name ="NewInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="NewInqButton_MouseEnter" MouseLeave="NewInqButton_MouseLeave" PreviewMouseLeftButtonDown="NewInqButton_PreviewMouseLeftButtonDown">
+                <Image Source="Resources/Inq/CreateInq.png" />
+            </Grid>
+            
+            <DataGrid HorizontalAlignment="Left" Margin="9,56,0,0" VerticalAlignment="Top" Height="595" Width="960" Background="{x:Null}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="П/П" Width="50" FontSize="20"/>
+                    <DataGridTextColumn Header="Дата запроса" Width="150" FontSize="20"/>
+                    <DataGridTextColumn Header="Название" Width="*" FontSize="20"/>
+                    <DataGridTextColumn Header="Статус" Width="200" FontSize="20"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <Grid x:Name ="NewInqGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,500"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,75,0,0" TextWrapping="Wrap" Text="Данные отсутствия" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+           
+            <TextBox HorizontalAlignment="Left" Margin="221.667,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,115,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата по" HorizontalAlignment="Left" Margin="35,155,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,195,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Вид" HorizontalAlignment="Left" Margin="35,195,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Причина" HorizontalAlignment="Left" Margin="35,235,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,275,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Документ" HorizontalAlignment="Left" Margin="35,275,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            
+            <Grid x:Name ="SaveInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" PreviewMouseLeftButtonDown="SaveInqButton_PreviewMouseLeftButtonDown" MouseEnter="SaveInqButton_MouseEnter" MouseLeave="SaveInqButton_MouseLeave">
+                <Image Source="Resources/People/Save.png" />
+            </Grid>
+
+            <Grid x:Name ="CencelInqButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,150,10" PreviewMouseLeftButtonDown="CencelInqButton_PreviewMouseLeftButtonDown" MouseEnter="CencelInqButton_MouseEnter" MouseLeave="CencelInqButton_MouseLeave">
+                <Image Source="Resources/People/Cancel.png" MouseLeave="NewProfileButton_MouseLeave" MouseEnter="NewProfileButton_MouseLeave" />
+            </Grid>
+        </Grid>
+
+        <Grid x:Name ="PreviewInqGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <Grid x:Name ="EditInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="EditInqButton_MouseEnter" MouseLeave="EditInqButton_MouseLeave" PreviewMouseLeftButtonDown="EditInqButton_PreviewMouseLeftButtonDown">
+                <Image Source="Resources/Inq/Edit.png" />
+            </Grid>
+            
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,500"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,75,0,0" TextWrapping="Wrap" Text="Данные отсутствия" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left" Margin="221.667,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,115,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата по" HorizontalAlignment="Left" Margin="35,155,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,195,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Вид" HorizontalAlignment="Left" Margin="35,195,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Причина" HorizontalAlignment="Left" Margin="35,235,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,275,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Документ" HorizontalAlignment="Left" Margin="35,275,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <TextBox HorizontalAlignment="Left" Margin="221.667,315,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Статус" HorizontalAlignment="Left" Margin="35,315,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
         </Grid>
         
-        
+        <Grid x:Name ="EditInqGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Visible">
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,500"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,75,0,0" TextWrapping="Wrap" Text="Данные отсутствия" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left" Margin="221.667,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,115,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата по" HorizontalAlignment="Left" Margin="35,155,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,195,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Вид" HorizontalAlignment="Left" Margin="35,195,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,235,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Причина" HorizontalAlignment="Left" Margin="35,235,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,275,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Документ" HorizontalAlignment="Left" Margin="35,275,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left" Margin="221.667,315,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Статус" HorizontalAlignment="Left" Margin="35,315,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+
+            <Grid x:Name ="OKEditInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" MouseEnter="OKEditInqButton_MouseEnter" MouseLeave="OKEditInqButton_MouseLeave" PreviewMouseLeftButtonDown="OKEditInqButton_PreviewMouseLeftButtonDown">
+                <Image Source="Resources/Inq/OK.png" />
+            </Grid>
+
+            <Grid x:Name ="NotEditInqButton" Background="#ff2c3b" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,150,10" PreviewMouseLeftButtonDown="NotEditInqButton_PreviewMouseLeftButtonDown" MouseEnter="NotEditInqButton_MouseEnter" MouseLeave="NotEditInqButton_MouseLeave">
+                <Image Source="Resources/Inq/Not.png" />
+            </Grid>
+
+            <Grid x:Name ="CencelEditInqButton1" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,290,10" PreviewMouseLeftButtonDown="CencelEditInqButton1_PreviewMouseLeftButtonDown" MouseEnter="CencelEditInqButton1_MouseEnter" MouseLeave="CencelEditInqButton1_MouseLeave">
+                <Image Source="Resources/People/Cancel.png" />
+            </Grid>
+        </Grid>
+
+        <!-- Отчёты-->
+        <Grid x:Name ="ReportsGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed"></Grid>
+
+        <!-- ГРВ -->
+        <Grid x:Name ="SchedulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed"></Grid>
+
+        <!-- Роли -->
+        <Grid x:Name ="RulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed"></Grid>
+
+        <!-- Монитр данных -->
+        <Grid x:Name ="MonitoringGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed"></Grid>
     </Grid>
 </Window>

@@ -22,6 +22,9 @@ namespace HRSaveTimeClient
             InitializeComponent();
         }
 
+        BrushConverter bc = new BrushConverter();
+        Grid grid = new Grid();
+
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
@@ -38,12 +41,6 @@ namespace HRSaveTimeClient
             this.WindowState = System.Windows.WindowState.Minimized;
         }
 
-        private void people_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-           
-        }
-
-        BrushConverter bc = new BrushConverter(); 
         private void people_MouseEnter(object sender, MouseEventArgs e)
         {
             People.Background = (Brush)bc.ConvertFrom("#105ef9");
@@ -83,7 +80,6 @@ namespace HRSaveTimeClient
         {
             Schedules.Background = Brushes.Transparent;
         }
-                 
 
         private void Rules_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -95,7 +91,6 @@ namespace HRSaveTimeClient
             Rules.Background = Brushes.Transparent;
         }
 
-
         private void Monitoring_MouseEnter(object sender, MouseEventArgs e)
         {
             Monitoring.Background = (Brush)bc.ConvertFrom("#105ef9");
@@ -106,12 +101,128 @@ namespace HRSaveTimeClient
             Monitoring.Background = Brushes.Transparent;
         }
 
+        private void NewProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NewProfileButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NewProfileButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveProfileButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveProfileButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void CencelProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelProfileButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelProfileButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void NewInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NewInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NewInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewInqGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание запроса на отсутствие";
+        }
+
+        private void Inquiry_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = InquiryGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Запросы на отсутствия";
+        }
+
+        private void SaveInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void CencelInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelInqButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelInqButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void OKEditInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void OKEditInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NotEditInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#fe717b");
+        }
+
+        private void NotEditInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#ff2c3b");
+        }
+
+        private void CencelEditInqButton1_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelEditInqButton1_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void EditInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            EditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void EditInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            EditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+
 
         private void Search_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Search.Text = "";
         }
-
 
         private void GExit_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -122,5 +233,120 @@ namespace HRSaveTimeClient
         {
             GExit.Width = 15;
         }
+
+        private void People_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = PersGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список сотрудников";
+        }
+
+        private void NewProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewProfileGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание профиля";
+        }
+
+        private void SaveInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult other = MessageBox.Show("Вы действительно хотите сохранить внесенные изменения?", "Сохранение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            switch (other)
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        grid.Visibility = System.Windows.Visibility.Collapsed;
+                        grid = InquiryGrid;
+                        grid.Visibility = System.Windows.Visibility.Visible;
+                        Title.Text = "Запросы на отсутствия";
+                        break;
+                    }
+                case MessageBoxResult.No: { break; }
+            }
+
+        }
+
+        private void CencelInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = InquiryGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Запросы на отсутствия";
+        }
+
+        private void CencelProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = PersGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Список сотрудников";
+        }
+
+        private void SaveProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult other = MessageBox.Show("Вы действительно хотите сохранить внесенные изменения?", "Сохранение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            switch (other)
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        grid.Visibility = System.Windows.Visibility.Collapsed;
+                        grid = PersGrid;
+                        grid.Visibility = System.Windows.Visibility.Visible;
+                        Title.Text = "Список сотрудников";
+                        break;
+                    }
+                case MessageBoxResult.No: { break; }
+            }
+        }
+
+        private void OKEditInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = PreviewInqGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Просмотр завпроса NameInq";
+        }
+
+        private void NotEditInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = PreviewInqGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Просмотр завпроса NameInq";
+        }
+
+        private void CencelEditInqButton1_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = PreviewInqGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Просмотр завпроса NameInq";
+        }
+
+        private void EditInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = EditInqGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Изменение запроса на отсутствие";
+        }
+
+
+        
+
+
+
+
+
+
+
+
+
+
     }
 }
