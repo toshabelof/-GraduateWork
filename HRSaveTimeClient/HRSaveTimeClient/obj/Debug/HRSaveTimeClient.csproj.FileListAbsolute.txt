@@ -29,3 +29,7 @@ D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\Mor
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MorePernrForm.g.cs
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\AddNameReports.baml
 D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\AddNameReports.g.cs
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\ViewBreak.baml
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\ViewOGRV.baml
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\ViewBreak.g.cs
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\ViewOGRV.g.cs

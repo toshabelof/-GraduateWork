@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -446,7 +447,7 @@ namespace HRSaveTimeClient
             grid.Visibility = Visibility.Visible;
             Title.Text = "Список графиков рабочего времени";
         }
-        
+
         private void Rules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (grid != null)
@@ -458,17 +459,271 @@ namespace HRSaveTimeClient
             Title.Text = "Список ролей";
         }
 
+        private void SendMonitorButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SendMonitorButton.Width = 43;
+            SendMonitorButton.Height = 43;
+        }
+
+        private void SendMonitorButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SendMonitorButton.Width = 38;
+            SendMonitorButton.Height = 38;
+        }
+
+        private void Monitoring_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = MonitoringGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Мониторинг потока данных";
+        }
+
+        private void StrictChekBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (StrictChekBox.Text == "")
+            {
+                StrictChekBox.Text = "X";
+            }
+            else { StrictChekBox.Text = ""; }
+        }
+
+        private void CencelSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelSchedulesButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelSchedulesButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelOGRVButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewSchedulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание графика рабочего времени";
+        }
+
+        private void SaveSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveSchedulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveSchedulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveOGRVButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewSchedulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание графика рабочего времени";
+        }
+
+        private void NewSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NewSchedulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NewSchedulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewSchedulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание графика рабочего времени";
+        }
 
 
+        private void Grid_MouseEnter_1(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 30;
+            MoreBreakButton.Height = 30;
+        }
 
+        private void Grid_MouseLeave_1(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 25;
+            MoreBreakButton.Height = 25;
+        }
 
+        private void MoreOGRVButtonFromNewPGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MoreOGRVButton.Width = 30;
+            MoreOGRVButton.Height = 30;
+        }
 
+        private void MoreOGRVButtonFromNewPGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MoreOGRVButton.Width = 25;
+            MoreOGRVButton.Height = 25;
+        }
 
+        private void MoreOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewOGRV vO = new ViewOGRV();
+            vO.ShowDialog();
+        }
 
+        private void AddOGRVButtonFromNewPGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AddOGRVButton.Width = 30;
+            AddOGRVButton.Height = 30;
+        }
 
+        private void AddOGRVButtonFromNewPGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AddOGRVButton.Width = 25;
+            AddOGRVButton.Height = 25;
+        }
 
+        private void AddOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewOGRVGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание однодневного графика рабочего времени";
+        }
 
+        private void GenerateSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#00dc77");
+        }
 
+        private void GenerateSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#01a459");
+        }
 
+        private void GenerateSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
+
+        private void CencelOGRVButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelOGRVButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelOGRVButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelOGRVButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void SaveOGRVButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveOGRVButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
+
+        private void CencelSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
+
+        private void MoreBreakButtonFromNewOGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 30;
+            MoreBreakButton.Height = 30;
+        }
+
+        private void MoreBreakButtonFromNewOGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 25;
+            MoreBreakButton.Height = 25;
+        }
+
+        private void MoreBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewBreak vB = new ViewBreak();
+            vB.ShowDialog();
+        }
+
+        private void AddBreakButtonFromNewOGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AddBreakButton.Width = 30;
+            AddBreakButton.Height = 30;
+        }
+
+        private void AddBreakButtonFromNewOGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AddBreakButton.Width = 25;
+            AddBreakButton.Height = 25;
+        }
+
+        private void AddBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewBreakGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Создание перерыва";
+            
+        }
+
+        private void SaveBreakButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveBreakButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveBreakButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewOGRVGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание однодневного графика рабочего времени";
+        }
+
+        private void CencelBreakButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelBreakButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+
+        }
+
+        private void CencelBreakButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelBreakButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelBreakButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewOGRVGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание однодневного графика рабочего времени";
+        }
     }
 }

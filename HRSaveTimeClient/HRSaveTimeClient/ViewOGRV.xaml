@@ -1,0 +1,25 @@
+﻿<Window x:Class="HRSaveTimeClient.ViewOGRV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+       Title="MorePernrForm" Height="400" Width="600" WindowStyle="None" ResizeMode="NoResize" BorderBrush="#0049db" BorderThickness="1" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <DataGrid HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Height="355" Width="600" CanUserResizeRows="False" IsSynchronizedWithCurrentItem="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Код" Width="100"/>
+                <DataGridTextColumn Header="Время с" Width="*"/>
+                <DataGridTextColumn Header="Время по" Width="*"/>
+                <DataGridTextColumn Header="Сокр.Время с" Width="*"/>
+                <DataGridTextColumn Header="Сокр.Время по" Width="*"/>
+                <DataGridTextColumn Header="Перерыв" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid x:Name ="OkMoreOGRVButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="52" Margin="0,0,10,10" MouseEnter="OkMoreOGRVButton_MouseEnter" MouseLeave="OkMoreOGRVButton_MouseLeave" PreviewMouseLeftButtonDown="OkMoreOGRVButton_PreviewMouseLeftButtonDown" >
+            <Image Source="Resources/Reports/OK.png" />
+        </Grid>
+
+        <Grid x:Name ="CencelMoreOGRVButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Margin="0,0,70,10" MouseEnter="CencelMoreOGRVButton_MouseEnter" MouseLeave="CencelMoreOGRVButton_MouseLeave" PreviewMouseLeftButtonDown="CencelMoreOGRVButton_PreviewMouseLeftButtonDown" >
+            <Image Source="Resources/People/Cancel.png"/>
+        </Grid>
+    </Grid>
+</Window>

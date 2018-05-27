@@ -63,6 +63,26 @@ namespace HRSaveTimeClient.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _36601 {
+            get {
+                object obj = ResourceManager.GetObject("_36601", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Add {
+            get {
+                object obj = ResourceManager.GetObject("Add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Calen {
             get {
                 object obj = ResourceManager.GetObject("Calen", resourceCulture);
@@ -146,6 +166,16 @@ namespace HRSaveTimeClient.Properties {
         internal static System.Drawing.Bitmap Generate {
             get {
                 object obj = ResourceManager.GetObject("Generate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Generation {
+            get {
+                object obj = ResourceManager.GetObject("Generation", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

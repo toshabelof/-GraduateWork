@@ -41,7 +41,7 @@
                     <TextBlock Text ="Роли" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
                     <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/Rules.png" />
                 </Grid>
-                <Grid x:Name ="Monitoring" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent"  Margin="15,292,15,0" MouseEnter="Monitoring_MouseEnter" MouseLeave="Monitoring_MouseLeave">
+                <Grid x:Name ="Monitoring" Width="270" Height="50" VerticalAlignment="Top" Background="Transparent"  Margin="15,292,15,0" MouseEnter="Monitoring_MouseEnter" MouseLeave="Monitoring_MouseLeave" PreviewMouseLeftButtonDown="Monitoring_PreviewMouseLeftButtonDown">
                     <TextBlock Text ="Мониторинг" FontSize="20" Foreground="#9de1ff" Margin="65,0,0,0" VerticalAlignment="Center"></TextBlock>
                     <Image HorizontalAlignment="Left" VerticalAlignment="Stretch" Height="30" Width="30" Margin="15,0,0,0" Source="Resources/Menu/monitor.png"/>
                 </Grid>
@@ -134,7 +134,7 @@
             <Grid x:Name ="NewInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="NewInqButton_MouseEnter" MouseLeave="NewInqButton_MouseLeave" PreviewMouseLeftButtonDown="NewInqButton_PreviewMouseLeftButtonDown">
                 <Image Source="Resources/Inq/CreateInq.png" />
             </Grid>
-            
+
             <DataGrid HorizontalAlignment="Left" Margin="9,56,0,0" VerticalAlignment="Top" Height="595" Width="960" Background="{x:Null}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="П/П" Width="50" FontSize="20"/>
@@ -148,10 +148,10 @@
         <Grid x:Name ="NewInqGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            
+
             <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,500"/>
             <TextBlock HorizontalAlignment="Left" Margin="35,75,0,0" TextWrapping="Wrap" Text="Данные отсутствия" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
-           
+
             <TextBox HorizontalAlignment="Left" Margin="221.667,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,115,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
             <TextBox HorizontalAlignment="Left" Margin="221.667,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
@@ -163,7 +163,7 @@
             <TextBox HorizontalAlignment="Left" Margin="221.667,275,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Документ" HorizontalAlignment="Left" Margin="35,275,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
-            
+
             <Grid x:Name ="SaveInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" PreviewMouseLeftButtonDown="SaveInqButton_PreviewMouseLeftButtonDown" MouseEnter="SaveInqButton_MouseEnter" MouseLeave="SaveInqButton_MouseLeave">
                 <Image Source="Resources/People/Save.png" />
             </Grid>
@@ -177,7 +177,7 @@
             <Grid x:Name ="EditInqButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="EditInqButton_MouseEnter" MouseLeave="EditInqButton_MouseLeave" PreviewMouseLeftButtonDown="EditInqButton_PreviewMouseLeftButtonDown">
                 <Image Source="Resources/Inq/Edit.png" />
             </Grid>
-            
+
             <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
@@ -198,7 +198,7 @@
             <TextBox HorizontalAlignment="Left" Margin="221.667,315,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Статус" HorizontalAlignment="Left" Margin="35,315,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
         </Grid>
-        
+
         <Grid x:Name ="EditInqGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
@@ -247,7 +247,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        
+
         <Grid   x:Name ="NewReportsGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <Grid  x:Name ="MorePernrReportsGrid" HorizontalAlignment="Left"  Margin="485,25,0,0" VerticalAlignment="Top" Height="35" Width="35" MouseEnter="MorePernrReportsGrid_MouseEnter" PreviewMouseLeftButtonDown="MorePernrReportsGrid_PreviewMouseLeftButtonDown" MouseLeave="MorePernrReportsGrid_MouseLeave">
                 <Image x:Name ="MorePernrReportsImage" Source="Resources/Reports/More.png" HorizontalAlignment="Center"  VerticalAlignment="Center" Height="25" Width="25"/>
@@ -257,8 +257,8 @@
 
             <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,500"/>
             <TextBlock HorizontalAlignment="Left" Margin="35,75,0,0" TextWrapping="Wrap" Text="Период" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
-       
-        
+
+
             <TextBox HorizontalAlignment="Left" Margin="221.667,115,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,115,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
             <TextBox HorizontalAlignment="Left" Margin="221.667,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
@@ -275,7 +275,7 @@
             <Grid x:Name ="GenerateReportsButton" Background="#01a459" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="165" Margin="0,0,10,10" MouseEnter="GenerateReportsButton_MouseEnter" MouseLeave="GenerateReportsButton_MouseLeave" PreviewMouseLeftButtonDown="GenerateReportsButton_PreviewMouseLeftButtonDown">
                 <Image Source="Resources/Reports/Generate.png" />
             </Grid>
-            
+
             <Grid x:Name ="SaveReportsButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,185,10" MouseEnter="SaveReportsButton_MouseEnter" MouseLeave="SaveReportsButton_MouseLeave" PreviewMouseLeftButtonDown="SaveReportsButton_PreviewMouseLeftButtonDown" >
                 <Image Source="Resources/People/Save.png" />
             </Grid>
@@ -283,25 +283,129 @@
             <Grid x:Name ="CencelReportsButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,320,10" MouseEnter="CencelReportsButton_MouseEnter" MouseLeave="CencelReportsButton_MouseLeave" PreviewMouseLeftButtonDown="CencelReportsButton_PreviewMouseLeftButtonDown" >
                 <Image Source="Resources/People/Cancel.png" />
             </Grid>
-            
+
         </Grid>
 
         <!-- ГРВ -->
         <Grid x:Name ="SchedulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
-            <Grid x:Name ="NewSchedulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="NewReportsButton_MouseEnter" MouseLeave="NewReportsButton_MouseLeave" PreviewMouseLeftButtonDown="NewReportsButton_PreviewMouseLeftButtonDown">
+            <Grid x:Name ="NewSchedulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="NewSchedulesButton_MouseEnter" MouseLeave="NewSchedulesButton_MouseLeave" PreviewMouseLeftButtonDown="NewSchedulesButton_PreviewMouseLeftButtonDown" >
                 <Image Source="Resources/Inq/CreateInq.png" />
             </Grid>
 
             <DataGrid HorizontalAlignment="Left" Margin="9,56,0,0" VerticalAlignment="Top" Height="595" Width="960" Background="{x:Null}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Код" Width="50" FontSize="20"/>
-                    <DataGridTextColumn Header="Дата с" Width="100" FontSize="20"/>
-                    <DataGridTextColumn Header="Дата п" Width="100" FontSize="20"/>
+                    <DataGridTextColumn Header="Код" Width="100" FontSize="20"/>
+                    <DataGridTextColumn Header="Дата с" Width="150" FontSize="20"/>
+                    <DataGridTextColumn Header="Дата по" Width="150" FontSize="20"/>
                     <DataGridTextColumn Header="Описание" Width="*" FontSize="20"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-       
+
+        <!-- Окно создания и генерации ПГРВ -->
+        <Grid x:Name ="NewSchedulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,53,0,-3" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Код графика" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата по" HorizontalAlignment="Left" Margin="35,105,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="575" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Описание" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,250"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,200,0,0" TextWrapping="Wrap" Text="ОГРВ на неделю" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left"  Margin="35,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="145,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="255,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="365,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="475,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="585,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="695,240,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="100" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+
+            <Grid x:Name="MoreOGRVButtonFromNewPGRV" HorizontalAlignment="Left"  Margin="800,240,0,0" VerticalAlignment="Top" Height="35" Width="35" MouseEnter="MoreOGRVButtonFromNewPGRV_MouseEnter" MouseLeave="MoreOGRVButtonFromNewPGRV_MouseLeave" PreviewMouseLeftButtonDown="MoreOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown"  >
+                <Image x:Name ="MoreOGRVButton" Source="Resources/Reports/More.png" HorizontalAlignment="Center"  VerticalAlignment="Stretch" Height="25" Width="25"/>
+            </Grid>
+
+            <Grid  x:Name="AddOGRVButtonFromNewPGRV" HorizontalAlignment="Left"  Margin="840,240,0,0" VerticalAlignment="Top" Height="35" Width="35" MouseEnter="AddOGRVButtonFromNewPGRV_MouseEnter" MouseLeave="AddOGRVButtonFromNewPGRV_MouseLeave" PreviewMouseLeftButtonDown="AddOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown"  >
+                <Image x:Name ="AddOGRVButton" Source="Resources/Schedules/Add.png" HorizontalAlignment="Center"  VerticalAlignment="Stretch" Height="25" Width="25"/>
+            </Grid>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,50"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,300,0,0" TextWrapping="Wrap" Text="Генерация графика" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,340,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата с" HorizontalAlignment="Left" Margin="35,340,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата по" HorizontalAlignment="Left" Margin="35,380,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <!--Кнопки нижние-->
+            <Grid x:Name ="GenerateSchedulesButton" Background="#01a459" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="165" Margin="0,0,10,10" MouseEnter="GenerateSchedulesButton_MouseEnter" MouseLeave="GenerateSchedulesButton_MouseLeave" PreviewMouseLeftButtonDown="GenerateSchedulesButton_PreviewMouseLeftButtonDown">
+                <Image Source="Resources/Schedules/Generation.png" />
+            </Grid>
+            <Grid x:Name ="SaveSchedulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,190,10" MouseEnter="SaveSchedulesButton_MouseEnter" MouseLeave="SaveSchedulesButton_MouseLeave" PreviewMouseLeftButtonDown="SaveSchedulesButton_PreviewMouseLeftButtonDown" >
+                <Image Source="Resources/People/Save.png" />
+            </Grid>
+            <Grid x:Name ="CencelSchedulesButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,330,10" MouseEnter="CencelSchedulesButton_MouseEnter" MouseLeave="CencelSchedulesButton_MouseLeave" PreviewMouseLeftButtonDown="CencelSchedulesButton_PreviewMouseLeftButtonDown" >
+                <Image Source="Resources/People/Cancel.png" MouseLeave="NewProfileButton_MouseLeave" MouseEnter="NewProfileButton_MouseLeave" />
+            </Grid>
+        </Grid>
+
+        <!-- Окно создания ОГРВ -->
+        <Grid x:Name ="NewOGRVGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Код ОГРВ" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Время с" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Время по" HorizontalAlignment="Left" Margin="35,105,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Сокр. Время с" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,185,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Сокр. Время по" HorizontalAlignment="Left" Margin="35,185,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,225,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Перерыв" HorizontalAlignment="Left" Margin="35,225,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid x:Name="MoreBreakButtonFromNewOGRV" HorizontalAlignment="Left"  Margin="480,225,0,0" VerticalAlignment="Top" Height="35" Width="35" MouseEnter="MoreBreakButtonFromNewOGRV_MouseEnter" MouseLeave="MoreBreakButtonFromNewOGRV_MouseLeave" PreviewMouseLeftButtonDown="MoreBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown"  >
+                <Image x:Name ="MoreBreakButton" Source="Resources/Reports/More.png" HorizontalAlignment="Center"  VerticalAlignment="Stretch" Height="25" Width="25"/>
+            </Grid>
+
+            <Grid  x:Name="AddBreakButtonFromNewOGRV" HorizontalAlignment="Left"  Margin="520,225,0,0" VerticalAlignment="Top" Height="35" Width="35" MouseEnter="AddBreakButtonFromNewOGRV_MouseEnter" MouseLeave="AddBreakButtonFromNewOGRV_MouseLeave" PreviewMouseLeftButtonDown="AddBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown"  >
+                <Image x:Name ="AddBreakButton" Source="Resources/Schedules/Add.png" HorizontalAlignment="Center"  VerticalAlignment="Stretch" Height="25" Width="25"/>
+            </Grid>
+
+            <Grid x:Name ="SaveOGRVButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" MouseEnter="SaveOGRVButton_MouseEnter" MouseLeave="SaveOGRVButton_MouseLeave" PreviewMouseLeftButtonDown="SaveOGRVButton_PreviewMouseLeftButtonDown" >
+                <Image Source="Resources/People/Save.png" />
+            </Grid>
+
+            <Grid x:Name ="CencelOGRVButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,150,10" MouseEnter="CencelOGRVButton_MouseEnter" MouseLeave="CencelOGRVButton_MouseLeave" PreviewMouseLeftButtonDown="CencelOGRVButton_PreviewMouseLeftButtonDown" >
+                <Image Source="Resources/People/Cancel.png" MouseLeave="NewProfileButton_MouseLeave" MouseEnter="NewProfileButton_MouseLeave" />
+            </Grid>
+        </Grid>
+
+        <!-- Окно создания Перерыва -->
+        <Grid x:Name ="NewBreakGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">          
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Код перерыва" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Время с" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Время по" HorizontalAlignment="Left" Margin="35,105,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="StrictChekBox" HorizontalAlignment="Left"  Margin="222,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="35" VerticalContentAlignment="Center" BorderBrush="#FFACACAC" PreviewMouseLeftButtonDown="StrictChekBox_PreviewMouseLeftButtonDown"/>
+            <Label Content="Строгость" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+
+
+            <Grid x:Name ="SaveBreakButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" MouseEnter="SaveBreakButton_MouseEnter" MouseLeave="SaveBreakButton_MouseLeave" PreviewMouseLeftButtonDown="SaveBreakButton_PreviewMouseLeftButtonDown" >
+                <Image Source="Resources/People/Save.png" />
+            </Grid>
+
+            <Grid x:Name ="CencelBreakButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,150,10" MouseEnter="CencelBreakButton_MouseEnter" MouseLeave="CencelBreakButton_MouseLeave" PreviewMouseLeftButtonDown="CencelBreakButton_PreviewMouseLeftButtonDown" >
+                <Image Source="Resources/People/Cancel.png" MouseLeave="NewProfileButton_MouseLeave" MouseEnter="NewProfileButton_MouseLeave" />
+            </Grid>
+        </Grid>
+
         <!-- Роли -->
         <Grid x:Name ="RulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <Grid x:Name ="NewRulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" >
@@ -310,15 +414,28 @@
 
             <DataGrid HorizontalAlignment="Left" Margin="9,56,0,0" VerticalAlignment="Top" Height="595" Width="960" Background="{x:Null}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Код роли" Width="50" FontSize="20"/>
+                    <DataGridTextColumn Header="Код роли" Width="100" FontSize="20"/>
                     <DataGridTextColumn Header="Наименование" Width="200" FontSize="20"/>
                     <DataGridTextColumn Header="Описание" Width="*" FontSize="20"/>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-  
-    
+
         <!-- Монитр данных -->
-        <Grid x:Name ="MonitoringGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed"></Grid>
+        <Grid x:Name ="MonitoringGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <RichTextBox HorizontalAlignment="Left" Height="605" Margin="10,10,0,0" VerticalAlignment="Top" Width="960" BorderBrush="#d0d0d0" BorderThickness="3" FontSize="13">
+                <FlowDocument>
+                    <Paragraph>
+                        <Run Text= "Монитор потока данных готов к работе!"/>
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+            <Grid HorizontalAlignment="Left" Height="50" VerticalAlignment="Bottom" Width="980">
+                <TextBox HorizontalAlignment="Left" Height="40" VerticalAlignment="Center" Width="910" Margin="10,0,0,0" BorderBrush="#d0d0d0" BorderThickness="3" FontSize="20" VerticalContentAlignment="Center"/>
+                <Grid  HorizontalAlignment="Right" Height="45" VerticalAlignment="Stretch" Width="45" Margin="0,0,10,0" >
+                    <Image x:Name ="SendMonitorButton" Height="38"  Width="38" HorizontalAlignment="Center" VerticalAlignment="Center" Source="Resources/Monitor/36601.png" MouseEnter="SendMonitorButton_MouseEnter" MouseLeave="SendMonitorButton_MouseLeave"/>
+                </Grid>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>
