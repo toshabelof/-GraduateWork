@@ -725,5 +725,78 @@ namespace HRSaveTimeClient
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Создание однодневного графика рабочего времени";
         }
+
+        private void MoreOGRVRuleGrid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MoreOGRVRuleButton.Width = 30;
+            MoreOGRVRuleButton.Height = 30;
+        }
+
+        private void MoreOGRVRuleGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MoreOGRVRuleButton.Width = 25;
+            MoreOGRVRuleButton.Height = 25;
+        }
+
+        private void MoreOGRVRuleGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MoreORGForm mof = new MoreORGForm();
+            mof.ShowDialog();
+        }
+
+        private void NewRulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewRulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewRulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание роли";
+        }
+
+
+        private void SaveRulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveRulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveRulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveRulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = RulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Список ролей";
+        }
+
+        private void CencelRulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelRulesButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelRulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelRulesButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = RulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Список ролей";
+        }
     }
 }

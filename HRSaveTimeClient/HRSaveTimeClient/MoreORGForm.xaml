@@ -1,0 +1,20 @@
+﻿<Window x:Class="HRSaveTimeClient.MoreORGForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         Title="MorePernrForm" Height="400" Width="300" WindowStyle="None" ResizeMode="NoResize" BorderBrush="Aqua" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <DataGrid HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Height="355" Width="300" MouseDown="DataGrid_MouseDown" CanUserResizeRows="False" IsSynchronizedWithCurrentItem="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Организационная единица" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Grid x:Name ="OkMoreORGButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="52" Margin="0,0,10,10" MouseEnter="OkMoreORGButton_MouseEnter" MouseLeave="OkMoreORGButton_MouseLeave" PreviewMouseLeftButtonDown="OkMoreORGButton_PreviewMouseLeftButtonDown" >
+            <Image Source="Resources/Reports/OK.png" />
+        </Grid>
+
+        <Grid x:Name ="CencelMoreORGButton" Background="#8d8d8d" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Margin="0,0,70,10" MouseEnter="CencelMoreORGButton_MouseEnter" MouseLeave="CencelMoreORGButton_MouseLeave" PreviewMouseLeftButtonDown="CencelMoreORGButton_PreviewMouseLeftButtonDown">
+            <Image Source="Resources/People/Cancel.png"/>
+        </Grid>
+    </Grid>
+</Window> 

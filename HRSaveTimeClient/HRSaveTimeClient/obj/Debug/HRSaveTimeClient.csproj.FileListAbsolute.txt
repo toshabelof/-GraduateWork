@@ -56,3 +56,5 @@ C:\Users\student\Desktop\-GraduateWork-master\HRSaveTimeClient\HRSaveTimeClient\
 C:\Users\student\Desktop\-GraduateWork-master\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.g.resources
 C:\Users\student\Desktop\-GraduateWork-master\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.Properties.Resources.resources
 C:\Users\student\Desktop\-GraduateWork-master\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.csproj.GenerateResource.Cache
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MoreORGForm.baml
+D:\_GitHubProjects\-GraduateWork\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MoreORGForm.g.cs
