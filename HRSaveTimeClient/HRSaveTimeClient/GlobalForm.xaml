@@ -385,7 +385,7 @@
         </Grid>
 
         <!-- Окно создания Перерыва -->
-        <Grid x:Name ="NewBreakGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">          
+        <Grid x:Name ="NewBreakGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Код перерыва" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
             <TextBox HorizontalAlignment="Left"  Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
@@ -419,6 +419,32 @@
                     <DataGridTextColumn Header="Описание" Width="*" FontSize="20"/>
                 </DataGrid.Columns>
             </DataGrid>
+        </Grid>
+
+        <!-- Роли -->
+        <Grid x:Name ="NewRulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Visible">
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Код роли" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="560" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Описание" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,400"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,125,0,0" TextWrapping="Wrap" Text="Настройка роли" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Клиент.прил." HorizontalAlignment="Left" Margin="35,165,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox HorizontalAlignment="Left"  Margin="221.667,205,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Сервер.прил." HorizontalAlignment="Left" Margin="35,205,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="173" Margin="603,200,0,0" VerticalAlignment="Top" Width="264">
+                <TabItem Header="TabItem">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+                <TabItem Header="TabItem">
+                    <Grid Background="#FFE5E5E5"/>
+                </TabItem>
+            </TabControl>
+
+
         </Grid>
 
         <!-- Монитр данных -->
