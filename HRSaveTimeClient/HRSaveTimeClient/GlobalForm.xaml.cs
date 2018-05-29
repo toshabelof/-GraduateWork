@@ -798,5 +798,33 @@ namespace HRSaveTimeClient
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Список ролей";
         }
+
+        private void myProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            myProfileButton.Background = (Brush)bc.ConvertFrom("#004ee8");
+        }
+
+        private void myProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            myProfileButton.Background = (Brush)bc.ConvertFrom("Transparent");
+        }
+
+        private void myProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = ProfileGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Мой профиль";
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            grid = ProfileGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Мой профиль";
+        }
     }
 }

@@ -16,13 +16,15 @@
 
         <TextBlock Text="ЛОГИН" FontSize="18" Foreground="#9de1ff" Margin="54,193.5,265,291.5"></TextBlock>
         <TextBox Margin="55,220,55,260" FontSize="19"/>
-        <TextBlock Text="ПАРОЛЬ" FontSize="18" Foreground="#9de1ff" Margin="54,260,265,225"/>      
-        <TextBlock Text="Забыли пароль?" FontSize="15" Foreground="#9de1ff" Margin="150.06,392.191,148.06,97.858" VerticalAlignment="Center" HorizontalAlignment="Center" PreviewMouseDown="TextBlock_PreviewMouseDown"/>
+        <TextBlock Text="ПАРОЛЬ" FontSize="18" Foreground="#9de1ff" Margin="54,260,265,225"/>
+        <TextBlock x:Name="RememberPasswordButton" Text="Забыли пароль?" FontSize="15" Foreground="#9de1ff" Margin="150.06,392.191,148.06,97.858" VerticalAlignment="Center" HorizontalAlignment="Center" PreviewMouseDown="TextBlock_PreviewMouseDown" MouseEnter="TextBlock_MouseEnter" MouseLeave="TextBlock_MouseLeave" Cursor="Arrow"/>
         <Button Background="Transparent" BorderBrush="#9de1ff" VerticalAlignment="Center" HorizontalAlignment="Center" Width="80" Height="30"  Margin="166.333,352,163.667,128" Click="Button_Click">
             <TextBlock Text="Вход" FontSize="18" Foreground="#9de1ff" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
         </Button>
         <Image HorizontalAlignment="Center" Height="100" Margin="155,50,155,0" VerticalAlignment="Top" Width="100" Source="Resources/LOGO2.png"/>
-        <Image Height="15" Width="15" Margin="390,5,5,0"  VerticalAlignment="Top" Source="Resources/EXIT.png" PreviewMouseDown="Image_PreviewMouseDown"/>
+        <Grid Height="20" Width="20" Margin="372,9,0,0"  VerticalAlignment="Top" PreviewMouseDown="Image_PreviewMouseDown" MouseEnter="Image_MouseEnter" MouseLeave="Image_MouseLeave">
+            <Image x:Name="ExitApp" Source="Resources/EXIT.png" Height="15" Width="15"/>
+        </Grid>
         <PasswordBox Margin="55,286.5,55,194" FontSize="19"/>
 
     </Grid>

@@ -31,7 +31,7 @@ namespace HRSaveTimeClient
 
         private void TextBlock_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("ДА!");
+            MessageBox.Show("Если вы забыли пароль, то обратитесь к вашему HR Администратору для его сброса!", "Инструкция", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
 
@@ -46,6 +46,32 @@ namespace HRSaveTimeClient
             this.Visibility = Visibility.Hidden;
             gf.ShowDialog();
             this.Visibility = Visibility.Visible;
+        }
+
+        private void Image_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ExitApp.Width = 20;
+            ExitApp.Height = 20;
+        }
+
+        private void Image_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ExitApp.Width = 15;
+            ExitApp.Height = 15;
+        }
+
+        
+            
+
+        private void TextBlock_MouseEnter(object sender, MouseEventArgs e)
+        {
+            RememberPasswordButton.TextDecorations = TextDecorations.Underline;
+            
+        }
+
+        private void TextBlock_MouseLeave(object sender, MouseEventArgs e)
+        {
+            RememberPasswordButton.TextDecorations = null;        
         }
     }
 }
