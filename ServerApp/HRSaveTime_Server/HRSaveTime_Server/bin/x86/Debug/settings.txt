@@ -1,2 +1,0 @@
-BD
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\bin\x86\Debug\ClientBD.mdb

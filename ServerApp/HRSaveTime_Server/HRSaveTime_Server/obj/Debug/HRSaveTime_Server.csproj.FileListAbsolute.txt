@@ -1,9 +1,0 @@
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\bin\Debug\HRSaveTime_Server.exe
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\bin\Debug\HRSaveTime_Server.pdb
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.csprojResolveAssemblyReference.cache
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.AddNewRoom.resources
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.Form1.resources
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.Properties.Resources.resources
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.csproj.GenerateResource.Cache
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.exe
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\obj\Debug\HRSaveTime_Server.pdb
