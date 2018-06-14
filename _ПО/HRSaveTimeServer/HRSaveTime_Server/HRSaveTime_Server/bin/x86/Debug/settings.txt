@@ -1,2 +1,2 @@
 BD
-C:\Users\Антон\Desktop\Диплом\ServerApp\HRSaveTime_Server\HRSaveTime_Server\bin\x86\Debug\ClientBD.mdb
+A/D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\bin\x64\Debug\ClientBD.mdb
