@@ -83,13 +83,13 @@ namespace HRSaveTime_Server
             }
         }
 
-        public List<string> SetLocationName(string Name, string login, string password)
+        public List<string> SetLocationName(string login, string password)
         {
-            String connect = "DATA SOURCE=localhost:1521/xe;PASSWORD=" + password + ";PERSIST SECURITY INFO=True;USER ID=" + login;
-            using (var con = new OleDbConnection(connect))
+            String connect = "Data Source = localhost; User ID = " + login + "; Password = " + password;
+            using (OracleConnection con = new OracleConnection(connect))
             {
                 con.Open();
-                var cmd = new OleDbCommand("SELECT Name FROM Location", con);
+                var cmd = new OracleCommand("SELECT Name FROM Rooms", con);
                 using (var reader = cmd.ExecuteReader())
                 {
                     var lists = new List<string>();
@@ -104,13 +104,37 @@ namespace HRSaveTime_Server
             }
         }
 
-        public List<string> SetLocationIDNAame(string Name)
+        public List<string> SetLocationIDNAame(string Way)
         {
-            String connect = "Provider=Microsoft.JET.OLEDB.4.0;data source= " + Name;
+            String connect = "Provider=Microsoft.JET.OLEDB.4.0;data source= " + Way;
             using (var con = new OleDbConnection(connect))
             {
                 con.Open();
                 var cmd = new OleDbCommand("SELECT ID_Room, Name FROM Location", con);
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    var lists = new List<string>();
+
+                    while (reader.Read())
+                    {
+                        lists.Add(reader[0].ToString());
+                        lists.Add(reader[1].ToString());
+                    }
+                    con.Close();
+
+                    return lists;
+                }
+            }
+        }
+
+        public List<string> SetLocationIDNAame(string login, string password)
+        {
+            String connect = "Data Source = localhost; User ID = " + login + "; Password = " + password;
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                con.Open();
+                var cmd = new OracleCommand("SELECT IDRooms, Name FROM Rooms", con);
 
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -158,6 +182,14 @@ namespace HRSaveTime_Server
             reader.Close();
             bd.Close();
 
+        }
+
+        public String[] GetBDType()
+        {
+            var result = "";
+            Form1.setting.TryGetValue("BD", out result);
+            String[] mas = result.Split('/');
+            return mas;
         }
     }
 }

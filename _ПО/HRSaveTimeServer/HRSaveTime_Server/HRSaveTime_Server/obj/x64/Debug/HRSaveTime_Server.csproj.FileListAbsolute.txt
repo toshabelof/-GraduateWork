@@ -8,3 +8,4 @@ D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSave
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.csproj.GenerateResource.Cache
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.exe
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.pdb
+D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.AddRule.resources

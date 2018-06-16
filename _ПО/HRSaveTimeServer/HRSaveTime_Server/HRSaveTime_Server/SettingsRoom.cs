@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Oracle.DataAccess.Client;
 
 using System.Data.OleDb;
 
@@ -19,65 +20,64 @@ namespace HRSaveTime_Server
 
         BDConnect bd = new BDConnect();
         bool Edit = false;
-        bool newRow = false;
+        bool Add = false;
+        bool Del = false;
         List<int> editIndex = new List<int>();
-        List<int> newIndex = new List<int>();
+        List<int> AddIndex = new List<int>();
+        List<int> DeleteIndex = new List<int>();
 
         private void SettingsRoom_Load(object sender, EventArgs e)
         {
-            var result = "";
-            Form1.setting.TryGetValue("BD", out result);
+            String[] mas = bd.GetBDType();
 
-            List<string> sss = bd.SetLocationIDNAame(result);
-
-            int j = 0;
-            for (int i = 0; i < sss.Count / 2; i++)
+            switch (mas[0])
             {
-                dataGridView1.Rows.Add();
-                dataGridView1.Rows[i].Cells[0].Value = sss[j];
-                dataGridView1.Rows[i].Cells[1].Value = sss[j + 1];
-                j += 2;
-            }
+                case "A":
+                    {
+                        List<string> sss = bd.SetLocationIDNAame(mas[1]);
+                        int j = 0;
+                        for (int i = 0; i < sss.Count / 2; i++)
+                        {
+                            dataGridView1.Rows.Add();
+                            dataGridView1.Rows[i].Cells[0].Value = sss[j];
+                            dataGridView1.Rows[i].Cells[1].Value = sss[j + 1];
+                            j += 2;
+                        }
+                        break;
+                    }
 
+                case "O":
+                    {
+                        List<string> sss = bd.SetLocationIDNAame(mas[1], mas[2]);
+                        int j = 0;
+                        for (int i = 0; i < sss.Count / 2; i++)
+                        {
+                            dataGridView1.Rows.Add();
+                            dataGridView1.Rows[i].Cells[0].Value = sss[j];
+                            dataGridView1.Rows[i].Cells[1].Value = sss[j + 1];
+                            j += 2;
+                        }
+                        break;
+                    }
+            }
         }
 
         private void SettingsRoom_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var result = "";
-            Form1.setting.TryGetValue("BD", out result);
-
-            if (Edit || newRow)
+            if (Edit || Add || Del)
             {
                 DialogResult dr = MessageBox.Show("Вы хотите сохранить изменения?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (dr == DialogResult.Yes)
                 {
-
-                    if (Edit)
-                    {
-                        foreach (int i in editIndex)
-                        {
-                            bd.SaveEditBDLocation(result, dataGridView1.Rows[i].Cells[1].Value.ToString(), dataGridView1.Rows[i].Cells[0].Value.ToString());
-                        }
-                    }
-
-                    if (newRow)
-                    {
-                        foreach (int i in newIndex)
-                        {
-                            bd.SaveNewBDLocation(result, dataGridView1.Rows[i - 1].Cells[1].Value.ToString(), dataGridView1.Rows[i - 1].Cells[0].Value.ToString());
-                        }
-                    }
-
-                    
+                    SaveToBD();
                 }
-                else if (dr == DialogResult.No)
+                else
                 {
-                    this.Close();
+                    e.Cancel = true;
                 }
             }
 
         }
-
 
         private void добавитьToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -87,9 +87,9 @@ namespace HRSaveTime_Server
             dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.RowCount - 1].Cells[1];
             dataGridView1.BeginEdit(true);
 
-           
-            newRow = true;
-            newIndex.Add(dataGridView1.RowCount);
+
+            Add = true;
+            AddIndex.Add(dataGridView1.RowCount-1);
         }
 
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -102,6 +102,79 @@ namespace HRSaveTime_Server
 
                 Edit = true;
                 editIndex.Add(e.RowIndex);
+            }
+
+            if (e.ColumnIndex == 3)
+            {
+                Del = true;
+                DeleteIndex.Add(Convert.ToInt32(dataGridView1.Rows[e.RowIndex].Cells[0].Value));
+                dataGridView1.Rows.RemoveAt(e.RowIndex);
+            }
+        }
+
+        private void сохранитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveToBD();
+            Edit = false;
+            Add = false;
+            Del = false;
+        }
+
+        private void SaveToBD()
+        {
+            String[] mas = bd.GetBDType();
+
+            switch (mas[0])
+            {
+                case "A":
+                    {
+
+                        break;
+                    }
+
+                case "O":
+                    {
+                        String connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                        using (OracleConnection con = new OracleConnection(connect))
+                        {
+                            con.Open();
+                            if (Edit)
+                            {
+                                for (int i = 0; i < dataGridView1.Rows.Count; i++)
+                                {
+                                    OracleCommand com = new OracleCommand("update Rooms set " +
+                                    "NAME  = '" + dataGridView1.Rows[i].Cells[1].Value + "'" +
+                                    "where IDROOMS  = '" + Convert.ToInt32(dataGridView1.Rows[i].Cells[0].Value) + "'",
+                                     con);
+                                    com.ExecuteNonQuery();
+                                }
+                            }
+
+                            if (Add)
+                            {
+                                foreach (int i in AddIndex)
+                                {
+                                    OracleCommand com = new OracleCommand("Insert into Rooms(IDROOMS,NAME) values('" +
+                                    Convert.ToInt32(dataGridView1.Rows[i].Cells[0].Value) + "', '" +
+                                    dataGridView1.Rows[i].Cells[1].Value + "')",
+                                    con);
+                                    com.ExecuteNonQuery();
+                                }
+                            }
+
+                            if (Del)
+                            {
+                                foreach (int i in DeleteIndex)
+                                {
+                                    OracleCommand com = new OracleCommand("Delete from Rooms where " +
+                                    "IDROOMS = '" + i + "'",
+                                    con);
+                                    com.ExecuteNonQuery();
+                                }
+                            }
+                            break;
+                        }
+                    }
             }
         }
     }
