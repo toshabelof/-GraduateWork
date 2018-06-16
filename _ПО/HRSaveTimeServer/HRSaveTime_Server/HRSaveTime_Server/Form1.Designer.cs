@@ -29,6 +29,13 @@
         private void InitializeComponent()
         {
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.ComPorts_cBox = new System.Windows.Forms.ComboBox();
+            this.ConnectToSensor_btn = new System.Windows.Forms.Button();
+            this.SerchComPort_btn = new System.Windows.Forms.Button();
+            this.StatusConnectToSensor_label = new System.Windows.Forms.Label();
+            this.StatusConnectToSensor_btn = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.PasswordOracle_tBox = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
@@ -49,6 +56,21 @@
             this.EditTableRules_btn = new System.Windows.Forms.Button();
             this.SaveRules_btn = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column4 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column7 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column8 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column9 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column10 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column11 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column12 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column13 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column14 = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.Column15 = new System.Windows.Forms.DataGridViewImageColumn();
             this.AddRule_btn = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.EditRooms_btn = new System.Windows.Forms.Button();
@@ -72,29 +94,8 @@
             this.Inquiry_tBox = new System.Windows.Forms.TextBox();
             this.Monitor_tBox = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column7 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column8 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column9 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column10 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column11 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column12 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column13 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column14 = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.Column15 = new System.Windows.Forms.DataGridViewImageColumn();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.ConnectToSensor_btn = new System.Windows.Forms.Button();
-            this.SerchComPort_btn = new System.Windows.Forms.Button();
-            this.StatusConnectToSensor_label = new System.Windows.Forms.Label();
-            this.StatusConnectToSensor_btn = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.ComPorts_cBox = new System.Windows.Forms.ComboBox();
             this.tabPage4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -104,7 +105,6 @@
             this.groupBox1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabControl1.SuspendLayout();
-            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabPage4
@@ -118,6 +118,76 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Настройки";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.ComPorts_cBox);
+            this.groupBox5.Controls.Add(this.ConnectToSensor_btn);
+            this.groupBox5.Controls.Add(this.SerchComPort_btn);
+            this.groupBox5.Controls.Add(this.StatusConnectToSensor_label);
+            this.groupBox5.Controls.Add(this.StatusConnectToSensor_btn);
+            this.groupBox5.Controls.Add(this.label5);
+            this.groupBox5.Location = new System.Drawing.Point(345, 16);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(283, 149);
+            this.groupBox5.TabIndex = 6;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Подключение Приёмник";
+            // 
+            // ComPorts_cBox
+            // 
+            this.ComPorts_cBox.FormattingEnabled = true;
+            this.ComPorts_cBox.Location = new System.Drawing.Point(20, 37);
+            this.ComPorts_cBox.Name = "ComPorts_cBox";
+            this.ComPorts_cBox.Size = new System.Drawing.Size(156, 21);
+            this.ComPorts_cBox.TabIndex = 6;
+            // 
+            // ConnectToSensor_btn
+            // 
+            this.ConnectToSensor_btn.Location = new System.Drawing.Point(172, 78);
+            this.ConnectToSensor_btn.Name = "ConnectToSensor_btn";
+            this.ConnectToSensor_btn.Size = new System.Drawing.Size(85, 23);
+            this.ConnectToSensor_btn.TabIndex = 5;
+            this.ConnectToSensor_btn.Text = "Подключить";
+            this.ConnectToSensor_btn.UseVisualStyleBackColor = true;
+            this.ConnectToSensor_btn.Click += new System.EventHandler(this.ConnectToSensor_btn_Click);
+            // 
+            // SerchComPort_btn
+            // 
+            this.SerchComPort_btn.Location = new System.Drawing.Point(182, 36);
+            this.SerchComPort_btn.Name = "SerchComPort_btn";
+            this.SerchComPort_btn.Size = new System.Drawing.Size(75, 23);
+            this.SerchComPort_btn.TabIndex = 4;
+            this.SerchComPort_btn.Text = "Считать";
+            this.SerchComPort_btn.UseVisualStyleBackColor = true;
+            this.SerchComPort_btn.Click += new System.EventHandler(this.SerchComPort_btn_Click);
+            // 
+            // StatusConnectToSensor_label
+            // 
+            this.StatusConnectToSensor_label.AutoSize = true;
+            this.StatusConnectToSensor_label.Location = new System.Drawing.Point(68, 88);
+            this.StatusConnectToSensor_label.Name = "StatusConnectToSensor_label";
+            this.StatusConnectToSensor_label.Size = new System.Drawing.Size(37, 13);
+            this.StatusConnectToSensor_label.TabIndex = 2;
+            this.StatusConnectToSensor_label.Text = "Status";
+            // 
+            // StatusConnectToSensor_btn
+            // 
+            this.StatusConnectToSensor_btn.Location = new System.Drawing.Point(20, 111);
+            this.StatusConnectToSensor_btn.Name = "StatusConnectToSensor_btn";
+            this.StatusConnectToSensor_btn.Size = new System.Drawing.Size(75, 23);
+            this.StatusConnectToSensor_btn.TabIndex = 1;
+            this.StatusConnectToSensor_btn.Text = "Проверить";
+            this.StatusConnectToSensor_btn.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(20, 88);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(44, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Статус:";
             // 
             // groupBox4
             // 
@@ -338,6 +408,183 @@
             this.dataGridView1.Size = new System.Drawing.Size(620, 330);
             this.dataGridView1.TabIndex = 1;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
+            // 
+            // Column1
+            // 
+            this.Column1.Frozen = true;
+            this.Column1.HeaderText = "ID";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Width = 40;
+            // 
+            // Column2
+            // 
+            this.Column2.Frozen = true;
+            this.Column2.HeaderText = "Имя";
+            this.Column2.Name = "Column2";
+            this.Column2.ReadOnly = true;
+            this.Column2.Width = 80;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "Описание";
+            this.Column3.Name = "Column3";
+            this.Column3.ReadOnly = true;
+            this.Column3.Width = 180;
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "Профили";
+            this.Column4.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column4.Name = "Column4";
+            this.Column4.ReadOnly = true;
+            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column4.Width = 80;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "Запросы";
+            this.Column5.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column5.Name = "Column5";
+            this.Column5.ReadOnly = true;
+            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column5.Width = 80;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "Отчёты";
+            this.Column6.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column6.Name = "Column6";
+            this.Column6.ReadOnly = true;
+            this.Column6.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column7
+            // 
+            this.Column7.HeaderText = "ПГРВ";
+            this.Column7.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column7.Name = "Column7";
+            this.Column7.ReadOnly = true;
+            // 
+            // Column8
+            // 
+            this.Column8.HeaderText = "Роли";
+            this.Column8.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column8.Name = "Column8";
+            this.Column8.ReadOnly = true;
+            this.Column8.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column8.Width = 80;
+            // 
+            // Column9
+            // 
+            this.Column9.HeaderText = "Монитор";
+            this.Column9.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column9.Name = "Column9";
+            this.Column9.ReadOnly = true;
+            // 
+            // Column10
+            // 
+            this.Column10.HeaderText = "Отсутствия";
+            this.Column10.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column10.Name = "Column10";
+            this.Column10.ReadOnly = true;
+            this.Column10.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column10.Width = 80;
+            // 
+            // Column11
+            // 
+            this.Column11.HeaderText = "Врем.пары";
+            this.Column11.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column11.Name = "Column11";
+            this.Column11.ReadOnly = true;
+            this.Column11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column11.Width = 80;
+            // 
+            // Column12
+            // 
+            this.Column12.HeaderText = "Таб.номера";
+            this.Column12.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column12.Name = "Column12";
+            this.Column12.ReadOnly = true;
+            this.Column12.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column12.Width = 80;
+            // 
+            // Column13
+            // 
+            this.Column13.HeaderText = "RFID";
+            this.Column13.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column13.Name = "Column13";
+            this.Column13.ReadOnly = true;
+            // 
+            // Column14
+            // 
+            this.Column14.HeaderText = "Авторизация";
+            this.Column14.Items.AddRange(new object[] {
+            "None",
+            "View",
+            "Edit",
+            "New"});
+            this.Column14.Name = "Column14";
+            this.Column14.ReadOnly = true;
+            this.Column14.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column14.Width = 80;
+            // 
+            // Column15
+            // 
+            this.Column15.HeaderText = "Удалить";
+            this.Column15.Image = global::HRSaveTime_Server.Properties.Resources.delete_message_in_skype1;
+            this.Column15.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.Column15.Name = "Column15";
+            this.Column15.ReadOnly = true;
+            this.Column15.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // AddRule_btn
             // 
@@ -579,253 +826,6 @@
             this.tabControl1.Size = new System.Drawing.Size(660, 426);
             this.tabControl1.TabIndex = 0;
             // 
-            // Column1
-            // 
-            this.Column1.Frozen = true;
-            this.Column1.HeaderText = "ID";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Width = 40;
-            // 
-            // Column2
-            // 
-            this.Column2.Frozen = true;
-            this.Column2.HeaderText = "Имя";
-            this.Column2.Name = "Column2";
-            this.Column2.ReadOnly = true;
-            this.Column2.Width = 80;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "Описание";
-            this.Column3.Name = "Column3";
-            this.Column3.ReadOnly = true;
-            this.Column3.Width = 180;
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Профили";
-            this.Column4.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column4.Name = "Column4";
-            this.Column4.ReadOnly = true;
-            this.Column4.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column4.Width = 80;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "Запросы";
-            this.Column5.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column5.Name = "Column5";
-            this.Column5.ReadOnly = true;
-            this.Column5.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column5.Width = 80;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "Отчёты";
-            this.Column6.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column6.Name = "Column6";
-            this.Column6.ReadOnly = true;
-            this.Column6.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column7
-            // 
-            this.Column7.HeaderText = "ПГРВ";
-            this.Column7.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column7.Name = "Column7";
-            this.Column7.ReadOnly = true;
-            // 
-            // Column8
-            // 
-            this.Column8.HeaderText = "Роли";
-            this.Column8.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column8.Name = "Column8";
-            this.Column8.ReadOnly = true;
-            this.Column8.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column8.Width = 80;
-            // 
-            // Column9
-            // 
-            this.Column9.HeaderText = "Монитор";
-            this.Column9.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column9.Name = "Column9";
-            this.Column9.ReadOnly = true;
-            // 
-            // Column10
-            // 
-            this.Column10.HeaderText = "Отсутствия";
-            this.Column10.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column10.Name = "Column10";
-            this.Column10.ReadOnly = true;
-            this.Column10.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column10.Width = 80;
-            // 
-            // Column11
-            // 
-            this.Column11.HeaderText = "Врем.пары";
-            this.Column11.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column11.Name = "Column11";
-            this.Column11.ReadOnly = true;
-            this.Column11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column11.Width = 80;
-            // 
-            // Column12
-            // 
-            this.Column12.HeaderText = "Таб.номера";
-            this.Column12.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column12.Name = "Column12";
-            this.Column12.ReadOnly = true;
-            this.Column12.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column12.Width = 80;
-            // 
-            // Column13
-            // 
-            this.Column13.HeaderText = "RFID";
-            this.Column13.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column13.Name = "Column13";
-            this.Column13.ReadOnly = true;
-            // 
-            // Column14
-            // 
-            this.Column14.HeaderText = "Авторизация";
-            this.Column14.Items.AddRange(new object[] {
-            "None",
-            "View",
-            "Edit",
-            "New"});
-            this.Column14.Name = "Column14";
-            this.Column14.ReadOnly = true;
-            this.Column14.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column14.Width = 80;
-            // 
-            // Column15
-            // 
-            this.Column15.HeaderText = "Удалить";
-            this.Column15.Image = global::HRSaveTime_Server.Properties.Resources.delete_message_in_skype1;
-            this.Column15.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.Column15.Name = "Column15";
-            this.Column15.ReadOnly = true;
-            this.Column15.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.ComPorts_cBox);
-            this.groupBox5.Controls.Add(this.ConnectToSensor_btn);
-            this.groupBox5.Controls.Add(this.SerchComPort_btn);
-            this.groupBox5.Controls.Add(this.StatusConnectToSensor_label);
-            this.groupBox5.Controls.Add(this.StatusConnectToSensor_btn);
-            this.groupBox5.Controls.Add(this.label5);
-            this.groupBox5.Location = new System.Drawing.Point(345, 16);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(283, 149);
-            this.groupBox5.TabIndex = 6;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Подключение Приёмник";
-            // 
-            // ConnectToSensor_btn
-            // 
-            this.ConnectToSensor_btn.Location = new System.Drawing.Point(172, 78);
-            this.ConnectToSensor_btn.Name = "ConnectToSensor_btn";
-            this.ConnectToSensor_btn.Size = new System.Drawing.Size(85, 23);
-            this.ConnectToSensor_btn.TabIndex = 5;
-            this.ConnectToSensor_btn.Text = "Подключить";
-            this.ConnectToSensor_btn.UseVisualStyleBackColor = true;
-            this.ConnectToSensor_btn.Click += new System.EventHandler(this.ConnectToSensor_btn_Click);
-            // 
-            // SerchComPort_btn
-            // 
-            this.SerchComPort_btn.Location = new System.Drawing.Point(182, 36);
-            this.SerchComPort_btn.Name = "SerchComPort_btn";
-            this.SerchComPort_btn.Size = new System.Drawing.Size(75, 23);
-            this.SerchComPort_btn.TabIndex = 4;
-            this.SerchComPort_btn.Text = "Считать";
-            this.SerchComPort_btn.UseVisualStyleBackColor = true;
-            this.SerchComPort_btn.Click += new System.EventHandler(this.SerchComPort_btn_Click);
-            // 
-            // StatusConnectToSensor_label
-            // 
-            this.StatusConnectToSensor_label.AutoSize = true;
-            this.StatusConnectToSensor_label.Location = new System.Drawing.Point(68, 88);
-            this.StatusConnectToSensor_label.Name = "StatusConnectToSensor_label";
-            this.StatusConnectToSensor_label.Size = new System.Drawing.Size(37, 13);
-            this.StatusConnectToSensor_label.TabIndex = 2;
-            this.StatusConnectToSensor_label.Text = "Status";
-            // 
-            // StatusConnectToSensor_btn
-            // 
-            this.StatusConnectToSensor_btn.Location = new System.Drawing.Point(20, 111);
-            this.StatusConnectToSensor_btn.Name = "StatusConnectToSensor_btn";
-            this.StatusConnectToSensor_btn.Size = new System.Drawing.Size(75, 23);
-            this.StatusConnectToSensor_btn.TabIndex = 1;
-            this.StatusConnectToSensor_btn.Text = "Проверить";
-            this.StatusConnectToSensor_btn.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(20, 88);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(44, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Статус:";
-            // 
-            // ComPorts_cBox
-            // 
-            this.ComPorts_cBox.FormattingEnabled = true;
-            this.ComPorts_cBox.Location = new System.Drawing.Point(20, 37);
-            this.ComPorts_cBox.Name = "ComPorts_cBox";
-            this.ComPorts_cBox.Size = new System.Drawing.Size(156, 21);
-            this.ComPorts_cBox.TabIndex = 6;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -833,9 +833,11 @@
             this.ClientSize = new System.Drawing.Size(684, 450);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "HRSaveTimeServer v1.0";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabPage4.ResumeLayout(false);
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -851,8 +853,6 @@
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
             this.tabControl1.ResumeLayout(false);
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }

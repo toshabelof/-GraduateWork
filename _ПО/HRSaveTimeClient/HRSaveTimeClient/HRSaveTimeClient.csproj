@@ -38,6 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
+    <Reference Include="Oracle.DataAccess, Version=2.112.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=AMD64" />
     <Reference Include="PresentationUI, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
@@ -60,9 +61,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Absence.cs" />
+    <Compile Include="Contacts.cs" />
+    <Compile Include="Inquiry.cs" />
     <Compile Include="MoreORGForm.xaml.cs">
       <DependentUpon>MoreORGForm.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Reports.cs" />
+    <Compile Include="Rules.cs" />
+    <Compile Include="Schedules.cs" />
+    <Compile Include="TimePairs.cs" />
     <Compile Include="ViewBreak.xaml.cs">
       <DependentUpon>ViewBreak.xaml</DependentUpon>
     </Compile>

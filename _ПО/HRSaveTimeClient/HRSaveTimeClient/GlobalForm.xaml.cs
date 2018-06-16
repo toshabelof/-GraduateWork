@@ -10,6 +10,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Oracle.DataAccess.Client;
+using System.IO;
+using System.Data;
+
+
 
 namespace HRSaveTimeClient
 {
@@ -23,14 +28,20 @@ namespace HRSaveTimeClient
             InitializeComponent();
         }
 
+        public String Login = "";
+
         BrushConverter bc = new BrushConverter();
         Grid grid = new Grid();
+        String connect;
+        public static SortedList<string, string> setting = new SortedList<string, string>();
+        List<string> list = new List<string>();
+
+        //***** GlobalForma ******
 
         private void Grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
-
 
         private void GExit_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -42,6 +53,8 @@ namespace HRSaveTimeClient
             this.WindowState = System.Windows.WindowState.Minimized;
         }
 
+        //***** GlobalForma: Menu ******
+
         private void people_MouseEnter(object sender, MouseEventArgs e)
         {
             People.Background = (Brush)bc.ConvertFrom("#105ef9");
@@ -52,14 +65,15 @@ namespace HRSaveTimeClient
             People.Background = Brushes.Transparent;
         }
 
-        private void Reports_MouseEnter(object sender, MouseEventArgs e)
+        private void People_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Reports.Background = (Brush)bc.ConvertFrom("#105ef9");
-        }
-
-        private void Reports_MouseLeave(object sender, MouseEventArgs e)
-        {
-            Reports.Background = Brushes.Transparent;
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = PersGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список сотрудников";
         }
 
         private void Inquiry_MouseEnter(object sender, MouseEventArgs e)
@@ -72,6 +86,39 @@ namespace HRSaveTimeClient
             Inquiry.Background = Brushes.Transparent;
         }
 
+        private void Inquiry_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = InquiryGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Запросы на отсутствия";
+
+            UpdateTableInquiry();
+        }
+        
+        private void Reports_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Reports.Background = (Brush)bc.ConvertFrom("#105ef9");
+        }
+
+        private void Reports_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Reports.Background = Brushes.Transparent;
+        }
+
+        private void Reports_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = ReportsGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Сохраненные отчеты";
+
+            UpdateTableReports();
+        }    
+
         private void Schedules_MouseEnter(object sender, MouseEventArgs e)
         {
             Schedules.Background = (Brush)bc.ConvertFrom("#105ef9");
@@ -80,6 +127,19 @@ namespace HRSaveTimeClient
         private void Schedules_MouseLeave(object sender, MouseEventArgs e)
         {
             Schedules.Background = Brushes.Transparent;
+        }
+
+        private void Schedules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+
+            UpdateTableSchedules();
         }
 
         private void Rules_MouseEnter(object sender, MouseEventArgs e)
@@ -92,6 +152,19 @@ namespace HRSaveTimeClient
             Rules.Background = Brushes.Transparent;
         }
 
+        private void Rules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = RulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список ролей";
+
+            UpdateTableRules();
+        }
+
         private void Monitoring_MouseEnter(object sender, MouseEventArgs e)
         {
             Monitoring.Background = (Brush)bc.ConvertFrom("#105ef9");
@@ -102,6 +175,9 @@ namespace HRSaveTimeClient
             Monitoring.Background = Brushes.Transparent;
         }
 
+        
+        //***** Profiles ******
+
         private void NewProfileButton_MouseEnter(object sender, MouseEventArgs e)
         {
             NewProfileButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
@@ -110,6 +186,22 @@ namespace HRSaveTimeClient
         private void NewProfileButton_MouseLeave(object sender, MouseEventArgs e)
         {
             NewProfileButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        
+        //***** Profiles: New ******
+
+        private void GeneratePasswordButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            string pass = "";
+            var r = new Random();
+            while (pass.Length < 16)
+            {
+                Char c = (char)r.Next(33, 125);
+                if (Char.IsLetterOrDigit(c))
+                    pass += c;
+            }
+            PasswordNewProfile_tBox.Text = pass;
         }
 
         private void SaveProfileButton_MouseEnter(object sender, MouseEventArgs e)
@@ -132,6 +224,31 @@ namespace HRSaveTimeClient
             CencelProfileButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
         }
 
+       
+        //***** Inquirys ******
+
+        public void UpdateTableInquiry()
+        {
+            Inquiry_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDINQ, DATECREATE, DESCRIPT, STATUS " +
+                    "FROM INQ_ABS order by IDINQ ", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Inquiry { Num = reader[0].ToString(), Date = reader[1].ToString(), Descript = reader[2].ToString(), Status = reader[3].ToString() };
+                        Inquiry_dG.Items.Add(data);
+                    }
+                }
+            }
+
+        }
+        
         private void NewInqButton_MouseEnter(object sender, MouseEventArgs e)
         {
             NewInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
@@ -150,13 +267,7 @@ namespace HRSaveTimeClient
             Title.Text = "Создание запроса на отсутствие";
         }
 
-        private void Inquiry_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = InquiryGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Запросы на отсутствия";
-        }
+        //***** Inquirys: New ******
 
         private void SaveInqButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -177,6 +288,8 @@ namespace HRSaveTimeClient
         {
             CencelInqButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
         }
+
+        //***** Inquirys: Preview ******
 
         private void OKEditInqButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -218,6 +331,8 @@ namespace HRSaveTimeClient
             EditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
         }
 
+
+
         private void MorePernrReportsGrid_MouseEnter(object sender, MouseEventArgs e)
         {
             MorePernrReportsImage.Width = 30;
@@ -229,7 +344,6 @@ namespace HRSaveTimeClient
             MorePernrReportsImage.Width = 25;
             MorePernrReportsImage.Height = 25;
         }
-
 
         private void Search_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -246,16 +360,7 @@ namespace HRSaveTimeClient
             GExit.Width = 15;
         }
 
-        private void People_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (grid != null)
-            {
-                grid.Visibility = System.Windows.Visibility.Collapsed;
-            }
-            grid = PersGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Список сотрудников";
-        }
+       
 
         private void NewProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -263,6 +368,50 @@ namespace HRSaveTimeClient
             grid = NewProfileGrid;
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Создание профиля";
+
+            GetSetting();
+            String[] mas = GetBDType();
+
+            connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                con.Open();
+                OracleCommand com = new OracleCommand("Select Name from ORG_LEVEL", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ORGComboBox.Items.Add(reader[0].ToString());
+                    }
+                }
+
+                com = new OracleCommand("Select IDPGRV from PGRV", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                       SchedulesComboBox.Items.Add(reader[0].ToString());
+                    }
+                }
+
+                com = new OracleCommand("Select CODE from Rules", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        RulesComboBox.Items.Add(reader[0].ToString());
+                    }
+                }
+
+                com = new OracleCommand("Select Name from POSITION", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        PositionComboBox.Items.Add(reader[0].ToString());
+                    }
+                }
+            }               
         }
 
         private void SaveInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -272,10 +421,50 @@ namespace HRSaveTimeClient
             {
                 case MessageBoxResult.Yes:
                     {
+                        String pernr = PernrInq_tBox.Text;
+                        String dateC = DateTime.Now.ToString("dd.MM.yyyy");
+                        String dateF = DateFromInq_tBox.Text;
+                        String dateB = DateByInq_tBox.Text;
+                        String view = ViewInq_tBox.Text;
+                        String descript = DescriptInq_tBox.Text;
+                        String document = DocumentInq_tBox.Text;
+                        int ID = 0;
+
+                        using (OracleConnection con = new OracleConnection(connect))
+                        {
+                            //вывод "Все отсутствия в виде запросов"
+                            con.Open();
+                            OracleCommand com = new OracleCommand("Select MAX(IDINQ) from INQ_ABS", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    ID = Convert.ToInt32(reader[0].ToString()) + 1;
+                                }
+                            }
+                            com = new OracleCommand(" Select VIEW_ABS.IDVIEW from VIEW_ABS WHERE VIEW_ABS.NAME = '" + view + "'", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    view = reader[0].ToString();
+                                }
+                            }
+
+
+                            com = new OracleCommand("Insert into INQ_ABS values('" +
+                                ID + "', to_date('" + dateC + "' , 'dd.mm.yyyy'), '" + Convert.ToInt32(view) + "', '" +
+                                descript + "', to_date('" + dateF + "' , 'dd.mm.yyyy'),  to_date('" + dateB + "' , 'dd.mm.yyyy'),  '" +
+                                document + "', 'На утверждении', '" + Convert.ToInt32(pernr) + "')", con);
+                            com.ExecuteNonQuery();
+                        }
+
+
                         grid.Visibility = System.Windows.Visibility.Collapsed;
                         grid = InquiryGrid;
                         grid.Visibility = System.Windows.Visibility.Visible;
                         Title.Text = "Запросы на отсутствия";
+                        UpdateTableInquiry();
                         break;
                     }
                 case MessageBoxResult.No: { break; }
@@ -306,6 +495,60 @@ namespace HRSaveTimeClient
             {
                 case MessageBoxResult.Yes:
                     {
+                        GetSetting();
+                        String[] mas = GetBDType();
+                        //IDPERS	DATAFROM	DATABY	LNAME	NAME	PATR	BIRTH	POSID	ORGID	PGRVID	RULE	PHOTO
+                        
+                        int ID = 0;
+                        String dateF = DateTime.Now.ToString("dd.MM.yyyy");
+                        String dateB = "31.12.9999";
+                        String lname = LNameNewProfile_tBox.Text;
+                        String name = NameNewProfile_tBox.Text;
+                        String patr = PatrNewProfile_tBox.Text;
+                        String birth = BirthNewProfile_tBox.Text;
+                        int posid = 0;
+                        int orgid = 0; 
+                        String pgrv = SchedulesComboBox.Text;
+                        String rule = RulesComboBox.Text;
+                        String photo;
+
+
+                        connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                        using (OracleConnection con = new OracleConnection(connect))
+                        {
+                            con.Open();
+                            OracleCommand com = new OracleCommand("Select IDPOS from POSITION where NAME = '" + PositionComboBox.Text + "'", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    posid = Convert.ToInt32(reader[0].ToString());
+                                }
+                            }
+
+                            com = new OracleCommand("Select IDORG from ORG_LEVEL where NAME = '" + ORGComboBox.Text + "'", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    orgid = Convert.ToInt32(reader[0].ToString());
+                                }
+                            }
+                            com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    ID = Convert.ToInt32(reader[0].ToString()) + 1;
+                                }
+                            }
+
+                            com = new OracleCommand("Insert into PERS_INFO values('" +
+                            ID + "',  to_date('" + dateF + "', 'dd.mm.yyyy'), to_date('" + dateB + "', 'dd.mm.yyyy'), '" + lname + "', '" +
+                            name + "', '" + patr + "',  to_date('" + birth + "', 'dd.mm.yyyy'), '" + posid + "', '" + orgid + "', '" + pgrv + "', '" + rule + "', '')", con);
+                            com.ExecuteNonQuery();
+                        }
+
                         grid.Visibility = System.Windows.Visibility.Collapsed;
                         grid = PersGrid;
                         grid.Visibility = System.Windows.Visibility.Visible;
@@ -397,15 +640,66 @@ namespace HRSaveTimeClient
             SaveReportsButton.Background = (Brush)bc.ConvertFrom("#0049db");
         }
 
+        public void UpdateTableReports()
+        {
+            Reports_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDREPORTS, DATACREATE, DESCRIPT " +
+                    "FROM REPORTS " +
+                    "where REPORTS.PERSID = '" + Pernr_tBox.Text + "' " +
+                    "order by IDREPORTS DESC ", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Reports { Num = reader[0].ToString(), Date = reader[1].ToString(), Descript = reader[2].ToString() };
+                        Reports_dG.Items.Add(data);
+                    }
+                }
+            }
+        }
+
         private void SaveReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             AddNameReports anr = new AddNameReports();
-            anr.ShowDialog();
+            anr.ShowDialog();         
 
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = ReportsGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Сохраненные отчеты";
+            GetSetting();
+            String[] mas = GetBDType();
+
+            int ID = 0;
+            String persID = Pernr_tBox.Text;
+            String dataC = DateTime.Now.ToString("dd.MM.yyyy");
+            String descript = anr.NameRreport_tBox.Text;
+            String morePernr = PernrReports_tBox.Text;
+            String orgLevel = ORGLevelReports_tBox.Text;
+            String dataF = DateFromReports_tBox.Text;
+            String dataB = DateByReports_tBox.Text;
+            String view = ViewReports_tBox.Text;
+
+
+            connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                con.Open();
+                OracleCommand com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ID = Convert.ToInt32(reader[0].ToString()) + 1;
+                    }
+                }
+
+                com = new OracleCommand("Insert into Reports values('" +
+                ID + "', '" + persID + "', to_date('" + dataC + "', 'dd.mm.yyyy'), '" + descript + "', '" + morePernr + "', '" +
+                orgLevel + "', to_date('" + dataF + "', 'dd.mm.yyyy'), to_date('" + dataB + "', 'dd.mm.yyyy'), '" + view + "')", con);
+                com.ExecuteNonQuery();
+            }
         }
 
         private void CencelReportsButton_MouseEnter(object sender, MouseEventArgs e)
@@ -424,40 +718,56 @@ namespace HRSaveTimeClient
             grid = ReportsGrid;
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Сохраненные отчеты";
+            UpdateTableReports();
         }
 
-        private void Reports_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void UpdateTableSchedules()
         {
-            if (grid != null)
+            Schedules_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
             {
-                grid.Visibility = System.Windows.Visibility.Collapsed;
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDPGRV, DESCRIPT " +
+                    "FROM PGRV " +
+                    "order by IDPGRV", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Schedules { Code = reader[0].ToString(), Descript = reader[1].ToString() };
+                        Schedules_dG.Items.Add(data);
+                    }
+                }
             }
-            grid = ReportsGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Сохраненные отчеты";
         }
 
-        private void Schedules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (grid != null)
-            {
-                grid.Visibility = System.Windows.Visibility.Collapsed;
-            }
-            grid = SchedulesGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Список графиков рабочего времени";
-        }
 
-        private void Rules_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        public void UpdateTableRules()
         {
-            if (grid != null)
+            Rules_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
             {
-                grid.Visibility = System.Windows.Visibility.Collapsed;
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT CODE,DESCRIPT " +
+                    "FROM RULES " +
+                    "order by CODE", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Rules { Code = reader[0].ToString(), Descript = reader[1].ToString() };
+                        Rules_dG.Items.Add(data);
+                    }
+                }
             }
-            grid = RulesGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Список ролей";
         }
+        
+
+        
 
         private void SendMonitorButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -544,7 +854,6 @@ namespace HRSaveTimeClient
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Создание графика рабочего времени";
         }
-
 
         private void Grid_MouseEnter_1(object sender, MouseEventArgs e)
         {
@@ -686,7 +995,7 @@ namespace HRSaveTimeClient
             grid = NewBreakGrid;
             grid.Visibility = Visibility.Visible;
             Title.Text = "Создание перерыва";
-            
+
         }
 
         private void SaveBreakButton_MouseEnter(object sender, MouseEventArgs e)
@@ -762,7 +1071,6 @@ namespace HRSaveTimeClient
             Title.Text = "Создание роли";
         }
 
-
         private void SaveRulesButton_MouseEnter(object sender, MouseEventArgs e)
         {
             SaveRulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
@@ -820,11 +1128,132 @@ namespace HRSaveTimeClient
             Title.Text = "Мой профиль";
         }
 
+
+        //**************************
+
+
+        public String[] GetBDType()
+        {
+            var result = "";
+            setting.TryGetValue("BD", out result);
+            String[] mas = result.Split('/');
+            return mas;
+        }
+
+        public void GetSetting()
+        {
+            StreamReader sr = new StreamReader("settings.txt");
+            try
+            {
+                list.Clear();
+                while (!sr.EndOfStream)
+                {
+                    list.Add(sr.ReadLine());
+                }
+                sr.Close();
+
+                setting.Clear();
+                if (list.Count != 0)
+                {
+                    for (int i = 0; i < list.Count; i += 2)
+                    {
+                        setting.Add(list[i], list[i + 1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), "Ошибка");
+            }
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            GetSetting();
+            String[] mas = GetBDType();
+
             grid = ProfileGrid;
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Мой профиль";
+
+            connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Основная инфа по профилю"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDPERNR, LNAME, PERS_INFO.NAME, PATR, BIRTH, POSITION.Name, ORG_LEVEL.NAME, PGRVID, RULE, LOGIN, PASSWORD, RFID.IDRFID, ROOMS.NAME " +
+                    "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID, TIME_PAIRS, ROOMS " +
+                    "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR= AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID and TIME_PAIRS.RFIDID = RFID.IDRFID and TIME_PAIRS.DATABY is Null  and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR =  '" + Pernr_tBox.Text + "'", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Pernr_tBox.Text = reader[0].ToString();
+                        FIO_tBox.Text = reader[1].ToString() + " " + reader[2].ToString() + " " + reader[3].ToString();
+                        Position_tBox.Text = reader[5].ToString();
+                        ORG_tBox.Text = reader[6].ToString();
+                        Login_tBox.Text = reader[9].ToString();
+                        Password_tBox.Text = reader[10].ToString();
+                        RFID_tBox.Text = reader[11].ToString();
+                        Location_tBox.Text = reader[12].ToString();
+                    }
+
+                }
+
+                //вывод "Контакты"
+                com = new OracleCommand("SELECT DESCRIPT, VALUE " +
+                        "FROM CONTACTS, PERS_INFO, PERNR " +
+                        "WHERE  CONTACTS.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS and PERNR.IDPERNR = '" + Pernr_tBox.Text + "'", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Contacts { Descript = reader[0].ToString(), Value = reader[1].ToString() };
+                        Contacts_dG.Items.Add(data);
+                    }
+                }
+
+                //вывод "Отсутствия"
+                com = new OracleCommand("SELECT VIEW_ABS.NAME, DATEFROM, DATEBY, DOCUMENT " +
+                        "FROM ABSCENCE, VIEW_ABS " +
+                        "WHERE VIEW_ABS.IDVIEW = ABSCENCE.VIEWID and ABSCENCE.PERNRID = '" + Pernr_tBox.Text + "'", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
+                        Absence_dG.Items.Add(data);
+                    }
+                }
+
+                //вывод "Присутствия"
+                com = new OracleCommand("SELECT TIME_PAIRS.DATAFROM, TIME_PAIRS.DATABY, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY, ROOMS.NAME " +
+                        "FROM PERNR, RFID, TIME_PAIRS, ROOMS " +
+                        "WHERE RFID.IDRFID = TIME_PAIRS.RFIDID and PERNR.PERSID = RFID.PERSID and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR = '" + Pernr_tBox.Text + "'", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
+                        TimePairs_dG.Items.Add(data);
+                    }
+                }
+            }
         }
+
+        private void OpenDocument_btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                openFileDialog.Filter = "Сканированный документ в формате PNG|*.png|Сканированный документ в формате JPEG|*.jpeg|Сканированный документ в формате PDF|*.pdf|Текстовый документ в формате DOC|*.doc";
+
+                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    DocumentInq_tBox.Text = openFileDialog.FileName.ToString();
+                }
+            }
+        }
+
+        
     }
 }
