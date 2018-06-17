@@ -13,6 +13,8 @@ using System.Windows.Shapes;
 using Oracle.DataAccess.Client;
 using System.IO;
 using System.Data;
+using System.ComponentModel;
+using Microsoft.Office.Interop.Excel;
 
 
 
@@ -21,13 +23,9 @@ namespace HRSaveTimeClient
     /// <summary>
     /// Логика взаимодействия для GlobalForm.xaml
     /// </summary>
-    public partial class GlobalForm : Window
+    public partial class GlobalForm : System.Windows.Window
     {
-        public GlobalForm()
-        {
-            InitializeComponent();
-        }
-
+        private BackgroundWorker backgroundWorker;
         public String Login = "";
 
         BrushConverter bc = new BrushConverter();
@@ -35,6 +33,15 @@ namespace HRSaveTimeClient
         String connect;
         public static SortedList<string, string> setting = new SortedList<string, string>();
         List<string> list = new List<string>();
+
+        String TypeReports = null;
+
+        public GlobalForm()
+        {
+            InitializeComponent();
+            backgroundWorker = ((BackgroundWorker)this.FindResource("backgroundWorker"));
+        }
+
 
         //***** GlobalForma ******
 
@@ -95,7 +102,7 @@ namespace HRSaveTimeClient
 
             UpdateTableInquiry();
         }
-        
+
         private void Reports_MouseEnter(object sender, MouseEventArgs e)
         {
             Reports.Background = (Brush)bc.ConvertFrom("#105ef9");
@@ -117,7 +124,7 @@ namespace HRSaveTimeClient
             Title.Text = "Сохраненные отчеты";
 
             UpdateTableReports();
-        }    
+        }
 
         private void Schedules_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -175,7 +182,7 @@ namespace HRSaveTimeClient
             Monitoring.Background = Brushes.Transparent;
         }
 
-        
+
         //***** Profiles ******
 
         private void NewProfileButton_MouseEnter(object sender, MouseEventArgs e)
@@ -188,7 +195,7 @@ namespace HRSaveTimeClient
             NewProfileButton.Background = (Brush)bc.ConvertFrom("#0049db");
         }
 
-        
+
         //***** Profiles: New ******
 
         private void GeneratePasswordButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -224,7 +231,7 @@ namespace HRSaveTimeClient
             CencelProfileButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
         }
 
-       
+
         //***** Inquirys ******
 
         public void UpdateTableInquiry()
@@ -248,7 +255,7 @@ namespace HRSaveTimeClient
             }
 
         }
-        
+
         private void NewInqButton_MouseEnter(object sender, MouseEventArgs e)
         {
             NewInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
@@ -360,7 +367,7 @@ namespace HRSaveTimeClient
             GExit.Width = 15;
         }
 
-       
+
 
         private void NewProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -390,7 +397,7 @@ namespace HRSaveTimeClient
                 {
                     while (reader.Read())
                     {
-                       SchedulesComboBox.Items.Add(reader[0].ToString());
+                        SchedulesComboBox.Items.Add(reader[0].ToString());
                     }
                 }
 
@@ -411,7 +418,7 @@ namespace HRSaveTimeClient
                         PositionComboBox.Items.Add(reader[0].ToString());
                     }
                 }
-            }               
+            }
         }
 
         private void SaveInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -498,7 +505,7 @@ namespace HRSaveTimeClient
                         GetSetting();
                         String[] mas = GetBDType();
                         //IDPERS	DATAFROM	DATABY	LNAME	NAME	PATR	BIRTH	POSID	ORGID	PGRVID	RULE	PHOTO
-                        
+
                         int ID = 0;
                         String dateF = DateTime.Now.ToString("dd.MM.yyyy");
                         String dateB = "31.12.9999";
@@ -507,7 +514,7 @@ namespace HRSaveTimeClient
                         String patr = PatrNewProfile_tBox.Text;
                         String birth = BirthNewProfile_tBox.Text;
                         int posid = 0;
-                        int orgid = 0; 
+                        int orgid = 0;
                         String pgrv = SchedulesComboBox.Text;
                         String rule = RulesComboBox.Text;
                         String photo;
@@ -625,8 +632,234 @@ namespace HRSaveTimeClient
             GenerateReportsButton.Background = (Brush)bc.ConvertFrom("#01a459");
         }
 
+        class TimeParisReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string Date { get; set; }
+            public string TimeF { get; set; }
+            public string TimeB { get; set; }
+
+            public TimeParisReport(string Pernr, string LName, string Name, string Patr, string Date, string TimeF, string TimeB)
+            {
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.Date = Date;
+                this.TimeF = TimeF;
+                this.TimeB = TimeB;
+            }
+        }
+
+        class AbsenceReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string DateF { get; set; }
+
+            public AbsenceReport(string Pernr, string LName, string Name, string Patr, string DateF)
+            {
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.DateF = DateF;
+            }
+        }
+
+
+        struct timeParisReports
+        {
+            public List<TimeParisReport> timeParis;
+            public List<AbsenceReport> Abscence;
+            public string FileName { get; set; }
+        }
+        timeParisReports _inputTimeParisReportsReports;
+
+
+
         private void GenerateReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            String[] pernr = PernrReports_tBox.Text.Split(',');
+            String[] org = ORGLevelReports_tBox.Text.Split(',');
+            String dateF = DateFromReports_tBox.Text;
+            String DateB = DateByReports_tBox.Text;
+            String view = ViewReports_tBox.Text;
+
+
+            if (backgroundWorker.IsBusy)
+            { return; }
+
+            using (System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog() { Filter = "Excel FIle (*.xls)|*.xls " })
+            {
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    switch (view)
+                    {
+                        case "По присутствиям":
+                            {
+                                TypeReports = "По присутствиям";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<TimeParisReport> l = new List<TimeParisReport>();
+                                    foreach (string p in pernr)
+                                    {
+                                        com = new OracleCommand("Select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, TIME_PAIRS.DATAFROM, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY " +
+                                            "from PERNR, PERS_INFO, RFID, TIME_PAIRS, ROOMS " +
+                                            "where PERS_INFO.IDPERS = PERNR.PERSID AND RFID.PERSID = PERS_INFO.IDPERS AND TIME_PAIRS.RFIDID = RFID.IDRFID AND TIME_PAIRS.ROOMID = ROOMS.IDROOMS and ROOMS.NAME <> 'Вне офиса' and IDPERNR = '" + p + "' order by TIME_PAIRS.DATAFROM", con);
+                                        using (var reader = com.ExecuteReader())
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                l.Add(new TimeParisReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
+                                            }
+                                        }
+                                        _inputTimeParisReportsReports.timeParis = l;
+                                    }
+                                }
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+                                break;
+                            }
+
+                        case "По прогулам":
+                            {
+                                TypeReports = "По прогулам";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<AbsenceReport> l = new List<AbsenceReport>();
+                                    foreach (string p in pernr)
+                                    {
+                                        com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM " +
+                                            "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                            "where  PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Прогул' and PERNR.IDPERNR  =  '" + p + "' order by ABSCENCE.DATEFROM", con);
+                                        using (var reader = com.ExecuteReader())
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                l.Add(new AbsenceReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString()));
+                                            }
+                                        }
+                                        _inputTimeParisReportsReports.Abscence = l;
+
+                                    }
+                                }
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+
+                                break;
+                            }
+                    }
+
+
+
+                }
+            }
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                Thread.Sleep(100);
+                MessageBox.Show("Данные экспортированы в файл", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            switch (TypeReports)
+            {
+                case "По присутствиям":
+                    {
+                        List<TimeParisReport> timeParis = ((timeParisReports)e.Argument).timeParis;
+                        String FileName = ((timeParisReports)e.Argument).FileName;
+                        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                        Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
+                        Worksheet ws = (Worksheet)excel.ActiveSheet;
+                        excel.Visible = false;
+                        int index = 1;
+                        int process = timeParis.Count;
+
+                        ws.Cells[1, 1] = "Табельный номер";
+                        ws.Cells[1, 2] = "Фамилия";
+                        ws.Cells[1, 3] = "Имя";
+                        ws.Cells[1, 4] = "Отчество";
+                        ws.Cells[1, 5] = "Дата";
+                        ws.Cells[1, 6] = "Время с";
+                        ws.Cells[1, 7] = "Время по";
+
+                        foreach (TimeParisReport s in timeParis)
+                        {
+                            if (!backgroundWorker.CancellationPending)
+                            {
+                                backgroundWorker.ReportProgress(index++ * 100 / process);
+                                ws.Cells[index, 1] = s.Pernr;
+                                ws.Cells[index, 2] = s.LName;
+                                ws.Cells[index, 3] = s.Name;
+                                ws.Cells[index, 4] = s.Patr;
+                                ws.Cells[index, 5] = s.Date;
+                                ws.Cells[index, 6] = s.TimeF;
+                                ws.Cells[index, 7] = s.TimeB;
+                            }
+                        }
+
+                        ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+                        excel.Quit(); 
+                        break;
+                    }
+                case "По прогулам":
+                    {
+                        List<AbsenceReport> absence = ((timeParisReports)e.Argument).Abscence;
+                        String FileName = ((timeParisReports)e.Argument).FileName;
+                        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                        Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
+                        Worksheet ws = (Worksheet)excel.ActiveSheet;
+                        excel.Visible = false;
+                        int index = 1;
+                        int process = absence.Count;
+
+                        ws.Cells[1, 1] = "Табельный номер";
+                        ws.Cells[1, 2] = "Фамилия";
+                        ws.Cells[1, 3] = "Имя";
+                        ws.Cells[1, 4] = "Отчество";
+                        ws.Cells[1, 5] = "Дата с";
+
+                        foreach (AbsenceReport s in absence)
+                        {
+                            if (!backgroundWorker.CancellationPending)
+                            {
+                                backgroundWorker.ReportProgress(index++ * 100 / process);
+                                ws.Cells[index, 1] = s.Pernr;
+                                ws.Cells[index, 2] = s.LName;
+                                ws.Cells[index, 3] = s.Name;
+                                ws.Cells[index, 4] = s.Patr;
+                                ws.Cells[index, 5] = s.DateF;
+                            }
+                        }
+
+                        ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+                        excel.Quit();
+                        break;
+                    }
+            }
 
         }
 
@@ -666,7 +899,7 @@ namespace HRSaveTimeClient
         private void SaveReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             AddNameReports anr = new AddNameReports();
-            anr.ShowDialog();         
+            anr.ShowDialog();
 
             GetSetting();
             String[] mas = GetBDType();
@@ -765,9 +998,9 @@ namespace HRSaveTimeClient
                 }
             }
         }
-        
 
-        
+
+
 
         private void SendMonitorButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -1254,6 +1487,18 @@ namespace HRSaveTimeClient
             }
         }
 
-        
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+
+
+
+
+
+        //***** BackGround Worker ***** 
+
+
     }
 }
