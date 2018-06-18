@@ -26,6 +26,15 @@ namespace HRSaveTimeClient
     /// </summary>
     public partial class GlobalForm : System.Windows.Window
     {
+        public GlobalForm()
+        {
+            InitializeComponent();
+            backgroundWorker = ((BackgroundWorker)this.FindResource("backgroundWorker"));
+        }
+
+        //***** AllVariables ******  
+
+        public String ValueProfile = "";
         private BackgroundWorker backgroundWorker;
         public String Login = "";
 
@@ -37,10 +46,153 @@ namespace HRSaveTimeClient
 
         String TypeReports = null;
 
-        public GlobalForm()
+
+        //***** AllFunc ******      
+
+        public String[] GetBDType()
         {
-            InitializeComponent();
-            backgroundWorker = ((BackgroundWorker)this.FindResource("backgroundWorker"));
+            var result = "";
+            setting.TryGetValue("BD", out result);
+            String[] mas = result.Split('/');
+            return mas;
+        }
+
+        public void GetSetting()
+        {
+            StreamReader sr = new StreamReader("settings.txt");
+            try
+            {
+                list.Clear();
+                while (!sr.EndOfStream)
+                {
+                    list.Add(sr.ReadLine());
+                }
+                sr.Close();
+
+                setting.Clear();
+                if (list.Count != 0)
+                {
+                    for (int i = 0; i < list.Count; i += 2)
+                    {
+                        setting.Add(list[i], list[i + 1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString(), "Ошибка");
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (ValueProfile == "HRALL")
+            {
+                GetSetting();
+                String[] mas = GetBDType();
+
+                grid = NewProfileGrid;
+                grid.Visibility = System.Windows.Visibility.Visible;
+                Title.Text = "Создание нового профиля";
+                People.IsEnabled = false;
+                Inquiry.IsEnabled = false;
+                Reports.IsEnabled = false;
+                Schedules.IsEnabled = false;
+                Rules.IsEnabled = false;
+                Monitoring.IsEnabled = false;
+                myProfileButton.IsEnabled = false;
+                Search.IsEnabled = false;
+            }
+            else
+            {
+                #region Вывод данных в профиль сотрудника, под которым осуществлялся вход
+                GetSetting();
+                String[] mas = GetBDType();
+
+                grid = MyProfileGrid;
+                grid.Visibility = System.Windows.Visibility.Visible;
+                Title.Text = "Мой профиль";
+
+                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                using (OracleConnection con = new OracleConnection(connect))
+                {
+                    //вывод "Основная инфа по профилю"
+                    con.Open();
+                    OracleCommand com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, PERS_INFO.BIRTH, POSITION.Name, ORG_LEVEL.NAME, PERS_INFO.PGRVID, AUTHENTICATION.LOGIN, AUTHENTICATION.PASSWORD, RFID.IDRFID " +
+                        "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID " +
+                        "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR = AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID  and PERNR.IDPERNR = '" + MyPernr_tBox.Text + "'", con);
+
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            MyFIO_tBox.Text = reader[0].ToString() + " " + reader[1].ToString() + " " + reader[2].ToString();
+                            MyBith_tBox.Text = Convert.ToDateTime(reader[3]).ToString("dd.MM.yyyy");
+                            MyPosition_tBox.Text = reader[4].ToString();
+                            MyORG_tBox.Text = reader[5].ToString();
+                            MyPGRV_tBox.Text = reader[6].ToString();
+                            MyLogin_tBox.Text = reader[7].ToString();
+                            MyPassword_pBox.Password = reader[8].ToString();
+                            MyRFID_tBox.Text = reader[9].ToString();
+                        }
+
+                    }
+
+                    //вывод местоположения
+                    com = new OracleCommand("SELECT ROOMS.NAME " +
+                       "FROM TIME_PAIRS, ROOMS " +
+                       "WHERE ROOMS.IDROOMS = TIME_PAIRS.ROOMID and TIME_PAIRS.TIMEBY is null and TIME_PAIRS.RFIDID= '" + MyRFID_tBox.Text + "'", con);
+
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            MyLocation_tBox.Text = reader[0].ToString();
+                        }
+
+                    }
+
+                    //вывод "Контакты"
+                    com = new OracleCommand("SELECT DESCRIPT, VALUE " +
+                            "FROM CONTACTS, PERS_INFO, PERNR " +
+                            "WHERE  CONTACTS.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS and PERNR.IDPERNR = '" + MyPernr_tBox.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var data = new Contacts { Descript = reader[0].ToString(), Value = reader[1].ToString() };
+                            MyContacts_dG.Items.Add(data);
+                        }
+                    }
+
+                    //вывод "Отсутствия"
+                    com = new OracleCommand("SELECT VIEW_ABS.NAME, DATEFROM, DATEBY, DOCUMENT " +
+                            "FROM ABSCENCE, VIEW_ABS " +
+                            "WHERE VIEW_ABS.IDVIEW = ABSCENCE.VIEWID and ABSCENCE.PERNRID = '" + MyPernr_tBox.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
+                            MyAbsence_dG.Items.Add(data);
+                        }
+                    }
+
+                    //вывод "Присутствия"
+                    com = new OracleCommand("SELECT TIME_PAIRS.DATAFROM, TIME_PAIRS.DATABY, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY, ROOMS.NAME " +
+                            "FROM PERNR, RFID, TIME_PAIRS, ROOMS " +
+                            "WHERE RFID.IDRFID = TIME_PAIRS.RFIDID and PERNR.PERSID = RFID.PERSID and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR = '" + MyPernr_tBox.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
+                            MyTimePairs_dG.Items.Add(data);
+                        }
+                    }
+                }
+                #endregion
+            }
         }
 
 
@@ -60,6 +212,107 @@ namespace HRSaveTimeClient
         {
             this.WindowState = System.Windows.WindowState.Minimized;
         }
+
+        private void GExit_MouseEnter(object sender, MouseEventArgs e)
+        {
+            GExit.Width = 20;
+        }
+
+        private void GExit_MouseLeave(object sender, MouseEventArgs e)
+        {
+            GExit.Width = 15;
+        }
+
+
+        //***** GlobalForma: Search ******
+
+        private void Search_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Search.Text = "";
+        }
+
+        private void Search_LostFocus(object sender, RoutedEventArgs e)
+        {
+            Search.Text = "Поиск...";
+        }
+
+        private void Search_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                grid.Visibility = System.Windows.Visibility.Hidden;
+                grid = ProfileGrid;
+                grid.Visibility = System.Windows.Visibility.Visible;
+                Title.Text = "Профиль сотрудника";
+
+                using (OracleConnection con = new OracleConnection(connect))
+                {
+                    //вывод "Основная инфа по профилю"
+                    con.Open();
+                    OracleCommand com = new OracleCommand("SELECT IDPERNR, LNAME, PERS_INFO.NAME, PATR, BIRTH, POSITION.Name, ORG_LEVEL.NAME, PGRVID, RULE, LOGIN, PASSWORD, RFID.IDRFID, ROOMS.NAME " +
+                        "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID, TIME_PAIRS, ROOMS " +
+                        "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR= AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID and TIME_PAIRS.RFIDID = RFID.IDRFID and TIME_PAIRS.DATABY is Null  and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR =  '" + Search.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Pernr_tBox.Text = reader[0].ToString();
+                            FIO_tBox.Text = reader[1].ToString() + " " + reader[2].ToString() + " " + reader[3].ToString();
+                            Position_tBox.Text = reader[5].ToString();
+                            ORG_tBox.Text = reader[6].ToString();
+                            Login_tBox.Text = reader[9].ToString();
+                            Password_pBox.Password = reader[10].ToString();
+                            RFID_tBox.Text = reader[11].ToString();
+                            Location_tBox.Text = reader[12].ToString();
+                        }
+
+                    }
+
+                    //вывод "Контакты"
+                    com = new OracleCommand("SELECT DESCRIPT, VALUE " +
+                            "FROM CONTACTS, PERS_INFO, PERNR " +
+                            "WHERE  CONTACTS.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS and PERNR.IDPERNR = '" + Search.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        Contacts_dG.Items.Clear();
+                        while (reader.Read())
+                        {
+                            var data = new Contacts { Descript = reader[0].ToString(), Value = reader[1].ToString() };
+                            Contacts_dG.Items.Add(data);
+                        }
+                    }
+
+                    //вывод "Отсутствия"
+                    com = new OracleCommand("SELECT VIEW_ABS.NAME, DATEFROM, DATEBY, DOCUMENT " +
+                            "FROM ABSCENCE, VIEW_ABS " +
+                            "WHERE VIEW_ABS.IDVIEW = ABSCENCE.VIEWID and ABSCENCE.PERNRID = '" + Search.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        Absence_dG.Items.Clear();
+                        while (reader.Read())
+                        {
+                            var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
+                            Absence_dG.Items.Add(data);
+                        }
+                    }
+
+                    //вывод "Присутствия"
+                    com = new OracleCommand("SELECT TIME_PAIRS.DATAFROM, TIME_PAIRS.DATABY, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY, ROOMS.NAME " +
+                            "FROM PERNR, RFID, TIME_PAIRS, ROOMS " +
+                            "WHERE RFID.IDRFID = TIME_PAIRS.RFIDID and PERNR.PERSID = RFID.PERSID and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR = '" + Search.Text + "'", con);
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            TimePairs_dG.Items.Clear();
+                            var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
+                            TimePairs_dG.Items.Add(data);
+                        }
+                    }
+                }
+            }
+        }
+
 
         //***** GlobalForma: Menu ******
 
@@ -82,6 +335,7 @@ namespace HRSaveTimeClient
             grid = PersGrid;
             grid.Visibility = Visibility.Visible;
             Title.Text = "Список сотрудников";
+            UpdatePersTable();
         }
 
         private void Inquiry_MouseEnter(object sender, MouseEventArgs e)
@@ -186,6 +440,36 @@ namespace HRSaveTimeClient
 
         //***** Profiles ******
 
+        class Pers
+        {
+            public string Pernr { get; set; }
+            public string Lname { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string ORG { get; set; }
+
+        }
+
+        public void UpdatePersTable()
+        {
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT PERNR.IDPERNR, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ORG_LEVEL.NAME " +
+                        "FROM PERS_INFO, ORG_LEVEL, PERNR " +
+                        "WHERE ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERNR.PERSID = PERS_INFO.IDPERS", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    Pers_dG.Items.Clear();
+                    while (reader.Read())
+                    {
+                        var data = new Pers { Pernr = reader[0].ToString(), Lname = reader[1].ToString(), Name = reader[2].ToString(), Patr = reader[3].ToString(), ORG = reader[4].ToString() };
+                        Pers_dG.Items.Add(data);
+                    }
+                }
+            }
+        }
+
         private void NewProfileButton_MouseEnter(object sender, MouseEventArgs e)
         {
             NewProfileButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
@@ -197,178 +481,35 @@ namespace HRSaveTimeClient
         }
 
 
-        //***** Profiles: New ******
+        //***** Profiles: My ******
 
-        private void GeneratePasswordButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void MyEdit_btn_Click(object sender, RoutedEventArgs e)
         {
-            string pass = "";
-            var r = new Random();
-            while (pass.Length < 16)
-            {
-                Char c = (char)r.Next(33, 125);
-                if (Char.IsLetterOrDigit(c))
-                    pass += c;
-            }
-            PasswordNewProfile_tBox.Text = pass;
+            MyPassword_pBox.Visibility = System.Windows.Visibility.Collapsed;
+            MyPassword_tBox.Visibility = System.Windows.Visibility.Visible;
+            MyPassword_tBox.Text = MyPassword_pBox.Password;
+            MyEdit_btn.Visibility = System.Windows.Visibility.Collapsed;
+            MyOk_btn.Visibility = System.Windows.Visibility.Visible;
         }
 
-        private void SaveProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        private void MyOk_btn_Click(object sender, RoutedEventArgs e)
         {
-            SaveProfileButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void SaveProfileButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveProfileButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void CencelProfileButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelProfileButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
-
-        private void CencelProfileButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelProfileButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-
-        //***** Inquirys ******
-
-        public void UpdateTableInquiry()
-        {
-            Inquiry_dG.Items.Clear();
+            MyPassword_pBox.Visibility = System.Windows.Visibility.Visible;
+            MyPassword_tBox.Visibility = System.Windows.Visibility.Collapsed;
+            MyPassword_pBox.Password = MyPassword_tBox.Text;
+            MyEdit_btn.Visibility = System.Windows.Visibility.Visible;
+            MyOk_btn.Visibility = System.Windows.Visibility.Collapsed;
 
             using (OracleConnection con = new OracleConnection(connect))
             {
-                //вывод "Все отсутствия в виде запросов"
                 con.Open();
-                OracleCommand com = new OracleCommand("SELECT IDINQ, DATECREATE, DESCRIPT, STATUS " +
-                    "FROM INQ_ABS order by IDINQ ", con);
-                using (var reader = com.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var data = new Inquiry { Num = reader[0].ToString(), Date = reader[1].ToString(), Descript = reader[2].ToString(), Status = reader[3].ToString() };
-                        Inquiry_dG.Items.Add(data);
-                    }
-                }
+                OracleCommand com = new OracleCommand("update AUTHENTICATION set PASSWORD = '" + MyPassword_pBox.Password + "'where PERNR = '" + MyPernr_tBox.Text + "'", con);
+                com.ExecuteNonQuery();
             }
-
-        }
-
-        private void NewInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            NewInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void NewInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            NewInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void NewInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewInqGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание запроса на отсутствие";
-        }
-
-        //***** Inquirys: New ******
-
-        private void SaveInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            SaveInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void SaveInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void CencelInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelInqButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
-
-        private void CencelInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelInqButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        //***** Inquirys: Preview ******
-
-        private void OKEditInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void OKEditInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void NotEditInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#fe717b");
-        }
-
-        private void NotEditInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#ff2c3b");
-        }
-
-        private void CencelEditInqButton1_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
-
-        private void CencelEditInqButton1_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        private void EditInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            EditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void EditInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            EditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
         }
 
 
-
-        private void MorePernrReportsGrid_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MorePernrReportsImage.Width = 30;
-            MorePernrReportsImage.Height = 30;
-        }
-
-        private void MorePernrReportsGrid_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MorePernrReportsImage.Width = 25;
-            MorePernrReportsImage.Height = 25;
-        }
-
-        private void Search_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            Search.Text = "";
-        }
-
-        private void GExit_MouseEnter(object sender, MouseEventArgs e)
-        {
-            GExit.Width = 20;
-        }
-
-        private void GExit_MouseLeave(object sender, MouseEventArgs e)
-        {
-            GExit.Width = 15;
-        }
-
-
+        //***** Profiles: New ******
 
         private void NewProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -420,6 +561,231 @@ namespace HRSaveTimeClient
                     }
                 }
             }
+        }
+
+        private void GeneratePasswordButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            string pass = "";
+            var r = new Random();
+            while (pass.Length < 16)
+            {
+                Char c = (char)r.Next(33, 125);
+                if (Char.IsLetterOrDigit(c))
+                    pass += c;
+            }
+            PasswordNewProfile_tBox.Text = pass;
+        }
+
+        private void SaveProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveProfileButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveProfileButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void CencelProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelProfileButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelProfileButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void SaveProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult other = MessageBox.Show("Вы действительно хотите сохранить внесенные изменения?", "Сохранение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            switch (other)
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        GetSetting();
+                        String[] mas = GetBDType();
+
+                        int ID = 0;
+                        String dateF = DateTime.Now.ToString("dd.MM.yyyy");
+                        String dateB = "31.12.9999";
+                        String lname = LNameNewProfile_tBox.Text;
+                        String name = NameNewProfile_tBox.Text;
+                        String patr = PatrNewProfile_tBox.Text;
+                        String birth = BirthNewProfile_tBox.Text;
+                        int posid = 0;
+                        int orgid = 0;
+                        String pgrv = SchedulesComboBox.Text;
+                        String rule = RulesComboBox.Text;
+                        String photo;
+
+
+                        connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                        using (OracleConnection con = new OracleConnection(connect))
+                        {
+                            con.Open();
+                            OracleCommand com = new OracleCommand("Select IDPOS from POSITION where NAME = '" + PositionComboBox.Text + "'", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    posid = Convert.ToInt32(reader[0].ToString());
+                                }
+                            }
+
+                            com = new OracleCommand("Select IDORG from ORG_LEVEL where NAME = '" + ORGComboBox.Text + "'", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    orgid = Convert.ToInt32(reader[0].ToString());
+                                }
+                            }
+                            com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    ID = Convert.ToInt32(reader[0].ToString()) + 1;
+                                }
+                            }
+
+                            com = new OracleCommand("Insert into PERS_INFO values('" +
+                            ID + "',  to_date('" + dateF + "', 'dd.mm.yyyy'), to_date('" + dateB + "', 'dd.mm.yyyy'), '" + lname + "', '" +
+                            name + "', '" + patr + "',  to_date('" + birth + "', 'dd.mm.yyyy'), '" + posid + "', '" + orgid + "', '" + pgrv + "', '" + rule + "', '')", con);
+                            com.ExecuteNonQuery();
+                        }
+
+                        grid.Visibility = System.Windows.Visibility.Collapsed;
+                        grid = PersGrid;
+                        grid.Visibility = System.Windows.Visibility.Visible;
+                        Title.Text = "Список сотрудников";
+                        break;
+                    }
+                case MessageBoxResult.No: { break; }
+            }
+        }
+
+
+        //***** Inquirys ******
+
+        public void UpdateTableInquiry()
+        {
+            Inquiry_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDINQ, DATECREATE, DESCRIPT, STATUS " +
+                    "FROM INQ_ABS order by IDINQ ", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Inquiry { Num = reader[0].ToString(), Date = Convert.ToDateTime(reader[1].ToString()).ToString("dd.MM.yyyy"), Descript = reader[2].ToString(), Status = reader[3].ToString() };
+                        Inquiry_dG.Items.Add(data);
+                    }
+                }
+            }
+
+        }
+
+        private void NewInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NewInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NewInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewInqGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание запроса на отсутствие";
+        }
+
+
+        //***** Inquirys: New ******
+
+
+        private void SaveInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void CencelInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelInqButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelInqButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+
+        //***** Inquirys: Preview ******
+
+        private void OKEditInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void OKEditInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NotEditInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#fe717b");
+        }
+
+        private void NotEditInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#ff2c3b");
+        }
+
+        private void CencelEditInqButton1_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelEditInqButton1_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void EditInqButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            EditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void EditInqButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            EditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void MorePernrReportsGrid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MorePernrReportsImage.Width = 30;
+            MorePernrReportsImage.Height = 30;
+        }
+
+        private void MorePernrReportsGrid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MorePernrReportsImage.Width = 25;
+            MorePernrReportsImage.Height = 25;
         }
 
         private void SaveInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -496,77 +862,6 @@ namespace HRSaveTimeClient
             Title.Text = "Список сотрудников";
         }
 
-        private void SaveProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MessageBoxResult other = MessageBox.Show("Вы действительно хотите сохранить внесенные изменения?", "Сохранение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            switch (other)
-            {
-                case MessageBoxResult.Yes:
-                    {
-                        GetSetting();
-                        String[] mas = GetBDType();
-                        //IDPERS	DATAFROM	DATABY	LNAME	NAME	PATR	BIRTH	POSID	ORGID	PGRVID	RULE	PHOTO
-
-                        int ID = 0;
-                        String dateF = DateTime.Now.ToString("dd.MM.yyyy");
-                        String dateB = "31.12.9999";
-                        String lname = LNameNewProfile_tBox.Text;
-                        String name = NameNewProfile_tBox.Text;
-                        String patr = PatrNewProfile_tBox.Text;
-                        String birth = BirthNewProfile_tBox.Text;
-                        int posid = 0;
-                        int orgid = 0;
-                        String pgrv = SchedulesComboBox.Text;
-                        String rule = RulesComboBox.Text;
-                        String photo;
-
-
-                        connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
-                        using (OracleConnection con = new OracleConnection(connect))
-                        {
-                            con.Open();
-                            OracleCommand com = new OracleCommand("Select IDPOS from POSITION where NAME = '" + PositionComboBox.Text + "'", con);
-                            using (var reader = com.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    posid = Convert.ToInt32(reader[0].ToString());
-                                }
-                            }
-
-                            com = new OracleCommand("Select IDORG from ORG_LEVEL where NAME = '" + ORGComboBox.Text + "'", con);
-                            using (var reader = com.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    orgid = Convert.ToInt32(reader[0].ToString());
-                                }
-                            }
-                            com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
-                            using (var reader = com.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    ID = Convert.ToInt32(reader[0].ToString()) + 1;
-                                }
-                            }
-
-                            com = new OracleCommand("Insert into PERS_INFO values('" +
-                            ID + "',  to_date('" + dateF + "', 'dd.mm.yyyy'), to_date('" + dateB + "', 'dd.mm.yyyy'), '" + lname + "', '" +
-                            name + "', '" + patr + "',  to_date('" + birth + "', 'dd.mm.yyyy'), '" + posid + "', '" + orgid + "', '" + pgrv + "', '" + rule + "', '')", con);
-                            com.ExecuteNonQuery();
-                        }
-
-                        grid.Visibility = System.Windows.Visibility.Collapsed;
-                        grid = PersGrid;
-                        grid.Visibility = System.Windows.Visibility.Visible;
-                        Title.Text = "Список сотрудников";
-                        break;
-                    }
-                case MessageBoxResult.No: { break; }
-            }
-        }
-
         private void OKEditInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             grid.Visibility = System.Windows.Visibility.Collapsed;
@@ -599,6 +894,9 @@ namespace HRSaveTimeClient
             Title.Text = "Изменение запроса на отсутствие";
         }
 
+
+        //***** Reports: ALL ******
+
         private void NewReportsButton_MouseEnter(object sender, MouseEventArgs e)
         {
             EditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
@@ -617,11 +915,11 @@ namespace HRSaveTimeClient
             Title.Text = "Создание нового отчёта";
         }
 
-        private void MorePernrReportsGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MorePernrForm mpf = new MorePernrForm();
-            mpf.ShowDialog();
-        }
+        //***** Reports: Preview ******
+
+
+
+        //***** Reports: New ******
 
         private void GenerateReportsButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -633,229 +931,11 @@ namespace HRSaveTimeClient
             GenerateReportsButton.Background = (Brush)bc.ConvertFrom("#01a459");
         }
 
-        class TimeParisReport
+        private void MorePernrReportsGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public string Date { get; set; }
-            public string TimeF { get; set; }
-            public string TimeB { get; set; }
-
-            public TimeParisReport(string Pernr, string LName, string Name, string Patr, string Date, string TimeF, string TimeB)
-            {
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.Date = Date;
-                this.TimeF = TimeF;
-                this.TimeB = TimeB;
-            }
+            MorePernrForm mpf = new MorePernrForm();
+            mpf.ShowDialog();
         }
-
-        class AbsencePromenadeReport
-        {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public string DateF { get; set; }
-            public string Doc { get; set; }
-
-            public AbsencePromenadeReport(string Pernr, string LName, string Name, string Patr, string DateF, string Doc)
-            {
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.DateF = DateF;
-                this.Doc = Doc;
-            }
-        }
-
-        class AbsenceTimeOFFReport
-        {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public int qDays { get; set; }
-            public string DateF { get; set; }
-            public string DateB { get; set; }
-            public string Doc { get; set; }
-
-            public AbsenceTimeOFFReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
-            {
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.qDays = qDays;
-                this.DateF = DateF;
-                this.DateB = DateB;
-                this.Doc = Doc;
-            }
-        }
-
-        class AbsenceHospitalReport
-        {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public int qDays { get; set; }
-            public string DateF { get; set; }
-            public string DateB { get; set; }
-            public string Doc { get; set; }
-
-            public AbsenceHospitalReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
-            {
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.qDays = qDays;
-                this.DateF = DateF;
-                this.DateB = DateB;
-                this.Doc = Doc;
-            }
-        }
-
-        class AbsenceBTripReport
-        {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public int qDays { get; set; }
-            public string DateF { get; set; }
-            public string DateB { get; set; }
-            public string Doc { get; set; }
-
-            public AbsenceBTripReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
-            {
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.qDays = qDays;
-                this.DateF = DateF;
-                this.DateB = DateB;
-                this.Doc = Doc;
-            }
-        }
-
-        class PeopleReport
-        {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public string Bith { get; set; }
-            public string DateF { get; set; }
-            public string DateB { get; set; }
-            public string Position { get; set; }
-            public string cORG { get; set; }
-            public string nORG { get; set; }
-            public string cPGRV { get; set; }
-            public string nPGRV { get; set; }
-            public string cRule { get; set; }
-            public string nRule { get; set; }
-
-            public PeopleReport(string Pernr, string DateF, string DateB, string LName, string Name, string Patr, string Bith, string Position, string cORG, string nORG, string cPGRV, string nPGRV, string cRule, string nRule)
-            {
-                this.DateF = DateF;
-                this.DateB = DateB;
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.Bith = Bith;
-                this.Position = Position;
-                this.cORG = cORG;
-                this.nORG = nORG;
-                this.cPGRV = cPGRV;
-                this.nPGRV = nPGRV;
-                this.cRule = cRule;
-                this.nRule = nRule;
-            }
-        }
-
-        class TimePiopleReport
-        {
-            public string Pernr { get; set; }
-            public string LName { get; set; }
-            public string Name { get; set; }
-            public string Patr { get; set; }
-            public string PlanTime { get; set; }
-            public string FactTime { get; set; }
-            public string WSTimeValue { get; set; }
-            public string WSTime { get; set; }
-            public string TardValue { get; set; }
-            public string TardTime { get; set; }
-            public string RecValue { get; set; }
-            public string RecTime { get; set; }
-            public string BTripValue { get; set; }
-            public string HospValue { get; set; }
-            public string HolyValue { get; set; }
-            public string AbsentValue { get; set; }
-            public string TimeOFFValue { get; set; }
-
-            public TimePiopleReport(string Pernr, string LName, string Name, string Patr, string PlanTime, string FactTime, string WSTimeValue, string WSTime, string TardValue,
-                string TardTime, string RecValue, string RecTime, string BTripValue, string HospValue, string HolyValue, string AbsentValue, string TimeOFFValue)
-            {
-                this.Pernr = Pernr;
-                this.LName = LName;
-                this.Name = Name;
-                this.Patr = Patr;
-                this.PlanTime = PlanTime;
-                this.FactTime = FactTime;
-                this.WSTimeValue = WSTimeValue;
-                this.WSTime = WSTime;
-                this.TardValue = TardValue;
-                this.TardTime = TardTime;
-                this.RecValue = RecValue;
-                this.RecTime = RecTime;
-                this.BTripValue = BTripValue;
-                this.HospValue = HospValue;
-                this.HolyValue = HolyValue;
-                this.AbsentValue = AbsentValue;
-                this.TimeOFFValue = TimeOFFValue;
-            }
-        }
-
-        class OGRVTime
-        {
-            public DateTime TYPE { get; set; }
-            public DateTime NORMFROM { get; set; }
-            public DateTime NORMBY { get; set; }
-            public DateTime TIMEFROM { get; set; }
-            public DateTime TIMEBY { get; set; }
-
-
-            public OGRVTime(string NORMFROM, string NORMBY, string TIMEFROM, string TIMEBY)
-            {
-                this.NORMFROM = Convert.ToDateTime(NORMFROM);
-                this.NORMBY = Convert.ToDateTime(NORMBY);
-                this.TIMEFROM = Convert.ToDateTime(TIMEFROM);
-                this.TIMEBY = Convert.ToDateTime(TIMEBY);
-            }
-        }
-
-        struct sReports
-        {
-            public List<TimeParisReport> timeParis;
-            public List<AbsencePromenadeReport> Promenade;
-            public List<AbsenceTimeOFFReport> TimeOFF;
-            public List<AbsenceHospitalReport> Hospital;
-            public List<AbsenceBTripReport> BTrip;
-            public List<PeopleReport> People;
-            public List<TimePiopleReport> TimePiople;
-            public string FileName { get; set; }
-        }
-        sReports _inputTimeParisReportsReports;
 
         private void GenerateReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -906,7 +986,7 @@ namespace HRSaveTimeClient
                                             _inputTimeParisReportsReports.timeParis = l;
                                         }
                                     }
-                                    else 
+                                    else
                                     {
                                         com = new OracleCommand("Select PERNR.IDPERNR, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, TIME_PAIRS.DATAFROM, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY " +
                                                     "from PERS_INFO, RFID, TIME_PAIRS, ROOMS " +
@@ -919,7 +999,7 @@ namespace HRSaveTimeClient
                                             }
                                         }
                                         _inputTimeParisReportsReports.timeParis = l;
-                                    }                                 
+                                    }
                                 }
                                 backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
                                 break;
@@ -1225,7 +1305,7 @@ namespace HRSaveTimeClient
                                                 int index = 0;
                                                 while (reader.Read())
                                                 {
-                                                    while(index < 7)
+                                                    while (index < 7)
                                                         lOgrv.Add(reader[index++].ToString());
                                                     //l.Add(new TimePiopleReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[6].ToString(), reader[7].ToString(), reader[8].ToString(), reader[9].ToString(), reader[10].ToString(), reader[11].ToString(), reader[12].ToString(), reader[13].ToString()));
                                                 }
@@ -1258,13 +1338,13 @@ namespace HRSaveTimeClient
                                             int kDays = DateTime.DaysInMonth(Convert.ToInt32(dt[1]), Convert.ToInt32(dt[0]));
                                             SortedList<int, string> MList = new SortedList<int, string>();
                                             for (int i = 1; i <= kDays; i++)
-                                            { 
+                                            {
                                                 DateTime day = new DateTime(Convert.ToInt32(dt[1]), Convert.ToInt32(dt[0]), i);
-                                                MList.Add(i, day.ToString("dddd", new CultureInfo("ru-RU"))); 
+                                                MList.Add(i, day.ToString("dddd", new CultureInfo("ru-RU")));
                                             }
 
                                             TimeSpan NormaTime = new TimeSpan();
-                                           
+
                                             foreach (string d in MList.Values)
                                             {
                                                 switch (d)
@@ -1301,13 +1381,13 @@ namespace HRSaveTimeClient
                                                             NormaTime += W - P;
                                                             break;
                                                         }
-                                                    case "пятница": 
+                                                    case "пятница":
                                                         {
                                                             TimeSpan W, P;
                                                             W = OGRVTime[4].NORMBY - OGRVTime[4].NORMFROM;
                                                             P = OGRVTime[4].TIMEBY - OGRVTime[4].TIMEFROM;
                                                             NormaTime += W - P;
-                                                            break; 
+                                                            break;
                                                         }
 
                                                     case "суббота":
@@ -1331,7 +1411,7 @@ namespace HRSaveTimeClient
                                             }
 
                                             String h = NormaTime.TotalHours + ":" + NormaTime.Minutes + ":" + NormaTime.Seconds;
-                                                _inputTimeParisReportsReports.People = l;
+                                            _inputTimeParisReportsReports.People = l;
                                         }
                                     }
 
@@ -1346,6 +1426,515 @@ namespace HRSaveTimeClient
             }
         }
 
+
+
+
+
+
+
+
+        private void SaveReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveReportsButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveReportsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveReportsButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+
+        public void UpdateTableReports()
+        {
+            Reports_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDREPORTS, DATACREATE, DESCRIPT " +
+                    "FROM REPORTS " +
+                    "where REPORTS.PERSID = '" + Pernr_tBox.Text + "' " +
+                    "order by IDREPORTS DESC ", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Reports { Num = reader[0].ToString(), Date = reader[1].ToString(), Descript = reader[2].ToString() };
+                        Reports_dG.Items.Add(data);
+                    }
+                }
+            }
+        }
+
+        private void SaveReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            AddNameReports anr = new AddNameReports();
+            anr.ShowDialog();
+
+            GetSetting();
+            String[] mas = GetBDType();
+
+            int ID = 0;
+            String persID = Pernr_tBox.Text;
+            String dataC = DateTime.Now.ToString("dd.MM.yyyy");
+            String descript = anr.NameRreport_tBox.Text;
+            String morePernr = PernrReports_tBox.Text;
+            String orgLevel = ORGLevelReports_tBox.Text;
+            String dataF = DateFromReports_tBox.Text;
+            String dataB = DateByReports_tBox.Text;
+            String view = ViewReports_tBox.Text;
+
+
+            connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                con.Open();
+                OracleCommand com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ID = Convert.ToInt32(reader[0].ToString()) + 1;
+                    }
+                }
+
+                com = new OracleCommand("Insert into Reports values('" +
+                ID + "', '" + persID + "', to_date('" + dataC + "', 'dd.mm.yyyy'), '" + descript + "', '" + morePernr + "', '" +
+                orgLevel + "', to_date('" + dataF + "', 'dd.mm.yyyy'), to_date('" + dataB + "', 'dd.mm.yyyy'), '" + view + "')", con);
+                com.ExecuteNonQuery();
+            }
+        }
+
+        private void CencelReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelReportsButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelReportsButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelReportsButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = ReportsGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Сохраненные отчеты";
+            UpdateTableReports();
+        }
+
+        public void UpdateTableSchedules()
+        {
+            Schedules_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT IDPGRV, DESCRIPT " +
+                    "FROM PGRV " +
+                    "order by IDPGRV", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Schedules { Code = reader[0].ToString(), Descript = reader[1].ToString() };
+                        Schedules_dG.Items.Add(data);
+                    }
+                }
+            }
+        }
+
+        public void UpdateTableRules()
+        {
+            Rules_dG.Items.Clear();
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                //вывод "Все отсутствия в виде запросов"
+                con.Open();
+                OracleCommand com = new OracleCommand("SELECT CODE,DESCRIPT " +
+                    "FROM RULES " +
+                    "order by CODE", con);
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var data = new Rules { Code = reader[0].ToString(), Descript = reader[1].ToString() };
+                        Rules_dG.Items.Add(data);
+                    }
+                }
+            }
+        }
+
+
+
+
+        private void SendMonitorButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SendMonitorButton.Width = 43;
+            SendMonitorButton.Height = 43;
+        }
+
+        private void SendMonitorButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SendMonitorButton.Width = 38;
+            SendMonitorButton.Height = 38;
+        }
+
+        private void Monitoring_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = MonitoringGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Мониторинг потока данных";
+        }
+
+        private void CencelSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelSchedulesButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelSchedulesButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelOGRVButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewSchedulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание графика рабочего времени";
+        }
+
+        private void SaveSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveSchedulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveSchedulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveOGRVButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewSchedulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание графика рабочего времени";
+        }
+
+        private void NewSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            NewSchedulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            NewSchedulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewSchedulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание графика рабочего времени";
+        }
+
+        private void Grid_MouseEnter_1(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 30;
+            MoreBreakButton.Height = 30;
+        }
+
+        private void Grid_MouseLeave_1(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 25;
+            MoreBreakButton.Height = 25;
+        }
+
+        private void MoreOGRVButtonFromNewPGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MoreOGRVButton.Width = 30;
+            MoreOGRVButton.Height = 30;
+        }
+
+        private void MoreOGRVButtonFromNewPGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MoreOGRVButton.Width = 25;
+            MoreOGRVButton.Height = 25;
+        }
+
+        private void MoreOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewOGRV vO = new ViewOGRV();
+            vO.ShowDialog();
+        }
+
+        private void AddOGRVButtonFromNewPGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AddOGRVButton.Width = 30;
+            AddOGRVButton.Height = 30;
+        }
+
+        private void AddOGRVButtonFromNewPGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AddOGRVButton.Width = 25;
+            AddOGRVButton.Height = 25;
+        }
+
+        private void AddOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewOGRVGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание однодневного графика рабочего времени";
+        }
+
+        private void GenerateSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#00dc77");
+        }
+
+        private void GenerateSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#01a459");
+        }
+
+        private void GenerateSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
+
+        private void CencelOGRVButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelOGRVButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelOGRVButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelOGRVButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void SaveOGRVButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveOGRVButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
+
+        private void CencelSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = SchedulesGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Список графиков рабочего времени";
+        }
+
+        private void MoreBreakButtonFromNewOGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 30;
+            MoreBreakButton.Height = 30;
+        }
+
+        private void MoreBreakButtonFromNewOGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            MoreBreakButton.Width = 25;
+            MoreBreakButton.Height = 25;
+        }
+
+        private void MoreBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            ViewBreak vB = new ViewBreak();
+            vB.ShowDialog();
+        }
+
+        private void AddBreakButtonFromNewOGRV_MouseEnter(object sender, MouseEventArgs e)
+        {
+            AddBreakButton.Width = 30;
+            AddBreakButton.Height = 30;
+        }
+
+        private void AddBreakButtonFromNewOGRV_MouseLeave(object sender, MouseEventArgs e)
+        {
+            AddBreakButton.Width = 25;
+            AddBreakButton.Height = 25;
+        }
+
+        private void AddBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewBreakGrid;
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Создание перерыва";
+
+        }
+
+        private void SaveBreakButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveBreakButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveBreakButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewOGRVGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание однодневного графика рабочего времени";
+        }
+
+        private void CencelBreakButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelBreakButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+
+        }
+
+        private void CencelBreakButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelBreakButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelBreakButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewOGRVGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание однодневного графика рабочего времени";
+        }
+
+        private void MoreOGRVRuleGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MoreORGForm mof = new MoreORGForm();
+            mof.ShowDialog();
+        }
+
+        private void NewRulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void NewRulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void NewRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = NewRulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Создание роли";
+        }
+
+        private void SaveRulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            SaveRulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
+        }
+
+        private void SaveRulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            SaveRulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
+        }
+
+        private void SaveRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = RulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Список ролей";
+        }
+
+        private void CencelRulesButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            CencelRulesButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
+        }
+
+        private void CencelRulesButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CencelRulesButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
+        }
+
+        private void CencelRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = RulesGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Список ролей";
+        }
+
+        private void myProfileButton_MouseEnter(object sender, MouseEventArgs e)
+        {
+            myProfileButton.Background = (Brush)bc.ConvertFrom("#004ee8");
+        }
+
+        private void myProfileButton_MouseLeave(object sender, MouseEventArgs e)
+        {
+            myProfileButton.Background = (Brush)bc.ConvertFrom("Transparent");
+        }
+
+        private void myProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (grid != null)
+            {
+                grid.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            grid = ProfileGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Мой профиль";
+        }
+
+
+
+
+        private void OpenDocument_btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                openFileDialog.Filter = "Сканированный документ в формате PNG|*.png|Сканированный документ в формате JPEG|*.jpeg|Сканированный документ в формате PDF|*.pdf|Текстовый документ в формате DOC|*.doc";
+
+                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    DocumentInq_tBox.Text = openFileDialog.FileName.ToString();
+                }
+            }
+        }
+
+
+        //***** BackGround Worker ***** 
+
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        //Описываемм что делать в фоне
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             switch (TypeReports)
@@ -1632,575 +2221,280 @@ namespace HRSaveTimeClient
             }
         }
 
-        //дизайн Grid: Reports
 
-        private void SaveReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        class TimeParisReport
         {
-            SaveReportsButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string Date { get; set; }
+            public string TimeF { get; set; }
+            public string TimeB { get; set; }
 
-        private void SaveReportsButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveReportsButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-
-        public void UpdateTableReports()
-        {
-            Reports_dG.Items.Clear();
-
-            using (OracleConnection con = new OracleConnection(connect))
+            public TimeParisReport(string Pernr, string LName, string Name, string Patr, string Date, string TimeF, string TimeB)
             {
-                //вывод "Все отсутствия в виде запросов"
-                con.Open();
-                OracleCommand com = new OracleCommand("SELECT IDREPORTS, DATACREATE, DESCRIPT " +
-                    "FROM REPORTS " +
-                    "where REPORTS.PERSID = '" + Pernr_tBox.Text + "' " +
-                    "order by IDREPORTS DESC ", con);
-                using (var reader = com.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var data = new Reports { Num = reader[0].ToString(), Date = reader[1].ToString(), Descript = reader[2].ToString() };
-                        Reports_dG.Items.Add(data);
-                    }
-                }
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.Date = Date;
+                this.TimeF = TimeF;
+                this.TimeB = TimeB;
             }
         }
 
-        private void SaveReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        class AbsencePromenadeReport
         {
-            AddNameReports anr = new AddNameReports();
-            anr.ShowDialog();
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string DateF { get; set; }
+            public string Doc { get; set; }
 
-            GetSetting();
-            String[] mas = GetBDType();
-
-            int ID = 0;
-            String persID = Pernr_tBox.Text;
-            String dataC = DateTime.Now.ToString("dd.MM.yyyy");
-            String descript = anr.NameRreport_tBox.Text;
-            String morePernr = PernrReports_tBox.Text;
-            String orgLevel = ORGLevelReports_tBox.Text;
-            String dataF = DateFromReports_tBox.Text;
-            String dataB = DateByReports_tBox.Text;
-            String view = ViewReports_tBox.Text;
-
-
-            connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
-            using (OracleConnection con = new OracleConnection(connect))
+            public AbsencePromenadeReport(string Pernr, string LName, string Name, string Patr, string DateF, string Doc)
             {
-                con.Open();
-                OracleCommand com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
-                using (var reader = com.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        ID = Convert.ToInt32(reader[0].ToString()) + 1;
-                    }
-                }
-
-                com = new OracleCommand("Insert into Reports values('" +
-                ID + "', '" + persID + "', to_date('" + dataC + "', 'dd.mm.yyyy'), '" + descript + "', '" + morePernr + "', '" +
-                orgLevel + "', to_date('" + dataF + "', 'dd.mm.yyyy'), to_date('" + dataB + "', 'dd.mm.yyyy'), '" + view + "')", con);
-                com.ExecuteNonQuery();
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.DateF = DateF;
+                this.Doc = Doc;
             }
         }
 
-        private void CencelReportsButton_MouseEnter(object sender, MouseEventArgs e)
+        class AbsenceTimeOFFReport
         {
-            CencelReportsButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public int qDays { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Doc { get; set; }
 
-        private void CencelReportsButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelReportsButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        private void CencelReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = ReportsGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Сохраненные отчеты";
-            UpdateTableReports();
-        }
-
-        public void UpdateTableSchedules()
-        {
-            Schedules_dG.Items.Clear();
-
-            using (OracleConnection con = new OracleConnection(connect))
+            public AbsenceTimeOFFReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
             {
-                //вывод "Все отсутствия в виде запросов"
-                con.Open();
-                OracleCommand com = new OracleCommand("SELECT IDPGRV, DESCRIPT " +
-                    "FROM PGRV " +
-                    "order by IDPGRV", con);
-                using (var reader = com.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var data = new Schedules { Code = reader[0].ToString(), Descript = reader[1].ToString() };
-                        Schedules_dG.Items.Add(data);
-                    }
-                }
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.qDays = qDays;
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Doc = Doc;
             }
         }
 
-
-        public void UpdateTableRules()
+        class AbsenceHospitalReport
         {
-            Rules_dG.Items.Clear();
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public int qDays { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Doc { get; set; }
 
-            using (OracleConnection con = new OracleConnection(connect))
+            public AbsenceHospitalReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
             {
-                //вывод "Все отсутствия в виде запросов"
-                con.Open();
-                OracleCommand com = new OracleCommand("SELECT CODE,DESCRIPT " +
-                    "FROM RULES " +
-                    "order by CODE", con);
-                using (var reader = com.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var data = new Rules { Code = reader[0].ToString(), Descript = reader[1].ToString() };
-                        Rules_dG.Items.Add(data);
-                    }
-                }
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.qDays = qDays;
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Doc = Doc;
             }
         }
 
-
-
-
-        private void SendMonitorButton_MouseEnter(object sender, MouseEventArgs e)
+        class AbsenceBTripReport
         {
-            SendMonitorButton.Width = 43;
-            SendMonitorButton.Height = 43;
-        }
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public int qDays { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Doc { get; set; }
 
-        private void SendMonitorButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SendMonitorButton.Width = 38;
-            SendMonitorButton.Height = 38;
-        }
-
-        private void Monitoring_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (grid != null)
+            public AbsenceBTripReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
             {
-                grid.Visibility = System.Windows.Visibility.Collapsed;
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.qDays = qDays;
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Doc = Doc;
             }
-            grid = MonitoringGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Мониторинг потока данных";
         }
 
-        private void StrictChekBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        class PeopleReport
         {
-            if (StrictChekBox.Text == "")
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string Bith { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Position { get; set; }
+            public string cORG { get; set; }
+            public string nORG { get; set; }
+            public string cPGRV { get; set; }
+            public string nPGRV { get; set; }
+            public string cRule { get; set; }
+            public string nRule { get; set; }
+
+            public PeopleReport(string Pernr, string DateF, string DateB, string LName, string Name, string Patr, string Bith, string Position, string cORG, string nORG, string cPGRV, string nPGRV, string cRule, string nRule)
             {
-                StrictChekBox.Text = "X";
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.Bith = Bith;
+                this.Position = Position;
+                this.cORG = cORG;
+                this.nORG = nORG;
+                this.cPGRV = cPGRV;
+                this.nPGRV = nPGRV;
+                this.cRule = cRule;
+                this.nRule = nRule;
             }
-            else { StrictChekBox.Text = ""; }
         }
 
-        private void CencelSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
+        class TimePiopleReport
         {
-            CencelSchedulesButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string PlanTime { get; set; }
+            public string FactTime { get; set; }
+            public string WSTimeValue { get; set; }
+            public string WSTime { get; set; }
+            public string TardValue { get; set; }
+            public string TardTime { get; set; }
+            public string RecValue { get; set; }
+            public string RecTime { get; set; }
+            public string BTripValue { get; set; }
+            public string HospValue { get; set; }
+            public string HolyValue { get; set; }
+            public string AbsentValue { get; set; }
+            public string TimeOFFValue { get; set; }
 
-        private void CencelSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelSchedulesButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        private void CencelOGRVButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewSchedulesGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание графика рабочего времени";
-        }
-
-        private void SaveSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            SaveSchedulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void SaveSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveSchedulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void SaveOGRVButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewSchedulesGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание графика рабочего времени";
-        }
-
-        private void NewSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            NewSchedulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void NewSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            NewSchedulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void NewSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewSchedulesGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание графика рабочего времени";
-        }
-
-        private void Grid_MouseEnter_1(object sender, MouseEventArgs e)
-        {
-            MoreBreakButton.Width = 30;
-            MoreBreakButton.Height = 30;
-        }
-
-        private void Grid_MouseLeave_1(object sender, MouseEventArgs e)
-        {
-            MoreBreakButton.Width = 25;
-            MoreBreakButton.Height = 25;
-        }
-
-        private void MoreOGRVButtonFromNewPGRV_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MoreOGRVButton.Width = 30;
-            MoreOGRVButton.Height = 30;
-        }
-
-        private void MoreOGRVButtonFromNewPGRV_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MoreOGRVButton.Width = 25;
-            MoreOGRVButton.Height = 25;
-        }
-
-        private void MoreOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ViewOGRV vO = new ViewOGRV();
-            vO.ShowDialog();
-        }
-
-        private void AddOGRVButtonFromNewPGRV_MouseEnter(object sender, MouseEventArgs e)
-        {
-            AddOGRVButton.Width = 30;
-            AddOGRVButton.Height = 30;
-        }
-
-        private void AddOGRVButtonFromNewPGRV_MouseLeave(object sender, MouseEventArgs e)
-        {
-            AddOGRVButton.Width = 25;
-            AddOGRVButton.Height = 25;
-        }
-
-        private void AddOGRVButtonFromNewPGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewOGRVGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание однодневного графика рабочего времени";
-        }
-
-        private void GenerateSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#00dc77");
-        }
-
-        private void GenerateSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#01a459");
-        }
-
-        private void GenerateSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = SchedulesGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Список графиков рабочего времени";
-        }
-
-        private void CencelOGRVButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelOGRVButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
-
-        private void CencelOGRVButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelOGRVButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        private void SaveOGRVButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void SaveOGRVButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void SaveSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = SchedulesGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Список графиков рабочего времени";
-        }
-
-        private void CencelSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = SchedulesGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Список графиков рабочего времени";
-        }
-
-        private void MoreBreakButtonFromNewOGRV_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MoreBreakButton.Width = 30;
-            MoreBreakButton.Height = 30;
-        }
-
-        private void MoreBreakButtonFromNewOGRV_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MoreBreakButton.Width = 25;
-            MoreBreakButton.Height = 25;
-        }
-
-        private void MoreBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ViewBreak vB = new ViewBreak();
-            vB.ShowDialog();
-        }
-
-        private void AddBreakButtonFromNewOGRV_MouseEnter(object sender, MouseEventArgs e)
-        {
-            AddBreakButton.Width = 30;
-            AddBreakButton.Height = 30;
-        }
-
-        private void AddBreakButtonFromNewOGRV_MouseLeave(object sender, MouseEventArgs e)
-        {
-            AddBreakButton.Width = 25;
-            AddBreakButton.Height = 25;
-        }
-
-        private void AddBreakButtonFromNewOGRV_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewBreakGrid;
-            grid.Visibility = Visibility.Visible;
-            Title.Text = "Создание перерыва";
-
-        }
-
-        private void SaveBreakButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void SaveBreakButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void SaveBreakButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewOGRVGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание однодневного графика рабочего времени";
-        }
-
-        private void CencelBreakButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelBreakButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-
-        }
-
-        private void CencelBreakButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelBreakButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        private void CencelBreakButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewOGRVGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание однодневного графика рабочего времени";
-        }
-
-        private void MoreOGRVRuleGrid_MouseEnter(object sender, MouseEventArgs e)
-        {
-            MoreOGRVRuleButton.Width = 30;
-            MoreOGRVRuleButton.Height = 30;
-        }
-
-        private void MoreOGRVRuleGrid_MouseLeave(object sender, MouseEventArgs e)
-        {
-            MoreOGRVRuleButton.Width = 25;
-            MoreOGRVRuleButton.Height = 25;
-        }
-
-        private void MoreOGRVRuleGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            MoreORGForm mof = new MoreORGForm();
-            mof.ShowDialog();
-        }
-
-        private void NewRulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            SaveBreakButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void NewRulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveOGRVButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void NewRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = NewRulesGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Создание роли";
-        }
-
-        private void SaveRulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            SaveRulesButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void SaveRulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            SaveRulesButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void SaveRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = RulesGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Список ролей";
-        }
-
-        private void CencelRulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelRulesButton.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
-
-        private void CencelRulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelRulesButton.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
-
-        private void CencelRulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = RulesGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Список ролей";
-        }
-
-        private void myProfileButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            myProfileButton.Background = (Brush)bc.ConvertFrom("#004ee8");
-        }
-
-        private void myProfileButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            myProfileButton.Background = (Brush)bc.ConvertFrom("Transparent");
-        }
-
-        private void myProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (grid != null)
+            public TimePiopleReport(string Pernr, string LName, string Name, string Patr, string PlanTime, string FactTime, string WSTimeValue, string WSTime, string TardValue,
+                string TardTime, string RecValue, string RecTime, string BTripValue, string HospValue, string HolyValue, string AbsentValue, string TimeOFFValue)
             {
-                grid.Visibility = System.Windows.Visibility.Collapsed;
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.PlanTime = PlanTime;
+                this.FactTime = FactTime;
+                this.WSTimeValue = WSTimeValue;
+                this.WSTime = WSTime;
+                this.TardValue = TardValue;
+                this.TardTime = TardTime;
+                this.RecValue = RecValue;
+                this.RecTime = RecTime;
+                this.BTripValue = BTripValue;
+                this.HospValue = HospValue;
+                this.HolyValue = HolyValue;
+                this.AbsentValue = AbsentValue;
+                this.TimeOFFValue = TimeOFFValue;
             }
+        }
+
+        class OGRVTime
+        {
+            public DateTime TYPE { get; set; }
+            public DateTime NORMFROM { get; set; }
+            public DateTime NORMBY { get; set; }
+            public DateTime TIMEFROM { get; set; }
+            public DateTime TIMEBY { get; set; }
+
+
+            public OGRVTime(string NORMFROM, string NORMBY, string TIMEFROM, string TIMEBY)
+            {
+                this.NORMFROM = Convert.ToDateTime(NORMFROM);
+                this.NORMBY = Convert.ToDateTime(NORMBY);
+                this.TIMEFROM = Convert.ToDateTime(TIMEFROM);
+                this.TIMEBY = Convert.ToDateTime(TIMEBY);
+            }
+        }
+
+        struct sReports
+        {
+            public List<TimeParisReport> timeParis;
+            public List<AbsencePromenadeReport> Promenade;
+            public List<AbsenceTimeOFFReport> TimeOFF;
+            public List<AbsenceHospitalReport> Hospital;
+            public List<AbsenceBTripReport> BTrip;
+            public List<PeopleReport> People;
+            public List<TimePiopleReport> TimePiople;
+            public string FileName { get; set; }
+        }
+
+        sReports _inputTimeParisReportsReports;
+
+
+
+        private void Pers_dG_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            int parse = Pers_dG.SelectedIndex;
+            Pers rowView = Pers_dG.SelectedItem as Pers;
+
+            grid.Visibility = Visibility.Hidden;
             grid = ProfileGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Мой профиль";
-        }
+            grid.Visibility = Visibility.Visible;
+            Title.Text = "Профиль сотрудника";
 
 
-        //**************************
-
-
-        public String[] GetBDType()
-        {
-            var result = "";
-            setting.TryGetValue("BD", out result);
-            String[] mas = result.Split('/');
-            return mas;
-        }
-
-        public void GetSetting()
-        {
-            StreamReader sr = new StreamReader("settings.txt");
-            try
-            {
-                list.Clear();
-                while (!sr.EndOfStream)
-                {
-                    list.Add(sr.ReadLine());
-                }
-                sr.Close();
-
-                setting.Clear();
-                if (list.Count != 0)
-                {
-                    for (int i = 0; i < list.Count; i += 2)
-                    {
-                        setting.Add(list[i], list[i + 1]);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString(), "Ошибка");
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            GetSetting();
-            String[] mas = GetBDType();
-
-            grid = ProfileGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
-            Title.Text = "Мой профиль";
-
-            connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
             using (OracleConnection con = new OracleConnection(connect))
             {
                 //вывод "Основная инфа по профилю"
                 con.Open();
-                OracleCommand com = new OracleCommand("SELECT IDPERNR, LNAME, PERS_INFO.NAME, PATR, BIRTH, POSITION.Name, ORG_LEVEL.NAME, PGRVID, RULE, LOGIN, PASSWORD, RFID.IDRFID, ROOMS.NAME " +
-                    "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID, TIME_PAIRS, ROOMS " +
-                    "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR= AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID and TIME_PAIRS.RFIDID = RFID.IDRFID and TIME_PAIRS.DATABY is Null  and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR =  '" + Pernr_tBox.Text + "'", con);
+                OracleCommand com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, PERS_INFO.BIRTH, POSITION.Name, ORG_LEVEL.NAME, PERS_INFO.PGRVID, AUTHENTICATION.LOGIN, AUTHENTICATION.PASSWORD, RFID.IDRFID " +
+                    "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID " +
+                    "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR = AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID  and PERNR.IDPERNR = '" + rowView.Pernr + "'", con);
+
                 using (var reader = com.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        Pernr_tBox.Text = reader[0].ToString();
-                        FIO_tBox.Text = reader[1].ToString() + " " + reader[2].ToString() + " " + reader[3].ToString();
-                        Position_tBox.Text = reader[5].ToString();
-                        ORG_tBox.Text = reader[6].ToString();
-                        Login_tBox.Text = reader[9].ToString();
-                        Password_tBox.Text = reader[10].ToString();
-                        RFID_tBox.Text = reader[11].ToString();
-                        Location_tBox.Text = reader[12].ToString();
+                        Pernr_tBox.Text = rowView.Pernr;
+                        FIO_tBox.Text = reader[0].ToString() + " " + reader[1].ToString() + " " + reader[2].ToString();
+                        Bith_tBox.Text = Convert.ToDateTime(reader[3]).ToString("dd.MM.yyyy");
+                        Position_tBox.Text = reader[4].ToString();
+                        ORG_tBox.Text = reader[5].ToString();
+                        PGRV_tBox.Text = reader[6].ToString();
+                        Login_tBox.Text = reader[7].ToString();
+                        Password_pBox.Password = reader[8].ToString();
+                        RFID_tBox.Text = reader[9].ToString();
+                    }
+
+                }
+
+                //вывод местоположения
+                com = new OracleCommand("SELECT ROOMS.NAME " +
+                   "FROM TIME_PAIRS, ROOMS " +
+                   "WHERE ROOMS.IDROOMS = TIME_PAIRS.ROOMID and TIME_PAIRS.TIMEBY is null and TIME_PAIRS.RFIDID= '" + rowView.Pernr + "'", con);
+
+                using (var reader = com.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Location_tBox.Text = reader[0].ToString();
                     }
 
                 }
@@ -2208,7 +2502,7 @@ namespace HRSaveTimeClient
                 //вывод "Контакты"
                 com = new OracleCommand("SELECT DESCRIPT, VALUE " +
                         "FROM CONTACTS, PERS_INFO, PERNR " +
-                        "WHERE  CONTACTS.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS and PERNR.IDPERNR = '" + Pernr_tBox.Text + "'", con);
+                        "WHERE  CONTACTS.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS and PERNR.IDPERNR = '" + rowView.Pernr + "'", con);
                 using (var reader = com.ExecuteReader())
                 {
                     while (reader.Read())
@@ -2221,56 +2515,42 @@ namespace HRSaveTimeClient
                 //вывод "Отсутствия"
                 com = new OracleCommand("SELECT VIEW_ABS.NAME, DATEFROM, DATEBY, DOCUMENT " +
                         "FROM ABSCENCE, VIEW_ABS " +
-                        "WHERE VIEW_ABS.IDVIEW = ABSCENCE.VIEWID and ABSCENCE.PERNRID = '" + Pernr_tBox.Text + "'", con);
+                        "WHERE VIEW_ABS.IDVIEW = ABSCENCE.VIEWID and ABSCENCE.PERNRID = '" + rowView.Pernr + "'", con);
                 using (var reader = com.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
-                        Absence_dG.Items.Add(data);
+                        MyAbsence_dG.Items.Add(data);
                     }
                 }
 
                 //вывод "Присутствия"
                 com = new OracleCommand("SELECT TIME_PAIRS.DATAFROM, TIME_PAIRS.DATABY, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY, ROOMS.NAME " +
                         "FROM PERNR, RFID, TIME_PAIRS, ROOMS " +
-                        "WHERE RFID.IDRFID = TIME_PAIRS.RFIDID and PERNR.PERSID = RFID.PERSID and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR = '" + Pernr_tBox.Text + "'", con);
+                        "WHERE RFID.IDRFID = TIME_PAIRS.RFIDID and PERNR.PERSID = RFID.PERSID and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR = '" + rowView.Pernr + "'", con);
                 using (var reader = com.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
-                        TimePairs_dG.Items.Add(data);
+                        MyTimePairs_dG.Items.Add(data);
                     }
                 }
             }
         }
 
-        private void OpenDocument_btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void GeneratePassEditProfile_btn_Click(object sender, RoutedEventArgs e)
         {
-            using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
+            string pass = "";
+            var r = new Random();
+            while (pass.Length < 16)
             {
-                openFileDialog.Filter = "Сканированный документ в формате PNG|*.png|Сканированный документ в формате JPEG|*.jpeg|Сканированный документ в формате PDF|*.pdf|Текстовый документ в формате DOC|*.doc";
-
-                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    DocumentInq_tBox.Text = openFileDialog.FileName.ToString();
-                }
+                Char c = (char)r.Next(33, 125);
+                if (Char.IsLetterOrDigit(c))
+                    pass += c;
             }
+            Password_pBox.Password = pass;
         }
-
-        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-
-        }
-
-
-
-
-
-
-        //***** BackGround Worker ***** 
-
-
     }
 }

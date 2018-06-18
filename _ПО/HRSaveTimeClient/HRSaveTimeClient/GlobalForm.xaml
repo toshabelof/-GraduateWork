@@ -6,7 +6,7 @@
     <Window.Resources>
         <cm:BackgroundWorker x:Key="backgroundWorker" WorkerReportsProgress="True" WorkerSupportsCancellation="True" DoWork="backgroundWorker_DoWork" ProgressChanged="backgroundWorker_ProgressChanged" RunWorkerCompleted="backgroundWorker_RunWorkerCompleted"/>
     </Window.Resources>
-       
+
     <Grid>
         <Grid VerticalAlignment="Center" HorizontalAlignment="Left" Width="300" Height="720">
             <Rectangle Grid.Row="2">
@@ -20,7 +20,7 @@
 
             <!--Поиск-->
             <Grid VerticalAlignment="Top" Height="50">
-                <TextBox x:Name ="Search" Height="30" Width="270" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Поиск" FontSize="15" FontStyle="Italic" Foreground="#9de1ff" Background="#105ef9" BorderBrush="Transparent" AllowDrop="True" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="Search_PreviewMouseLeftButtonDown"/>
+                <TextBox x:Name ="Search" Height="30" Width="270" VerticalAlignment="Center" HorizontalAlignment="Center" Text="Поиск" FontSize="15" FontStyle="Italic" Foreground="#9de1ff" Background="#105ef9" BorderBrush="Transparent" AllowDrop="True" VerticalContentAlignment="Center" PreviewMouseLeftButtonDown="Search_PreviewMouseLeftButtonDown" LostFocus="Search_LostFocus" KeyDown="Search_KeyDown"/>
             </Grid>
 
             <!--Меню-->
@@ -74,9 +74,21 @@
 
         <!--Page-->
         <!-- Профили -->
-        <Grid x:Name ="PersGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+        <Grid x:Name ="PersGrid" Margin="300,50,0,0" Visibility="Collapsed">
             <Grid x:Name ="NewProfileButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" PreviewMouseLeftButtonDown="NewProfileButton_PreviewMouseLeftButtonDown" MouseEnter="NewProfileButton_MouseEnter" MouseLeave="NewProfileButton_MouseLeave">
                 <Image Source="Resources/People/Create.png" />
+            </Grid>
+
+            <Grid Background="Transparent" Margin="5,48,5,5">
+                <DataGrid x:Name="Pers_dG" AutoGenerateColumns="False" Height="617"  VerticalAlignment="Top" ItemsSource="{Binding}" FontSize="15" PreviewMouseDoubleClick="Pers_dG_PreviewMouseDoubleClick">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Табельный номер" IsReadOnly="True" Binding="{Binding Path=Pernr}" Width="180"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Фамилия" IsReadOnly="True"  Binding="{Binding Path=Lname}" Width="*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Имя" IsReadOnly="True"  Binding="{Binding Path=Name}" Width="*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Отчество" IsReadOnly="True"  Binding="{Binding Path=Patr}" Width="*"></DataGridTextColumn>
+                        <DataGridTextColumn Header="Орг.единица" IsReadOnly="True"  Binding="{Binding Path=ORG}" Width="*"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </Grid>
 
@@ -141,6 +153,86 @@
                 <Image Source="Resources/People/Cancel.png" MouseLeave="NewProfileButton_MouseLeave" MouseEnter="NewProfileButton_MouseLeave" />
             </Grid>
         </Grid>
+
+        <!-- Просмотр профиля -->
+        <Grid x:Name ="ProfileGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <Image x:Name ="PictureUser_img" Width="157" Height="157" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,25,0" Source="Resources/noavatar.png"/>
+
+            <Grid x:Name ="EditProfileButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,25,355,0" >
+                <Image Source="Resources/Inq/Edit.png" Margin="0,0,0,0" />
+            </Grid>
+
+            <TextBox x:Name ="Pernr_tBox" HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+
+            <TextBox x:Name ="FIO_tBox" HorizontalAlignment="Left" Margin="222,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="ФИО" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="Position_tBox" HorizontalAlignment="Left" Margin="222,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Должность" HorizontalAlignment="Left" Margin="35,148,0,0" VerticalAlignment="Top" FontSize="20" Height="34" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="ORG_tBox" HorizontalAlignment="Left" Margin="222,188,0,0" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" Background="Transparent"/>
+            <Label Content="Орг.присвоение" HorizontalAlignment="Left" Margin="35,188,0,0" VerticalAlignment="Top" FontSize="20" Height="34" HorizontalContentAlignment="Center"/>
+
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,253,0,415"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,242,0,0" TextWrapping="Wrap" Text="Дополнительно" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+
+            <TextBox x:Name ="RFID_tBox" HorizontalAlignment="Right" Margin="0,279,507,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="RFID" HorizontalAlignment="Left" Margin="35,279,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <Grid x:Name ="EditRFIDButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,280,355,0" >
+                <Image Source="Resources/Inq/Edit.png" Margin="0,0,0,0" />
+            </Grid>
+
+            <TextBox x:Name ="Login_tBox" HorizontalAlignment="Right" Margin="0,319,507,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Логин" HorizontalAlignment="Left" Margin="35,319,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <PasswordBox x:Name ="Password_pBox" HorizontalAlignment="Right" Margin="0,319,106,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Button x:Name="Generate_btn" Content="Изменить" HorizontalAlignment="Left" Margin="883,319,0,0" VerticalAlignment="Top" Width="68" Height="35" Click="GeneratePassEditProfile_btn_Click"/>
+
+            <Label Content="Пароль" HorizontalAlignment="Left" Margin="507,319,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TabControl HorizontalAlignment="Left" Height="275" Margin="41,369,0,0" VerticalAlignment="Top" Width="911">
+                <TabItem Header="Контактная информация" FontSize="15">
+                    <Grid Background="Transparent">
+                        <DataGrid x:Name="Contacts_dG" AutoGenerateColumns="False" Height="272" Margin="5,5,5,0"  VerticalAlignment="Top" ItemsSource="{Binding}" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Наименование" IsReadOnly="True" Binding="{Binding Path=Descript}" Width="250"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Значение" IsReadOnly="True"  Binding="{Binding Path=Value}" Width="*"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Отсутствия" FontSize="15">
+                    <Grid Background="Transparent">
+                        <DataGrid x:Name="Absence_dG" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" IsReadOnly="True" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Вид" IsReadOnly="True" Binding="{Binding Path=View}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Дата с" IsReadOnly="True"  Binding="{Binding Path=DateFrom}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Дата по" IsReadOnly="True"  Binding="{Binding Path=DateBy}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Документ" IsReadOnly="True"  Binding="{Binding Path=Document}" Width="*"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Присутствия" FontSize="15">
+                    <Grid Background="Transparent">
+                        <DataGrid x:Name="TimePairs_dG" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" IsReadOnly="True" >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Дата с" IsReadOnly="True" Binding="{Binding Path=DateFrom}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Дата по" IsReadOnly="True"  Binding="{Binding Path=DateBy}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Время с" IsReadOnly="True"  Binding="{Binding Path=TimeFrom}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Время по" IsReadOnly="True"  Binding="{Binding Path=TimeBy}" Width="*"></DataGridTextColumn>
+                                <DataGridTextColumn Header="Помещение" IsReadOnly="True"  Binding="{Binding Path=Location}" Width="*"></DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <Label Content="Местоположение" HorizontalAlignment="Left" Margin="492,148,0,0" VerticalAlignment="Top" FontSize="20" Height="36" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="Location_tBox" HorizontalAlignment="Left" Margin="498,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox x:Name ="Bith_tBox" HorizontalAlignment="Left" Margin="222,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="36" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата рождения" HorizontalAlignment="Left" Margin="35,106,0,0" VerticalAlignment="Top" FontSize="20" Height="36" HorizontalContentAlignment="Center"/>
+            <Label Content="График" HorizontalAlignment="Left" Margin="492,66,0,0" VerticalAlignment="Top" FontSize="20" Height="36" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="PGRV_tBox" HorizontalAlignment="Left" Margin="498,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+        </Grid>
+
 
         <!-- Запросы -->
         <Grid x:Name ="InquiryGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
@@ -312,7 +404,7 @@
             </Grid>
         </Grid>
 
-        
+
         <!-- ГРВ -->
         <Grid x:Name ="SchedulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <Grid x:Name ="NewSchedulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="NewSchedulesButton_MouseEnter" MouseLeave="NewSchedulesButton_MouseLeave" PreviewMouseLeftButtonDown="NewSchedulesButton_PreviewMouseLeftButtonDown" >
@@ -416,8 +508,6 @@
             <Label Content="Время с" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
             <TextBox HorizontalAlignment="Left"  Margin="221.667,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Время по" HorizontalAlignment="Left" Margin="35,105,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name ="StrictChekBox" HorizontalAlignment="Left"  Margin="222,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="35" VerticalContentAlignment="Center" BorderBrush="#FFACACAC" PreviewMouseLeftButtonDown="StrictChekBox_PreviewMouseLeftButtonDown"/>
-            <Label Content="Строгость" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
             <Grid x:Name ="SaveBreakButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" MouseEnter="SaveBreakButton_MouseEnter" MouseLeave="SaveBreakButton_MouseLeave" PreviewMouseLeftButtonDown="SaveBreakButton_PreviewMouseLeftButtonDown" >
                 <Image Source="Resources/People/Save.png" />
@@ -428,7 +518,7 @@
             </Grid>
         </Grid>
 
-        
+
         <!-- Роли -->
         <Grid x:Name ="RulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
             <Grid x:Name ="NewRulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,10,10,0" MouseEnter="NewRulesButton_MouseEnter" MouseLeave="NewRulesButton_MouseLeave" PreviewMouseLeftButtonDown="NewRulesButton_PreviewMouseLeftButtonDown" >
@@ -444,46 +534,94 @@
         </Grid>
 
         <!-- Роли новый -->
-        <Grid x:Name ="NewRulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
-            <TextBox HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+        <Grid x:Name ="NewRulesGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Visible" RenderTransformOrigin="0.507,0.487">
+            <TextBox HorizontalAlignment="Left"  Margin="250,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Код роли" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TextBox HorizontalAlignment="Left"  Margin="221.667,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="560" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox HorizontalAlignment="Left"  Margin="250,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="560" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Описание" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
             <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,0,0,400"/>
             <TextBlock HorizontalAlignment="Left" Margin="35,125,0,0" TextWrapping="Wrap" Text="Настройка роли" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
-            <TabControl x:Name="tabControl" HorizontalAlignment="Left" Height="435" Margin="35,175,0,0" VerticalAlignment="Top" Width="910">
-                                <TabItem Header="Полномочия на HRSaveTimeClient" FontSize="15">
-                    <Grid Background="Transparent">
-                        <TextBox HorizontalAlignment="Left"  Margin="250,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="35" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="HRClientAll" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Сотрудники" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Запросы" HorizontalAlignment="Left" Margin="35,105,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,145,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Отчёты" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,185,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Графики" HorizontalAlignment="Left" Margin="35,185,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,225,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Роли" HorizontalAlignment="Left" Margin="35,225,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,265,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Мониторинг" HorizontalAlignment="Left" Margin="35,265,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                    </Grid>
-                </TabItem>
-                <TabItem Header="Структурные полномочия" FontSize="15">
-                    <Grid Background="Transparent">
-                        <TextBox HorizontalAlignment="Left"  Margin="250,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="35" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="ORGStructureAll" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
-                        <Grid  x:Name ="MoreOGRVRuleGrid" HorizontalAlignment="Left"  Margin="514,65,0,0" VerticalAlignment="Top" Height="35" Width="35" MouseEnter="MoreOGRVRuleGrid_MouseEnter" PreviewMouseLeftButtonDown="MoreOGRVRuleGrid_PreviewMouseLeftButtonDown" MouseLeave="MoreOGRVRuleGrid_MouseLeave">
-                            <Image x:Name ="MoreOGRVRuleButton" Source="Resources/Reports/More.png" HorizontalAlignment="Center"  VerticalAlignment="Center" Height="25" Width="25"/>
-                        </Grid>
-                        <TextBox HorizontalAlignment="Left"  Margin="250,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-                        <Label Content="Орг.единица" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-                    </Grid>
-                </TabItem>
-            </TabControl>
+            <TextBox HorizontalAlignment="Left"  Margin="794,175,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="35" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="HRClientAll" HorizontalAlignment="Left" Margin="579,175,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,175,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Профиль" HorizontalAlignment="Left" Margin="35,175,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,215,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Запросы" HorizontalAlignment="Left" Margin="35,215,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,255,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Отчёты" HorizontalAlignment="Left" Margin="35,255,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,295,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Графики" HorizontalAlignment="Left" Margin="35,295,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,335,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Роли" HorizontalAlignment="Left" Margin="35,335,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,375,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Мониторинг" HorizontalAlignment="Left" Margin="35,375,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,415,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Отсутствия" HorizontalAlignment="Left" Margin="35,415,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,455,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Временная пара" HorizontalAlignment="Left" Margin="35,455,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,495,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Табельный номера" HorizontalAlignment="Left" Margin="35,495,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,535,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="RFID" HorizontalAlignment="Left" Margin="35,535,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <ComboBox HorizontalAlignment="Left"  Margin="250,575,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC">
+                <TextBlock Text="None" Background="Transparent" />
+                <TextBlock Text="View" Background="Transparent" />
+                <TextBlock Text="Edit" Background="Transparent" />
+                <TextBlock Text="New" Background="Transparent" />
+            </ComboBox>
+            <Label Content="Авторизация" HorizontalAlignment="Left" Margin="35,575,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
             <Grid x:Name ="SaveRulesButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="125" Margin="0,0,10,10" MouseEnter="SaveRulesButton_MouseEnter" MouseLeave="SaveRulesButton_MouseLeave" PreviewMouseLeftButtonDown="SaveRulesButton_PreviewMouseLeftButtonDown" >
                 <Image Source="Resources/People/Save.png" />
@@ -513,40 +651,34 @@
         </Grid>
 
         <!-- Мой профиль-->
-        <Grid x:Name ="ProfileGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
-            <Image x:Name ="PictureUser_img" Width="157" Height="157" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,25,0" Source="Resources/noavatar.png"/>
+        <Grid x:Name ="MyProfileGrid" HorizontalAlignment="Left" Height="670" Margin="300,50,0,0" VerticalAlignment="Top" Width="980" Visibility="Collapsed">
+            <Image x:Name ="MyPictureUser_img" Width="157" Height="157" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,25,25,0" Source="Resources/noavatar.png"/>
 
-            <Grid x:Name ="EditProfileButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,25,355,0" >
-                <Image Source="Resources/Inq/Edit.png" Margin="0,0,0,0" />
-            </Grid>
-
-            <TextBox x:Name ="Pernr_tBox" HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox x:Name ="MyPernr_tBox" HorizontalAlignment="Left"  Margin="221.667,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Табельный номер" HorizontalAlignment="Left" Margin="35,25,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
-            <TextBox x:Name ="FIO_tBox" HorizontalAlignment="Left" Margin="222,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox x:Name ="MyFIO_tBox" HorizontalAlignment="Left" Margin="222,65,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="ФИО" HorizontalAlignment="Left" Margin="35,65,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name ="Position_tBox" HorizontalAlignment="Left" Margin="222,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-            <Label Content="Должность" HorizontalAlignment="Left" Margin="35,106,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name ="ORG_tBox" HorizontalAlignment="Left" Margin="222,146,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" Background="Transparent"/>
-            <Label Content="Орг.присвоение" HorizontalAlignment="Left" Margin="35,146,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="MyPosition_tBox" HorizontalAlignment="Left" Margin="222,148,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Должность" HorizontalAlignment="Left" Margin="35,148,0,0" VerticalAlignment="Top" FontSize="20" Height="34" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="MyORG_tBox" HorizontalAlignment="Left" Margin="222,188,0,0" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" Background="Transparent"/>
+            <Label Content="Орг.присвоение" HorizontalAlignment="Left" Margin="35,188,0,0" VerticalAlignment="Top" FontSize="20" Height="34" HorizontalContentAlignment="Center"/>
 
-            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,211,0,457"/>
-            <TextBlock HorizontalAlignment="Left" Margin="35,200,0,0" TextWrapping="Wrap" Text="Дополнительно" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
+            <Grid Background="#d0d0d0" VerticalAlignment="Center" HorizontalAlignment="Center" Width="980" Height="2" Margin="0,253,0,415"/>
+            <TextBlock HorizontalAlignment="Left" Margin="35,242,0,0" TextWrapping="Wrap" Text="Дополнительно" FontSize="15" Background="White" VerticalAlignment="Top" Padding="0"/>
 
-            <TextBox x:Name ="RFID_tBox" HorizontalAlignment="Right" Margin="0,237,507,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-            <Label Content="RFID" HorizontalAlignment="Left" Margin="35,237,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <Grid x:Name ="EditRFIDButton" Background="#0049db" HorizontalAlignment="Right" VerticalAlignment="Top" Width="125" Margin="0,237,355,0" >
-                <Image Source="Resources/Inq/Edit.png" Margin="0,0,0,0" />
-            </Grid>
+            <TextBox x:Name ="MyRFID_tBox" HorizontalAlignment="Right" Margin="0,279,507,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="RFID" HorizontalAlignment="Left" Margin="35,279,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 
-            <TextBox x:Name ="Login_tBox" HorizontalAlignment="Right" Margin="0,277,507,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-            <Label Content="Логин" HorizontalAlignment="Left" Margin="35,277,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name ="Password_tBox" HorizontalAlignment="Right" Margin="0,277,35,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
-            <Label Content="Пароль" HorizontalAlignment="Left" Margin="507,277,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TabControl HorizontalAlignment="Left" Height="315" Margin="41,329,0,0" VerticalAlignment="Top" Width="911">
+            <TextBox x:Name ="MyLogin_tBox" HorizontalAlignment="Right" Margin="0,319,507,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Логин" HorizontalAlignment="Left" Margin="35,319,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <PasswordBox x:Name ="MyPassword_pBox" HorizontalAlignment="Right" Margin="0,319,106,0"  VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC" />
+            <TextBox x:Name ="MyPassword_tBox" HorizontalAlignment="Right" Margin="0,319,106,0"  VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"  Visibility="Collapsed"/>
+            <Label Content="Пароль" HorizontalAlignment="Left" Margin="507,319,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
+            <TabControl HorizontalAlignment="Left" Height="275" Margin="41,369,0,0" VerticalAlignment="Top" Width="911">
                 <TabItem Header="Контактная информация" FontSize="15">
                     <Grid Background="Transparent">
-                        <DataGrid x:Name="Contacts_dG" AutoGenerateColumns="False" Height="272" Margin="5,5,5,0"  VerticalAlignment="Top" ItemsSource="{Binding}" >
+                        <DataGrid x:Name="MyContacts_dG" AutoGenerateColumns="False" Height="272" Margin="5,5,5,0"  VerticalAlignment="Top" ItemsSource="{Binding}" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Наименование" IsReadOnly="True" Binding="{Binding Path=Descript}" Width="250"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Значение" IsReadOnly="True"  Binding="{Binding Path=Value}" Width="*"></DataGridTextColumn>
@@ -557,7 +689,7 @@
 
                 <TabItem Header="Отсутствия" FontSize="15">
                     <Grid Background="Transparent">
-                        <DataGrid x:Name="Absence_dG" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" IsReadOnly="True" >
+                        <DataGrid x:Name="MyAbsence_dG" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" IsReadOnly="True" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Вид" IsReadOnly="True" Binding="{Binding Path=View}" Width="*"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Дата с" IsReadOnly="True"  Binding="{Binding Path=DateFrom}" Width="*"></DataGridTextColumn>
@@ -569,7 +701,7 @@
                 </TabItem>
                 <TabItem Header="Присутствия" FontSize="15">
                     <Grid Background="Transparent">
-                        <DataGrid x:Name="TimePairs_dG" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" IsReadOnly="True" >
+                        <DataGrid x:Name="MyTimePairs_dG" HorizontalAlignment="Center" VerticalAlignment="Top" Background="Transparent" IsReadOnly="True" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Дата с" IsReadOnly="True" Binding="{Binding Path=DateFrom}" Width="*"></DataGridTextColumn>
                                 <DataGridTextColumn Header="Дата по" IsReadOnly="True"  Binding="{Binding Path=DateBy}" Width="*"></DataGridTextColumn>
@@ -581,8 +713,14 @@
                     </Grid>
                 </TabItem>
             </TabControl>
-            <Label Content="Местоположение" HorizontalAlignment="Left" Margin="494,107,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
-            <TextBox x:Name ="Location_tBox" HorizontalAlignment="Left" Margin="500,147,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Местоположение" HorizontalAlignment="Left" Margin="492,148,0,0" VerticalAlignment="Top" FontSize="20" Height="36" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="MyLocation_tBox" HorizontalAlignment="Left" Margin="498,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <TextBox x:Name ="MyBith_tBox" HorizontalAlignment="Left" Margin="222,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="36" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Label Content="Дата рождения" HorizontalAlignment="Left" Margin="35,106,0,0" VerticalAlignment="Top" FontSize="20" Height="36" HorizontalContentAlignment="Center"/>
+            <Label Content="График" HorizontalAlignment="Left" Margin="492,66,0,0" VerticalAlignment="Top" FontSize="20" Height="36" HorizontalContentAlignment="Center"/>
+            <TextBox x:Name ="MyPGRV_tBox" HorizontalAlignment="Left" Margin="498,106,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="34" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
+            <Button x:Name="MyEdit_btn" Content="Изменить" HorizontalAlignment="Left" Margin="883,319,0,0" VerticalAlignment="Top" Width="68" Height="35" Click="MyEdit_btn_Click"/>
+            <Button x:Name="MyOk_btn" Content="Ок" HorizontalAlignment="Left" Margin="883,319,0,0" VerticalAlignment="Top" Width="68" Height="35" Visibility="Collapsed" Click="MyOk_btn_Click"/>
         </Grid>
     </Grid>
 </Window>

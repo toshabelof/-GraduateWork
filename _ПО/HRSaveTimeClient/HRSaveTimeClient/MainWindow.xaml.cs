@@ -168,84 +168,116 @@ namespace HRSaveTimeClient
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Login_tBox.Text == "SysAdmin")
+            switch (Login_tBox.Text)
             {
-                using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
-                {
-
-                    openFileDialog.Filter = "Settings File (*.txt) | *.txt";
-
-                    if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                case "SysAdmin":
                     {
-                        try
+                        #region
+                        using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
                         {
-                            GetSetting(openFileDialog.FileName.ToString());
-                            SetSetting();
-                            MessageBox.Show("Настройки HRSaveTime успешно скопированы на локальный ПК.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                            openFileDialog.Filter = "Settings File (*.txt) | *.txt";
+
+                            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                            {
+                                try
+                                {
+                                    GetSetting(openFileDialog.FileName.ToString());
+                                    SetSetting();
+                                    MessageBox.Show("Настройки HRSaveTime успешно скопированы на локальный ПК.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(ex.Message.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                            }
 
                         }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        break;
+                        #endregion
                     }
+                case "HRALL":
+                    {
+                        #region
+                        if (Password_tBox.Password == "ROOT")
+                        {
+                            GlobalForm gf = new GlobalForm();                        
 
-                }
+                            this.Visibility = Visibility.Hidden;
+                            gf.ValueProfile = "HRALL";
+                            gf.ShowDialog();
+
+                            this.Visibility = Visibility.Visible;
+                            return;
+                        }
+                        else
+                        {
+                            MessageBox.Show("Вы ввели неверный пароль.", "Информация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            Password_tBox.Password = "";
+                            Password_tBox.Focus();
+                        }
+                        break;
+                        #endregion
+                    }
+                default:
+                    {
+                        #region
+                        GetSetting();
+                        String[] mas = GetBDType();
+                        String connect;
+
+
+                        String login = Login_tBox.Text;
+                        String password = Password_tBox.Password;
+                        var lists = new List<string>();
+
+                        connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                        using (OracleConnection con = new OracleConnection(connect))
+                        {
+                            con.Open();
+                            OracleCommand com = new OracleCommand("select PASSWORD, PERNR from AUTHENTICATION where LOGIN = '" + login + "'", con);
+                            using (var reader = com.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    lists.Add(reader[0].ToString());
+                                    lists.Add(reader[1].ToString());
+                                }
+                                con.Close();
+                            }
+                        }
+
+                        if (lists.Count != 0)
+                        {
+                            if (Password_tBox.Password == lists[0])
+                            {
+                                GlobalForm gf = new GlobalForm();
+                                gf.MyPernr_tBox.Text = lists[1];
+
+                                this.Visibility = Visibility.Hidden;
+                                gf.ShowDialog();
+                                this.Visibility = Visibility.Visible;
+                                return;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Вы ввели неверный пароль.", "Информация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                                Password_tBox.Password = "";
+                                Password_tBox.Focus();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Пользователь с таким Login не найден в системе HRSaveTime.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                            Password_tBox.Password = "";
+                            Login_tBox.Focus();
+                        }
+                        break;
+                        #endregion
+                    }
             }
-            else
-            {
-                GetSetting();
-                String[] mas = GetBDType();
-                String connect;
-               
-
-                String login = Login_tBox.Text;
-                String password = Password_tBox.Password;
-                var lists = new List<string>();
-
-                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
-                using (OracleConnection con = new OracleConnection(connect))
-                {
-                    con.Open();
-                    OracleCommand com = new OracleCommand("select PASSWORD, PERNR from AUTHENTICATION where LOGIN = '" + login + "'", con);
-                    using (var reader = com.ExecuteReader())
-                    {                       
-                        while (reader.Read())
-                        {
-                            lists.Add(reader[0].ToString());
-                            lists.Add(reader[1].ToString());
-                        }
-                        con.Close();
-                    }
-                }
-
-                if (lists.Count != 0)
-                {
-                    if (Password_tBox.Password == lists[0])
-                    {
-                        GlobalForm gf = new GlobalForm();
-                        gf.Pernr_tBox.Text = lists[1];
-
-                        this.Visibility = Visibility.Hidden;
-                        gf.ShowDialog();
-                        this.Visibility = Visibility.Visible;
-                        return;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Вы ввели неверный пароль.", "Информация", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        Password_tBox.Password = "";
-                        Password_tBox.Focus();
-                    }
-                    
-                }
-                else
-                {
-                    MessageBox.Show("Пользователь с таким Login не найден в системе HRSaveTime.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Password_tBox.Password = "";
-                    Login_tBox.Focus();
-                }
-            }
+            
         }
 
         private void Image_MouseEnter(object sender, MouseEventArgs e)
