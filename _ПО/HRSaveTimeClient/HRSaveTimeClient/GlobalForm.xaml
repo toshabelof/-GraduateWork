@@ -67,7 +67,7 @@
         <!--Заголовок Page-->
         <Grid Background="#eaeaea" VerticalAlignment="Top" Height="50" MouseLeftButtonDown="Grid_MouseLeftButtonDown" Margin="300,0,0,0" >
             <TextBlock x:Name ="Title" Text="GlobalForm" Foreground="#7d7d7d" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"></TextBlock>
-            <Grid Background="#d0d0d0" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Width="980" Height="5" MouseLeftButtonDown="Grid_MouseLeftButtonDown" ></Grid>
+            <Grid Background="#d0d0d0" VerticalAlignment="Bottom" HorizontalAlignment="Right"  Width="980" Height="5" MouseLeftButtonDown="Grid_MouseLeftButtonDown"></Grid>
             <Image x:Name="GExit" VerticalAlignment="Center" HorizontalAlignment="Right" Width="15" Source="Resources/GEXIT.png" Margin="0,12.5,10,12.5" PreviewMouseDown="GExit_PreviewMouseDown" MouseEnter="GExit_MouseEnter" MouseLeave="GExit_MouseLeave" />
             <Image x:Name="GCurt" VerticalAlignment="Center" HorizontalAlignment="Right" Height = "15" Source="Resources/GCURT.png" Margin="0,17.5,35,17.5" PreviewMouseDown="GCurt_PreviewMouseDown"/>
         </Grid>
@@ -288,11 +288,14 @@
             <TextBox x:Name="DateByReports_tBox" HorizontalAlignment="Left" Margin="222,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" BorderBrush="#FFACACAC"/>
             <Label Content="Дата по" HorizontalAlignment="Left" Margin="35,200,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
             <ComboBox  x:Name="ViewReports_tBox" HorizontalAlignment="Left" Margin="222,240,0,0" VerticalAlignment="Top" FontSize="20" Height="35" Width="250" VerticalContentAlignment="Center" Background="Transparent" BorderBrush="#FFACACAC">
-                <TextBlock Text="Общий отчёт" Background="Transparent" />
+                <TextBlock Text="По временным данным" Background="Transparent" />
                 <Separator/>
+                <TextBlock Text="По сотрудникам" Background="Transparent"/>
                 <TextBlock Text="По присутствиям" Background="Transparent"/>
-                <TextBlock Text="По прогулам" Background="Transparent"/>               
-
+                <TextBlock Text="По прогулам" Background="Transparent"/>
+                <TextBlock Text="По отгулам" Background="Transparent"/>
+                <TextBlock Text="По больничным" Background="Transparent"/>
+                <TextBlock Text="По командировкам" Background="Transparent"/>
             </ComboBox>
             <Label Content="Вид" HorizontalAlignment="Left" Margin="35,240,0,0" VerticalAlignment="Top" FontSize="20" Height="35" HorizontalContentAlignment="Center"/>
 

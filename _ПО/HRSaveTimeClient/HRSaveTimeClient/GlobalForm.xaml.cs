@@ -15,6 +15,7 @@ using System.IO;
 using System.Data;
 using System.ComponentModel;
 using Microsoft.Office.Interop.Excel;
+using System.Globalization;
 
 
 
@@ -654,34 +655,207 @@ namespace HRSaveTimeClient
             }
         }
 
-        class AbsenceReport
+        class AbsencePromenadeReport
         {
             public string Pernr { get; set; }
             public string LName { get; set; }
             public string Name { get; set; }
             public string Patr { get; set; }
             public string DateF { get; set; }
+            public string Doc { get; set; }
 
-            public AbsenceReport(string Pernr, string LName, string Name, string Patr, string DateF)
+            public AbsencePromenadeReport(string Pernr, string LName, string Name, string Patr, string DateF, string Doc)
             {
                 this.Pernr = Pernr;
                 this.LName = LName;
                 this.Name = Name;
                 this.Patr = Patr;
                 this.DateF = DateF;
+                this.Doc = Doc;
             }
         }
 
+        class AbsenceTimeOFFReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public int qDays { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Doc { get; set; }
 
-        struct timeParisReports
+            public AbsenceTimeOFFReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
+            {
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.qDays = qDays;
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Doc = Doc;
+            }
+        }
+
+        class AbsenceHospitalReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public int qDays { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Doc { get; set; }
+
+            public AbsenceHospitalReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
+            {
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.qDays = qDays;
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Doc = Doc;
+            }
+        }
+
+        class AbsenceBTripReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public int qDays { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Doc { get; set; }
+
+            public AbsenceBTripReport(string Pernr, string LName, string Name, string Patr, int qDays, string DateF, string DateB, string Doc)
+            {
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.qDays = qDays;
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Doc = Doc;
+            }
+        }
+
+        class PeopleReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string Bith { get; set; }
+            public string DateF { get; set; }
+            public string DateB { get; set; }
+            public string Position { get; set; }
+            public string cORG { get; set; }
+            public string nORG { get; set; }
+            public string cPGRV { get; set; }
+            public string nPGRV { get; set; }
+            public string cRule { get; set; }
+            public string nRule { get; set; }
+
+            public PeopleReport(string Pernr, string DateF, string DateB, string LName, string Name, string Patr, string Bith, string Position, string cORG, string nORG, string cPGRV, string nPGRV, string cRule, string nRule)
+            {
+                this.DateF = DateF;
+                this.DateB = DateB;
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.Bith = Bith;
+                this.Position = Position;
+                this.cORG = cORG;
+                this.nORG = nORG;
+                this.cPGRV = cPGRV;
+                this.nPGRV = nPGRV;
+                this.cRule = cRule;
+                this.nRule = nRule;
+            }
+        }
+
+        class TimePiopleReport
+        {
+            public string Pernr { get; set; }
+            public string LName { get; set; }
+            public string Name { get; set; }
+            public string Patr { get; set; }
+            public string PlanTime { get; set; }
+            public string FactTime { get; set; }
+            public string WSTimeValue { get; set; }
+            public string WSTime { get; set; }
+            public string TardValue { get; set; }
+            public string TardTime { get; set; }
+            public string RecValue { get; set; }
+            public string RecTime { get; set; }
+            public string BTripValue { get; set; }
+            public string HospValue { get; set; }
+            public string HolyValue { get; set; }
+            public string AbsentValue { get; set; }
+            public string TimeOFFValue { get; set; }
+
+            public TimePiopleReport(string Pernr, string LName, string Name, string Patr, string PlanTime, string FactTime, string WSTimeValue, string WSTime, string TardValue,
+                string TardTime, string RecValue, string RecTime, string BTripValue, string HospValue, string HolyValue, string AbsentValue, string TimeOFFValue)
+            {
+                this.Pernr = Pernr;
+                this.LName = LName;
+                this.Name = Name;
+                this.Patr = Patr;
+                this.PlanTime = PlanTime;
+                this.FactTime = FactTime;
+                this.WSTimeValue = WSTimeValue;
+                this.WSTime = WSTime;
+                this.TardValue = TardValue;
+                this.TardTime = TardTime;
+                this.RecValue = RecValue;
+                this.RecTime = RecTime;
+                this.BTripValue = BTripValue;
+                this.HospValue = HospValue;
+                this.HolyValue = HolyValue;
+                this.AbsentValue = AbsentValue;
+                this.TimeOFFValue = TimeOFFValue;
+            }
+        }
+
+        class OGRVTime
+        {
+            public DateTime TYPE { get; set; }
+            public DateTime NORMFROM { get; set; }
+            public DateTime NORMBY { get; set; }
+            public DateTime TIMEFROM { get; set; }
+            public DateTime TIMEBY { get; set; }
+
+
+            public OGRVTime(string NORMFROM, string NORMBY, string TIMEFROM, string TIMEBY)
+            {
+                this.NORMFROM = Convert.ToDateTime(NORMFROM);
+                this.NORMBY = Convert.ToDateTime(NORMBY);
+                this.TIMEFROM = Convert.ToDateTime(TIMEFROM);
+                this.TIMEBY = Convert.ToDateTime(TIMEBY);
+            }
+        }
+
+        struct sReports
         {
             public List<TimeParisReport> timeParis;
-            public List<AbsenceReport> Abscence;
+            public List<AbsencePromenadeReport> Promenade;
+            public List<AbsenceTimeOFFReport> TimeOFF;
+            public List<AbsenceHospitalReport> Hospital;
+            public List<AbsenceBTripReport> BTrip;
+            public List<PeopleReport> People;
+            public List<TimePiopleReport> TimePiople;
             public string FileName { get; set; }
         }
-        timeParisReports _inputTimeParisReportsReports;
-
-
+        sReports _inputTimeParisReportsReports;
 
         private void GenerateReportsButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -692,17 +866,18 @@ namespace HRSaveTimeClient
             String view = ViewReports_tBox.Text;
 
 
-            if (backgroundWorker.IsBusy)
-            { return; }
+            if (backgroundWorker.IsBusy) { return; }
 
-            using (System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog() { Filter = "Excel FIle (*.xls)|*.xls " })
+            using (System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog() { Filter = "Excel FIle (*.xlsx)|*.xlsx " })
             {
                 if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     switch (view)
                     {
+
                         case "По присутствиям":
                             {
+                                #region
                                 TypeReports = "По присутствиям";
                                 _inputTimeParisReportsReports.FileName = sfd.FileName;
 
@@ -714,27 +889,46 @@ namespace HRSaveTimeClient
                                     con.Open();
                                     OracleCommand com;
                                     List<TimeParisReport> l = new List<TimeParisReport>();
-                                    foreach (string p in pernr)
+                                    if (pernr[0] != "")
                                     {
-                                        com = new OracleCommand("Select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, TIME_PAIRS.DATAFROM, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY " +
-                                            "from PERNR, PERS_INFO, RFID, TIME_PAIRS, ROOMS " +
-                                            "where PERS_INFO.IDPERS = PERNR.PERSID AND RFID.PERSID = PERS_INFO.IDPERS AND TIME_PAIRS.RFIDID = RFID.IDRFID AND TIME_PAIRS.ROOMID = ROOMS.IDROOMS and ROOMS.NAME <> 'Вне офиса' and IDPERNR = '" + p + "' order by TIME_PAIRS.DATAFROM", con);
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("Select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, TIME_PAIRS.DATAFROM, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY " +
+                                                "from PERNR, PERS_INFO, RFID, TIME_PAIRS, ROOMS " +
+                                                "where TIME_PAIRS.RFIDID = RFID.IDRFID AND PERS_INFO.IDPERS = PERNR.PERSID AND RFID.PERSID = PERS_INFO.IDPERS AND  TIME_PAIRS.ROOMID = ROOMS.IDROOMS and ROOMS.NAME <> 'Вне офиса' and IDPERNR = '" + p + "' order by TIME_PAIRS.DATAFROM", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                while (reader.Read())
+                                                {
+                                                    l.Add(new TimeParisReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
+                                                }
+                                            }
+                                            _inputTimeParisReportsReports.timeParis = l;
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        com = new OracleCommand("Select PERNR.IDPERNR, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, TIME_PAIRS.DATAFROM, TIME_PAIRS.TIMEFROM, TIME_PAIRS.TIMEBY " +
+                                                    "from PERS_INFO, RFID, TIME_PAIRS, ROOMS " +
+                                                    "where TIME_PAIRS.RFIDID = RFID.IDRFID and RFID.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS AND TIME_PAIRS.ROOMID = ROOMS.IDROOMS and ROOMS.NAME <> 'Вне офиса' order by TIME_PAIRS.DATAFROM", con);
                                         using (var reader = com.ExecuteReader())
                                         {
                                             while (reader.Read())
                                             {
-                                                l.Add(new TimeParisReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
+                                                l.Add(new TimeParisReport(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString(), reader[6].ToString()));
                                             }
                                         }
                                         _inputTimeParisReportsReports.timeParis = l;
-                                    }
+                                    }                                 
                                 }
                                 backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
                                 break;
+                                #endregion
                             }
 
                         case "По прогулам":
                             {
+                                #region
                                 TypeReports = "По прогулам";
                                 _inputTimeParisReportsReports.FileName = sfd.FileName;
 
@@ -745,41 +939,410 @@ namespace HRSaveTimeClient
                                 {
                                     con.Open();
                                     OracleCommand com;
-                                    List<AbsenceReport> l = new List<AbsenceReport>();
-                                    foreach (string p in pernr)
+                                    List<AbsencePromenadeReport> l = new List<AbsencePromenadeReport>();
+                                    if (pernr[0] != "")
                                     {
-                                        com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM " +
-                                            "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
-                                            "where  PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Прогул' and PERNR.IDPERNR  =  '" + p + "' order by ABSCENCE.DATEFROM", con);
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DOCUMENT " +
+                                                "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                "where ABSCENCE.PERNRID = PERNR.IDPERNR and PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Прогул' and ABSCENCE.PERNRID  =  '" + p + "' order by ABSCENCE.DATEFROM", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                while (reader.Read())
+                                                {
+                                                    l.Add(new AbsencePromenadeReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString()));
+                                                }
+                                            }
+                                            _inputTimeParisReportsReports.Promenade = l;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        com = new OracleCommand("select ABSCENCE.PERNRID,PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DOCUMENT " +
+                                                    "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                    "where  ABSCENCE.PERNRID = PERNR.IDPERNR and PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Прогул' order by ABSCENCE.DATEFROM", con);
                                         using (var reader = com.ExecuteReader())
                                         {
                                             while (reader.Read())
                                             {
-                                                l.Add(new AbsenceReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString()));
+                                                l.Add(new AbsencePromenadeReport(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
                                             }
                                         }
-                                        _inputTimeParisReportsReports.Abscence = l;
-
+                                        _inputTimeParisReportsReports.Promenade = l;
                                     }
                                 }
                                 backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
 
                                 break;
+                                #endregion
+                            }
+
+                        case "По отгулам":
+                            {
+                                #region
+                                TypeReports = "По отгулам";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<AbsenceTimeOFFReport> l = new List<AbsenceTimeOFFReport>();
+                                    if (pernr[0] != "")
+                                    {
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DATEBY, ABSCENCE.DOCUMENT " +
+                                                "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                "where  PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Отгул' and ABSCENCE.PERNRID  =  '" + p + "' order by ABSCENCE.DATEFROM", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                while (reader.Read())
+                                                {
+                                                    TimeSpan days = (DateTime)reader[4] - (DateTime)reader[3];
+                                                    l.Add(new AbsenceTimeOFFReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), days.Days + 1, reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
+                                                }
+                                            }
+                                            _inputTimeParisReportsReports.TimeOFF = l;
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        com = new OracleCommand("select ABSCENCE.PERNRID, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DATEBY, ABSCENCE.DOCUMENT " +
+                                                    "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                    "where  ABSCENCE.PERNRID = PERNR.IDPERNR and PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Отгул' order by ABSCENCE.DATEFROM", con);
+                                        using (var reader = com.ExecuteReader())
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                TimeSpan days = (DateTime)reader[5] - (DateTime)reader[4];
+                                                l.Add(new AbsenceTimeOFFReport(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), days.Days + 1, reader[4].ToString(), reader[5].ToString(), reader[6].ToString()));
+                                            }
+                                        }
+                                        _inputTimeParisReportsReports.TimeOFF = l;
+                                    }
+                                }
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+
+                                break;
+                                #endregion
+                            }
+
+                        case "По больничным":
+                            {
+                                #region
+                                TypeReports = "По больничным";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<AbsenceHospitalReport> l = new List<AbsenceHospitalReport>();
+
+                                    if (pernr[0] != "")
+                                    {
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DATEBY, ABSCENCE.DOCUMENT " +
+                                                "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                "where ABSCENCE.PERNRID = PERNR.IDPERNR and PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Больничный' and  ABSCENCE.PERNRID  =  '" + p + "' order by ABSCENCE.DATEFROM", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                while (reader.Read())
+                                                {
+                                                    TimeSpan days = (DateTime)reader[4] - (DateTime)reader[3];
+                                                    l.Add(new AbsenceHospitalReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), days.Days + 1, reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
+                                                }
+                                            }
+                                            _inputTimeParisReportsReports.Hospital = l;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        com = new OracleCommand("select ABSCENCE.PERNRID, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DATEBY, ABSCENCE.DOCUMENT " +
+                                                    "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                    "where ABSCENCE.PERNRID = PERNR.IDPERNR and PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Больничный' order by ABSCENCE.DATEFROM", con);
+                                        using (var reader = com.ExecuteReader())
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                TimeSpan days = (DateTime)reader[5] - (DateTime)reader[4];
+                                                l.Add(new AbsenceHospitalReport(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), days.Days + 1, reader[4].ToString(), reader[5].ToString(), reader[6].ToString()));
+                                            }
+                                        }
+                                        _inputTimeParisReportsReports.Hospital = l;
+                                    }
+                                }
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+
+                                break;
+                                #endregion
+                            }
+
+                        case "По командировкам":
+                            {
+                                #region
+                                TypeReports = "По командировкам";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<AbsenceBTripReport> l = new List<AbsenceBTripReport>();
+                                    if (pernr[0] != "")
+                                    {
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DATEBY, ABSCENCE.DOCUMENT " +
+                                                "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                "where  PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Командировка' and ABSCENCE.PERNRID  =  '" + p + "' order by ABSCENCE.DATEFROM", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                while (reader.Read())
+                                                {
+                                                    TimeSpan days = (DateTime)reader[4] - (DateTime)reader[3];
+                                                    l.Add(new AbsenceBTripReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), days.Days + 1, reader[3].ToString(), reader[4].ToString(), reader[5].ToString()));
+                                                }
+                                            }
+                                            _inputTimeParisReportsReports.BTrip = l;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        com = new OracleCommand("select ABSCENCE.PERNRID, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, ABSCENCE.DATEFROM, ABSCENCE.DATEBY, ABSCENCE.DOCUMENT " +
+                                                "from PERNR, PERS_INFO, ABSCENCE, VIEW_ABS " +
+                                                "where  ABSCENCE.PERNRID = PERNR.IDPERNR and PERNR.PERSID = PERS_INFO.IDPERS and ABSCENCE.VIEWID = VIEW_ABS.IDVIEW and VIEW_ABS.NAME = 'Командировка' order by ABSCENCE.DATEFROM", con);
+                                        using (var reader = com.ExecuteReader())
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                TimeSpan days = (DateTime)reader[5] - (DateTime)reader[4];
+                                                l.Add(new AbsenceBTripReport(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), days.Days + 1, reader[4].ToString(), reader[5].ToString(), reader[6].ToString()));
+                                            }
+                                        }
+                                        _inputTimeParisReportsReports.BTrip = l;
+                                    }
+                                }
+
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+
+                                break;
+                                #endregion
+                            }
+
+                        case "По сотрудникам":
+                            {
+                                #region
+                                TypeReports = "По сотрудникам";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<PeopleReport> l = new List<PeopleReport>();
+                                    if (pernr[0] != "")
+                                    {
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("select PERS_INFO.DATAFROM, PERS_INFO.DATABY, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, PERS_INFO.BIRTH, POSITION.Name, PERS_INFO.ORGID, ORG_LEVEL.NAME,  PERS_INFO.PGRVID, PGRV.DESCRIPT, PERS_INFO.RULE, RULES.DESCRIPT " +
+                                                "from PERNR, PERS_INFO, POSITION, ORG_LEVEL, RULES, PGRV " +
+                                                "where PERNR.PERSID = PERS_INFO.IDPERS and POSITION.IDPOS = PERS_INFO.POSID and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.RULE = RULES.CODE and PGRV.IDPGRV = PERS_INFO.PGRVID and PERNR.IDPERNR = '" + p + "'", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                while (reader.Read())
+                                                {
+                                                    l.Add(new PeopleReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[6].ToString(), reader[7].ToString(), reader[8].ToString(), reader[9].ToString(), reader[10].ToString(), reader[11].ToString(), reader[12].ToString(), reader[13].ToString()));
+                                                }
+                                            }
+                                            _inputTimeParisReportsReports.People = l;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        com = new OracleCommand("select PERNR.IDPERNR, PERS_INFO.DATAFROM, PERS_INFO.DATABY, PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, PERS_INFO.BIRTH, POSITION.Name, PERS_INFO.ORGID, ORG_LEVEL.NAME,  PERS_INFO.PGRVID, PGRV.DESCRIPT, PERS_INFO.RULE, RULES.DESCRIPT " +
+                                                "from PERNR, PERS_INFO, POSITION, ORG_LEVEL, RULES, PGRV " +
+                                                "where PERNR.PERSID = PERS_INFO.IDPERS and POSITION.IDPOS = PERS_INFO.POSID and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.RULE = RULES.CODE and PGRV.IDPGRV = PERS_INFO.PGRVID", con);
+                                        using (var reader = com.ExecuteReader())
+                                        {
+                                            while (reader.Read())
+                                            {
+                                                l.Add(new PeopleReport(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[5].ToString(), reader[6].ToString(), reader[7].ToString(), reader[8].ToString(), reader[9].ToString(), reader[10].ToString(), reader[11].ToString(), reader[12].ToString(), reader[13].ToString()));
+                                            }
+
+                                            _inputTimeParisReportsReports.People = l;
+                                        }
+                                    }
+
+                                }
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+
+                                break;
+                                #endregion
+                            }
+
+                        case "По временным данным":
+                            {
+                                #region
+                                TypeReports = "По временным данным";
+                                _inputTimeParisReportsReports.FileName = sfd.FileName;
+
+                                GetSetting();
+                                String[] mas = GetBDType();
+                                connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
+                                using (OracleConnection con = new OracleConnection(connect))
+                                {
+                                    con.Open();
+                                    OracleCommand com;
+                                    List<PeopleReport> l = new List<PeopleReport>();
+                                    List<string> lOgrv = new List<string>();
+
+                                    if (pernr[0] != "")
+                                    {
+                                        foreach (string p in pernr)
+                                        {
+                                            com = new OracleCommand("select OGRV1, OGRV2, OGRV3, OGRV4, OGRV5, OGRV6, OGRV7 " +
+                                                "from PERS_INFO, PERNR, PGRV " +
+                                                "where PERS_INFO.IDPERS = PERNR.PERSID and PGRV.IDPGRV = PERS_INFO.PGRVID and PERNR.IDPERNR = '" + p + "'", con);
+                                            using (var reader = com.ExecuteReader())
+                                            {
+                                                int index = 0;
+                                                while (reader.Read())
+                                                {
+                                                    while(index < 7)
+                                                        lOgrv.Add(reader[index++].ToString());
+                                                    //l.Add(new TimePiopleReport(p, reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString(), reader[4].ToString(), reader[6].ToString(), reader[7].ToString(), reader[8].ToString(), reader[9].ToString(), reader[10].ToString(), reader[11].ToString(), reader[12].ToString(), reader[13].ToString()));
+                                                }
+                                            }
+
+                                            List<OGRVTime> OGRVTime = new List<OGRVTime>();
+                                            foreach (string o in lOgrv)
+                                            {
+                                                if (o != "Вых")
+                                                {
+
+                                                    com = new OracleCommand("select NORMFROM, NORMBY, TIMEFROM, TIMEBY " +
+                                                        "from OGRV, BREAK " +
+                                                        "where OGRV.BREAKID= BREAK.IDBREACK and OGRV.IDOGRV = '" + o + "'", con);
+                                                    using (var reader = com.ExecuteReader())
+                                                    {
+                                                        while (reader.Read())
+                                                        {
+                                                            OGRVTime.Add(new OGRVTime(reader[0].ToString(), reader[1].ToString(), reader[2].ToString(), reader[3].ToString()));
+                                                        }
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    OGRVTime.Add(new OGRVTime("00:00", "00:00", "00:00", "00:00"));
+                                                }
+                                            }
+
+                                            String[] dt = Convert.ToDateTime(DateFromReports_tBox.Text).ToString("MM.yyyy").Split('.');
+                                            int kDays = DateTime.DaysInMonth(Convert.ToInt32(dt[1]), Convert.ToInt32(dt[0]));
+                                            SortedList<int, string> MList = new SortedList<int, string>();
+                                            for (int i = 1; i <= kDays; i++)
+                                            { 
+                                                DateTime day = new DateTime(Convert.ToInt32(dt[1]), Convert.ToInt32(dt[0]), i);
+                                                MList.Add(i, day.ToString("dddd", new CultureInfo("ru-RU"))); 
+                                            }
+
+                                            TimeSpan NormaTime = new TimeSpan();
+                                           
+                                            foreach (string d in MList.Values)
+                                            {
+                                                switch (d)
+                                                {
+                                                    case "понедельник":
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[0].NORMBY - OGRVTime[0].NORMFROM;
+                                                            P = OGRVTime[0].TIMEBY - OGRVTime[0].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break;
+                                                        }
+                                                    case "вторник":
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[1].NORMBY - OGRVTime[1].NORMFROM;
+                                                            P = OGRVTime[1].TIMEBY - OGRVTime[1].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break;
+                                                        }
+                                                    case "среда":
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[2].NORMBY - OGRVTime[2].NORMFROM;
+                                                            P = OGRVTime[2].TIMEBY - OGRVTime[2].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break;
+                                                        }
+                                                    case "четверг":
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[3].NORMBY - OGRVTime[3].NORMFROM;
+                                                            P = OGRVTime[3].TIMEBY - OGRVTime[3].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break;
+                                                        }
+                                                    case "пятница": 
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[4].NORMBY - OGRVTime[4].NORMFROM;
+                                                            P = OGRVTime[4].TIMEBY - OGRVTime[4].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break; 
+                                                        }
+
+                                                    case "суббота":
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[5].NORMBY - OGRVTime[5].NORMFROM;
+                                                            P = OGRVTime[5].TIMEBY - OGRVTime[5].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break;
+                                                        }
+
+                                                    case "воскресенье":
+                                                        {
+                                                            TimeSpan W, P;
+                                                            W = OGRVTime[6].NORMBY - OGRVTime[6].NORMFROM;
+                                                            P = OGRVTime[6].TIMEBY - OGRVTime[6].TIMEFROM;
+                                                            NormaTime += W - P;
+                                                            break;
+                                                        }
+                                                }
+                                            }
+
+                                            String h = NormaTime.TotalHours + ":" + NormaTime.Minutes + ":" + NormaTime.Seconds;
+                                                _inputTimeParisReportsReports.People = l;
+                                        }
+                                    }
+
+                                }
+                                backgroundWorker.RunWorkerAsync(_inputTimeParisReportsReports);
+
+                                break;
+                                #endregion
                             }
                     }
-
-
-
                 }
-            }
-        }
-
-        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                Thread.Sleep(100);
-                MessageBox.Show("Данные экспортированы в файл", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -789,8 +1352,9 @@ namespace HRSaveTimeClient
             {
                 case "По присутствиям":
                     {
-                        List<TimeParisReport> timeParis = ((timeParisReports)e.Argument).timeParis;
-                        String FileName = ((timeParisReports)e.Argument).FileName;
+                        #region
+                        List<TimeParisReport> timeParis = ((sReports)e.Argument).timeParis;
+                        String FileName = ((sReports)e.Argument).FileName;
                         Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
                         Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
                         Worksheet ws = (Worksheet)excel.ActiveSheet;
@@ -822,13 +1386,15 @@ namespace HRSaveTimeClient
                         }
 
                         ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
-                        excel.Quit(); 
+                        excel.Quit();
                         break;
+                        #endregion
                     }
                 case "По прогулам":
                     {
-                        List<AbsenceReport> absence = ((timeParisReports)e.Argument).Abscence;
-                        String FileName = ((timeParisReports)e.Argument).FileName;
+                        #region
+                        List<AbsencePromenadeReport> absence = ((sReports)e.Argument).Promenade;
+                        String FileName = ((sReports)e.Argument).FileName;
                         Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
                         Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
                         Worksheet ws = (Worksheet)excel.ActiveSheet;
@@ -840,9 +1406,10 @@ namespace HRSaveTimeClient
                         ws.Cells[1, 2] = "Фамилия";
                         ws.Cells[1, 3] = "Имя";
                         ws.Cells[1, 4] = "Отчество";
-                        ws.Cells[1, 5] = "Дата с";
+                        ws.Cells[1, 5] = "Дата";
+                        ws.Cells[1, 6] = "Документ";
 
-                        foreach (AbsenceReport s in absence)
+                        foreach (AbsencePromenadeReport s in absence)
                         {
                             if (!backgroundWorker.CancellationPending)
                             {
@@ -852,16 +1419,220 @@ namespace HRSaveTimeClient
                                 ws.Cells[index, 3] = s.Name;
                                 ws.Cells[index, 4] = s.Patr;
                                 ws.Cells[index, 5] = s.DateF;
+                                ws.Cells[index, 6] = s.Doc;
                             }
                         }
 
                         ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
                         excel.Quit();
                         break;
+                        #endregion
+                    }
+
+                case "По отгулам":
+                    {
+                        #region
+                        List<AbsenceTimeOFFReport> absence = ((sReports)e.Argument).TimeOFF;
+                        String FileName = ((sReports)e.Argument).FileName;
+                        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                        Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
+                        Worksheet ws = (Worksheet)excel.ActiveSheet;
+                        excel.Visible = false;
+                        int index = 1;
+                        int process = absence.Count;
+
+                        ws.Cells[1, 1] = "Табельный номер";
+                        ws.Cells[1, 2] = "Фамилия";
+                        ws.Cells[1, 3] = "Имя";
+                        ws.Cells[1, 4] = "Отчество";
+                        ws.Cells[1, 5] = "Количество дней";
+                        ws.Cells[1, 6] = "Дата с";
+                        ws.Cells[1, 7] = "Дата по";
+                        ws.Cells[1, 8] = "Документ";
+
+                        foreach (AbsenceTimeOFFReport s in absence)
+                        {
+                            if (!backgroundWorker.CancellationPending)
+                            {
+                                backgroundWorker.ReportProgress(index++ * 100 / process);
+                                ws.Cells[index, 1] = s.Pernr;
+                                ws.Cells[index, 2] = s.LName;
+                                ws.Cells[index, 3] = s.Name;
+                                ws.Cells[index, 4] = s.Patr;
+                                ws.Cells[index, 5] = s.qDays;
+                                ws.Cells[index, 6] = s.DateF;
+                                ws.Cells[index, 7] = s.DateB;
+                                ws.Cells[index, 8] = s.Doc;
+                            }
+                        }
+
+                        ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+                        excel.Quit();
+                        break;
+                        #endregion
+                    }
+
+                case "По больничным":
+                    {
+                        #region
+                        List<AbsenceHospitalReport> absence = ((sReports)e.Argument).Hospital;
+                        String FileName = ((sReports)e.Argument).FileName;
+                        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                        Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
+                        Worksheet ws = (Worksheet)excel.ActiveSheet;
+                        excel.Visible = false;
+                        int index = 1;
+                        int process = absence.Count;
+
+                        ws.Cells[1, 1] = "Табельный номер";
+                        ws.Cells[1, 2] = "Фамилия";
+                        ws.Cells[1, 3] = "Имя";
+                        ws.Cells[1, 4] = "Отчество";
+                        ws.Cells[1, 5] = "Количество дней";
+                        ws.Cells[1, 6] = "Дата с";
+                        ws.Cells[1, 7] = "Дата по";
+                        ws.Cells[1, 8] = "Документ";
+
+                        foreach (AbsenceHospitalReport s in absence)
+                        {
+                            if (!backgroundWorker.CancellationPending)
+                            {
+                                backgroundWorker.ReportProgress(index++ * 100 / process);
+                                ws.Cells[index, 1] = s.Pernr;
+                                ws.Cells[index, 2] = s.LName;
+                                ws.Cells[index, 3] = s.Name;
+                                ws.Cells[index, 4] = s.Patr;
+                                ws.Cells[index, 5] = s.qDays;
+                                ws.Cells[index, 6] = s.DateF;
+                                ws.Cells[index, 7] = s.DateB;
+                                ws.Cells[index, 8] = s.Doc;
+                            }
+
+                        }
+
+
+                        ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+                        excel.Quit();
+                        break;
+                        #endregion
+                    }
+
+                case "По командировкам":
+                    {
+                        #region
+                        List<AbsenceBTripReport> absence = ((sReports)e.Argument).BTrip;
+                        String FileName = ((sReports)e.Argument).FileName;
+                        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                        Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
+                        Worksheet ws = (Worksheet)excel.ActiveSheet;
+                        excel.Visible = false;
+                        int index = 1;
+                        int process = absence.Count;
+
+                        ws.Cells[1, 1] = "Табельный номер";
+                        ws.Cells[1, 2] = "Фамилия";
+                        ws.Cells[1, 3] = "Имя";
+                        ws.Cells[1, 4] = "Отчество";
+                        ws.Cells[1, 5] = "Количество дней";
+                        ws.Cells[1, 6] = "Дата с";
+                        ws.Cells[1, 7] = "Дата по";
+                        ws.Cells[1, 8] = "Документ";
+
+                        foreach (AbsenceBTripReport s in absence)
+                        {
+                            if (!backgroundWorker.CancellationPending)
+                            {
+                                backgroundWorker.ReportProgress(index++ * 100 / process);
+                                ws.Cells[index, 1] = s.Pernr;
+                                ws.Cells[index, 2] = s.LName;
+                                ws.Cells[index, 3] = s.Name;
+                                ws.Cells[index, 4] = s.Patr;
+                                ws.Cells[index, 5] = s.qDays;
+                                ws.Cells[index, 6] = s.DateF;
+                                ws.Cells[index, 7] = s.DateB;
+                                ws.Cells[index, 8] = s.Doc;
+                            }
+                        }
+                        ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+                        excel.Quit();
+                        break;
+                        #endregion
+                    }
+
+                case "По сотрудникам":
+                    {
+                        #region
+                        List<PeopleReport> absence = ((sReports)e.Argument).People;
+                        String FileName = ((sReports)e.Argument).FileName;
+                        Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
+                        Workbook wb = excel.Workbooks.Add(XlSheetType.xlWorksheet);
+                        Worksheet ws = (Worksheet)excel.ActiveSheet;
+                        excel.Visible = false;
+                        int index = 1;
+                        int process = absence.Count;
+
+                        ws.Cells[1, 1] = "Дата принятия";
+                        ws.Cells[1, 2] = "Дата увольнения";
+                        ws.Cells[1, 3] = "Табельный номер";
+                        ws.Cells[1, 4] = "Фамилия";
+                        ws.Cells[1, 5] = "Имя";
+                        ws.Cells[1, 6] = "Отчество";
+                        ws.Cells[1, 7] = "Дата рождения";
+                        ws.Cells[1, 8] = "Должность";
+                        ws.Cells[1, 9] = "Орг.единица";
+                        ws.Cells[1, 10] = "Наименование";
+                        ws.Cells[1, 11] = "ГРВ";
+                        ws.Cells[1, 12] = "Описание";
+                        ws.Cells[1, 13] = "Роль";
+                        ws.Cells[1, 14] = "Описание";
+
+
+                        foreach (PeopleReport s in absence)
+                        {
+                            if (!backgroundWorker.CancellationPending)
+                            {
+                                backgroundWorker.ReportProgress(index++ * 100 / process);
+                                ws.Cells[index, 1] = s.DateF;
+                                ws.Cells[index, 2] = s.DateB;
+                                ws.Cells[index, 3] = s.Pernr;
+                                ws.Cells[index, 4] = s.LName;
+                                ws.Cells[index, 5] = s.Name;
+                                ws.Cells[index, 6] = s.Patr;
+                                ws.Cells[index, 7] = s.Bith;
+                                ws.Cells[index, 8] = s.Position;
+                                ws.Cells[index, 9] = s.cORG;
+                                ws.Cells[index, 10] = s.nORG;
+                                ws.Cells[index, 11] = s.cPGRV;
+                                ws.Cells[index, 12] = s.nPGRV;
+                                ws.Cells[index, 13] = s.cRule;
+                                ws.Cells[index, 14] = s.nRule;
+                            }
+                        }
+                        ws.SaveAs(FileName, XlFileFormat.xlWorkbookDefault, Type.Missing, Type.Missing, true, false, XlSaveAsAccessMode.xlNoChange, XlSaveConflictResolution.xlLocalSessionChanges, Type.Missing, Type.Missing);
+                        excel.Quit();
+                        break;
+                        #endregion
                     }
             }
 
         }
+
+        //обработка кона выполненеия фоновой операции
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error == null)
+            {
+                Thread.Sleep(100);
+                MessageBox.Show("Данные успешно экспортированы в файл", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                Thread.Sleep(100);
+                MessageBox.Show(e.Error.Message.ToString(), "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        //дизайн Grid: Reports
 
         private void SaveReportsButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -872,6 +1643,7 @@ namespace HRSaveTimeClient
         {
             SaveReportsButton.Background = (Brush)bc.ConvertFrom("#0049db");
         }
+
 
         public void UpdateTableReports()
         {

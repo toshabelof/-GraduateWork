@@ -170,7 +170,6 @@ namespace HRSaveTimeClient
         {
             if (Login_tBox.Text == "SysAdmin")
             {
-                String result;
                 using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
                 {
 
