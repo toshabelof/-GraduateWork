@@ -57,6 +57,7 @@ namespace HRSaveTime_Server
                             dataGridView1.Rows[i].Cells[1].Value = sss[j + 1];
                             j += 2;
                         }
+                        dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
                         break;
                     }
             }
@@ -73,7 +74,10 @@ namespace HRSaveTime_Server
                 }
                 else
                 {
-                    e.Cancel = true;
+                    Edit = !Edit;
+                    Add  = !Add;
+                    Del  = !Del;
+                    return;
                 }
             }
 

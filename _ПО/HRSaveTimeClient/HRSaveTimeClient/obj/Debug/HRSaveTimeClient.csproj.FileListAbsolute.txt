@@ -63,7 +63,6 @@ D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Deb
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.pdb
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\HRSaveTimeClient.exe
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\HRSaveTimeClient.pdb
-D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.csprojResolveAssemblyReference.cache
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\AddNameReports.baml
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\GlobalForm.baml
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\MainWindow.baml
@@ -84,3 +83,4 @@ D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Deb
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.Properties.Resources.resources
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.csproj.GenerateResource.Cache
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\bin\Debug\Oracle.DataAccess.dll
+D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeClient\HRSaveTimeClient\obj\Debug\HRSaveTimeClient.csprojResolveAssemblyReference.cache

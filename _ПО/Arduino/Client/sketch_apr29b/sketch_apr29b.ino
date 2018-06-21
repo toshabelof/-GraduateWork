@@ -22,7 +22,7 @@ RF24 radio(9, 10); // "создать" модуль на пинах 9 и 10
 
 byte address[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node"}; //возможные номера труб
 
-byte counter = 43;
+
 
 void setup() {
   Serial.begin(9600); //открываем порт для связи с ПК
@@ -48,9 +48,26 @@ void setup() {
   Serial.println("Waiting for card...");
   SPI.begin();  //  инициализация SPI / Init SPI bus.
   mfrc522.PCD_Init();     // инициализация MFRC522 / Init MFRC522 card.
+
+  pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
 }
 
 void loop() {
+  if (Serial.available() > 0) {
+    char a = Serial.read();
+    Serial.println(a);
+    if (a == '1')
+    {
+      digitalWrite(4, HIGH);
+      delay(300);
+      digitalWrite(4, LOW);
+      delay(300);
+      digitalWrite(4, HIGH);
+      delay(300);
+      digitalWrite(4, LOW);
+    }
+  }
 
   if ( ! mfrc522.PICC_IsNewCardPresent())
     return;
@@ -58,13 +75,11 @@ void loop() {
   if ( ! mfrc522.PICC_ReadCardSerial())
     return;
   // показать результат чтения UID и тип метки
-  Serial.print(F("Card UID:"));
   dump_byte_array(mfrc522.uid.uidByte, mfrc522.uid.size);
   Serial.println();
-  Serial.print(F("PICC type: "));
-  byte piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
-  Serial.println(mfrc522.PICC_GetTypeName(piccType));
-  SendMessage();
+  digitalWrite(5, HIGH);
+  delay(1000);
+  digitalWrite(5, LOW);
   delay(500);
 }
 
@@ -77,10 +92,4 @@ void dump_byte_array(byte *buffer, byte bufferSize)
   }
 }
 
-void SendMessage()
-{
-  Serial.print("Sent: "); Serial.println(counter);
-  radio.write(&counter, sizeof(counter));
-  delay(500);
-  Serial.print("Message Send");
-}
+

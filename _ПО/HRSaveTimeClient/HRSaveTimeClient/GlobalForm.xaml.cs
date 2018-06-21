@@ -16,6 +16,8 @@ using System.Data;
 using System.ComponentModel;
 using Microsoft.Office.Interop.Excel;
 using System.Globalization;
+using System.IO.Ports;
+using System.Windows.Threading;
 
 
 
@@ -109,9 +111,9 @@ namespace HRSaveTimeClient
                 GetSetting();
                 String[] mas = GetBDType();
 
-                grid = MyProfileGrid;
-                grid.Visibility = System.Windows.Visibility.Visible;
-                Title.Text = "Мой профиль";
+                //grid = MyProfileGrid;
+                //grid.Visibility = System.Windows.Visibility.Visible;
+                //Title.Text = "Мой профиль";
 
                 connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
                 using (OracleConnection con = new OracleConnection(connect))
@@ -173,7 +175,7 @@ namespace HRSaveTimeClient
                     {
                         while (reader.Read())
                         {
-                            var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
+                            var data = new Absence { View = reader[0].ToString(), DateFrom = Convert.ToDateTime(reader[1].ToString()).ToString("dd.MM.yyyy"), DateBy = Convert.ToDateTime(reader[2].ToString()).ToString("dd.MM.yyyy"), Document = reader[3].ToString() };
                             MyAbsence_dG.Items.Add(data);
                         }
                     }
@@ -186,7 +188,7 @@ namespace HRSaveTimeClient
                     {
                         while (reader.Read())
                         {
-                            var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
+                            var data = new TimePairs { DateFrom = Convert.ToDateTime(reader[0].ToString()).ToString("dd.MM.yyyy"), DateBy = Convert.ToDateTime(reader[1].ToString()).ToString("dd.MM.yyyy"), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
                             MyTimePairs_dG.Items.Add(data);
                         }
                     }
@@ -249,21 +251,36 @@ namespace HRSaveTimeClient
                 {
                     //вывод "Основная инфа по профилю"
                     con.Open();
-                    OracleCommand com = new OracleCommand("SELECT IDPERNR, LNAME, PERS_INFO.NAME, PATR, BIRTH, POSITION.Name, ORG_LEVEL.NAME, PGRVID, RULE, LOGIN, PASSWORD, RFID.IDRFID, ROOMS.NAME " +
-                        "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID, TIME_PAIRS, ROOMS " +
-                        "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR= AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID and TIME_PAIRS.RFIDID = RFID.IDRFID and TIME_PAIRS.DATABY is Null  and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR =  '" + Search.Text + "'", con);
+                    OracleCommand com = new OracleCommand("select PERS_INFO.LNAME, PERS_INFO.NAME, PERS_INFO.PATR, PERS_INFO.BIRTH, POSITION.Name, ORG_LEVEL.NAME, PERS_INFO.PGRVID, AUTHENTICATION.LOGIN, AUTHENTICATION.PASSWORD, RFID.IDRFID " +
+                        "FROM PERNR, PERS_INFO , POSITION, AUTHENTICATION, ORG_LEVEL, RFID " +
+                        "WHERE PERS_INFO.IDPERS = PERNR.PERSID and POSITION.IDPOS = PERS_INFO.POSID and PERNR.IDPERNR = AUTHENTICATION.PERNR and ORG_LEVEL.IDORG = PERS_INFO.ORGID and PERS_INFO.IDPERS = RFID.PERSID  and PERNR.IDPERNR = '" + Search.Text + "'", con);
                     using (var reader = com.ExecuteReader())
                     {
                         while (reader.Read())
                         {
                             Pernr_tBox.Text = reader[0].ToString();
                             FIO_tBox.Text = reader[1].ToString() + " " + reader[2].ToString() + " " + reader[3].ToString();
+                            Bith_tBox.Text = Convert.ToDateTime(reader[3]).ToString("dd.MM.yyyy");
                             Position_tBox.Text = reader[5].ToString();
                             ORG_tBox.Text = reader[6].ToString();
                             Login_tBox.Text = reader[9].ToString();
                             Password_pBox.Password = reader[10].ToString();
                             RFID_tBox.Text = reader[11].ToString();
                             Location_tBox.Text = reader[12].ToString();
+                        }
+
+                    }
+
+                    //вывод местоположения
+                    com = new OracleCommand("SELECT ROOMS.NAME " +
+                       "FROM TIME_PAIRS, ROOMS " +
+                       "WHERE ROOMS.IDROOMS = TIME_PAIRS.ROOMID and TIME_PAIRS.TIMEBY is null and TIME_PAIRS.RFIDID= '" + MyRFID_tBox.Text + "'", con);
+
+                    using (var reader = com.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            MyLocation_tBox.Text = reader[0].ToString();
                         }
 
                     }
@@ -291,7 +308,7 @@ namespace HRSaveTimeClient
                         Absence_dG.Items.Clear();
                         while (reader.Read())
                         {
-                            var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
+                            var data = new Absence { View = reader[0].ToString(), DateFrom = Convert.ToDateTime(reader[1].ToString()).ToString("dd.MM.yyyy"), DateBy = Convert.ToDateTime(reader[2].ToString()).ToString("dd.MM.yyyy"), Document = reader[3].ToString() };
                             Absence_dG.Items.Add(data);
                         }
                     }
@@ -305,7 +322,7 @@ namespace HRSaveTimeClient
                         while (reader.Read())
                         {
                             TimePairs_dG.Items.Clear();
-                            var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
+                            var data = new TimePairs { DateFrom = Convert.ToDateTime(reader[0].ToString()).ToString("dd.MM.yyyy"), DateBy = Convert.ToDateTime(reader[1].ToString()).ToString("dd.MM.yyyy"), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
                             TimePairs_dG.Items.Add(data);
                         }
                     }
@@ -483,22 +500,23 @@ namespace HRSaveTimeClient
 
         //***** Profiles: My ******
 
-        private void MyEdit_btn_Click(object sender, RoutedEventArgs e)
+
+        private void MyEdit_btn_Click(object sender, MouseButtonEventArgs e)
         {
-            MyPassword_pBox.Visibility = System.Windows.Visibility.Collapsed;
             MyPassword_tBox.Visibility = System.Windows.Visibility.Visible;
+            MyPassword_pBox.Visibility = System.Windows.Visibility.Collapsed;
             MyPassword_tBox.Text = MyPassword_pBox.Password;
-            MyEdit_btn.Visibility = System.Windows.Visibility.Collapsed;
-            MyOk_btn.Visibility = System.Windows.Visibility.Visible;
+
+            MyEditPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+            MyEditOKPassword_btn.Visibility = System.Windows.Visibility.Visible;
+            MyEditEndPassword_btn.Visibility = System.Windows.Visibility.Visible;
         }
 
-        private void MyOk_btn_Click(object sender, RoutedEventArgs e)
+        private void MyEditOKPassword_btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            MyPassword_pBox.Visibility = System.Windows.Visibility.Visible;
             MyPassword_tBox.Visibility = System.Windows.Visibility.Collapsed;
+            MyPassword_pBox.Visibility = System.Windows.Visibility.Visible;
             MyPassword_pBox.Password = MyPassword_tBox.Text;
-            MyEdit_btn.Visibility = System.Windows.Visibility.Visible;
-            MyOk_btn.Visibility = System.Windows.Visibility.Collapsed;
 
             using (OracleConnection con = new OracleConnection(connect))
             {
@@ -506,6 +524,19 @@ namespace HRSaveTimeClient
                 OracleCommand com = new OracleCommand("update AUTHENTICATION set PASSWORD = '" + MyPassword_pBox.Password + "'where PERNR = '" + MyPernr_tBox.Text + "'", con);
                 com.ExecuteNonQuery();
             }
+
+            MyEditPassword_btn.Visibility = System.Windows.Visibility.Visible;
+            MyEditOKPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+            MyEditEndPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void MyEditEndPassword_btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MyPassword_tBox.Visibility = System.Windows.Visibility.Collapsed;
+            MyPassword_pBox.Visibility = System.Windows.Visibility.Visible;
+            MyEditPassword_btn.Visibility = System.Windows.Visibility.Visible;
+            MyEditOKPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+            MyEditEndPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
         }
 
 
@@ -609,6 +640,7 @@ namespace HRSaveTimeClient
                         int ID = 0;
                         String dateF = DateTime.Now.ToString("dd.MM.yyyy");
                         String dateB = "31.12.9999";
+                        String pernr = PernrNewProfile_tBox.Text;
                         String lname = LNameNewProfile_tBox.Text;
                         String name = NameNewProfile_tBox.Text;
                         String patr = PatrNewProfile_tBox.Text;
@@ -641,7 +673,7 @@ namespace HRSaveTimeClient
                                     orgid = Convert.ToInt32(reader[0].ToString());
                                 }
                             }
-                            com = new OracleCommand("Select MAX(IDREPORTS) from REPORTS", con);
+                            com = new OracleCommand("Select MAX(IDPERS) from PERS_INFO", con);
                             using (var reader = com.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -654,6 +686,10 @@ namespace HRSaveTimeClient
                             ID + "',  to_date('" + dateF + "', 'dd.mm.yyyy'), to_date('" + dateB + "', 'dd.mm.yyyy'), '" + lname + "', '" +
                             name + "', '" + patr + "',  to_date('" + birth + "', 'dd.mm.yyyy'), '" + posid + "', '" + orgid + "', '" + pgrv + "', '" + rule + "', '')", con);
                             com.ExecuteNonQuery();
+
+                            com = new OracleCommand("Insert into PERNR values('" +
+                            pernr + "',  to_date('" + dateF + "', 'dd.mm.yyyy'), to_date('" + dateB + "', 'dd.mm.yyyy'), '" + ID + "')", con);
+                            com.ExecuteNonQuery();
                         }
 
                         grid.Visibility = System.Windows.Visibility.Collapsed;
@@ -664,6 +700,56 @@ namespace HRSaveTimeClient
                     }
                 case MessageBoxResult.No: { break; }
             }
+            UpdatePersTable();
+        }
+
+        //***** Profiles: View ******
+
+        private void GeneratePassEditProfile_btn_Click(object sender, MouseButtonEventArgs e)
+        {
+            Password_pBox.Visibility = System.Windows.Visibility.Collapsed;
+            Password_tBox.Visibility = System.Windows.Visibility.Visible;
+
+            string pass = "";
+            var r = new Random();
+            while (pass.Length < 16)
+            {
+                Char c = (char)r.Next(33, 125);
+                if (Char.IsLetterOrDigit(c))
+                    pass += c;
+            }
+            Password_tBox.Text = pass;
+
+            EditPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+            EditOKPassword_btn.Visibility = System.Windows.Visibility.Visible;
+            EditEndPassword_btn.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void EditOKPassword_btn_PreviewMouseLeftButtonDown_1(object sender, MouseButtonEventArgs e)
+        {
+            Password_tBox.Visibility = System.Windows.Visibility.Collapsed;
+            Password_pBox.Visibility = System.Windows.Visibility.Visible;
+            Password_pBox.Password = Password_tBox.Text;
+
+            using (OracleConnection con = new OracleConnection(connect))
+            {
+                con.Open();
+                OracleCommand com = new OracleCommand("update AUTHENTICATION set PASSWORD = '" + Password_pBox.Password + "'where PERNR = '" + Pernr_tBox.Text + "'", con);
+                com.ExecuteNonQuery();
+            }
+
+            EditPassword_btn.Visibility = System.Windows.Visibility.Visible;
+            EditOKPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+            EditEndPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void EditEndPassword_btn_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Password_tBox.Visibility = System.Windows.Visibility.Collapsed;
+            Password_pBox.Visibility = System.Windows.Visibility.Visible;
+            EditPassword_btn.Visibility = System.Windows.Visibility.Visible;
+            EditOKPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
+            EditEndPassword_btn.Visibility = System.Windows.Visibility.Collapsed;
         }
 
 
@@ -736,35 +822,7 @@ namespace HRSaveTimeClient
 
         //***** Inquirys: Preview ******
 
-        private void OKEditInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#2c71fd");
-        }
-
-        private void OKEditInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            OKEditInqButton.Background = (Brush)bc.ConvertFrom("#0049db");
-        }
-
-        private void NotEditInqButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#fe717b");
-        }
-
-        private void NotEditInqButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            NotEditInqButton.Background = (Brush)bc.ConvertFrom("#ff2c3b");
-        }
-
-        private void CencelEditInqButton1_MouseEnter(object sender, MouseEventArgs e)
-        {
-            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#cbcaca");
-        }
-
-        private void CencelEditInqButton1_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CencelEditInqButton1.Background = (Brush)bc.ConvertFrom("#8d8d8d");
-        }
+       
 
         private void EditInqButton_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -888,10 +946,10 @@ namespace HRSaveTimeClient
 
         private void EditInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            grid.Visibility = System.Windows.Visibility.Collapsed;
-            grid = EditInqGrid;
-            grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Изменение запроса на отсутствие";
+            EditInqButton.Visibility = System.Windows.Visibility.Collapsed;
+            SaveViewInqButton.Visibility = System.Windows.Visibility.Collapsed;
+            CencelViewInqButton.Visibility = System.Windows.Visibility.Collapsed;
         }
 
 
@@ -1454,13 +1512,13 @@ namespace HRSaveTimeClient
                 con.Open();
                 OracleCommand com = new OracleCommand("SELECT IDREPORTS, DATACREATE, DESCRIPT " +
                     "FROM REPORTS " +
-                    "where REPORTS.PERSID = '" + Pernr_tBox.Text + "' " +
+                    "where REPORTS.PERSID = '" + MyPernr_tBox.Text + "' " +
                     "order by IDREPORTS DESC ", con);
                 using (var reader = com.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        var data = new Reports { Num = reader[0].ToString(), Date = reader[1].ToString(), Descript = reader[2].ToString() };
+                        var data = new Reports { Num = reader[0].ToString(), Date = Convert.ToDateTime(reader[1].ToString()).ToString("dd.MM.yyyy"), Descript = reader[2].ToString() };
                         Reports_dG.Items.Add(data);
                     }
                 }
@@ -1699,16 +1757,6 @@ namespace HRSaveTimeClient
             Title.Text = "Создание однодневного графика рабочего времени";
         }
 
-        private void GenerateSchedulesButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#00dc77");
-        }
-
-        private void GenerateSchedulesButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            GenerateSchedulesButton.Background = (Brush)bc.ConvertFrom("#01a459");
-        }
-
         private void GenerateSchedulesButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             grid.Visibility = System.Windows.Visibility.Collapsed;
@@ -1905,7 +1953,7 @@ namespace HRSaveTimeClient
             {
                 grid.Visibility = System.Windows.Visibility.Collapsed;
             }
-            grid = ProfileGrid;
+            grid = MyProfileGrid;
             grid.Visibility = System.Windows.Visibility.Visible;
             Title.Text = "Мой профиль";
         }
@@ -2505,6 +2553,7 @@ namespace HRSaveTimeClient
                         "WHERE  CONTACTS.PERSID = PERS_INFO.IDPERS and PERNR.PERSID = PERS_INFO.IDPERS and PERNR.IDPERNR = '" + rowView.Pernr + "'", con);
                 using (var reader = com.ExecuteReader())
                 {
+                    Contacts_dG.Items.Clear();
                     while (reader.Read())
                     {
                         var data = new Contacts { Descript = reader[0].ToString(), Value = reader[1].ToString() };
@@ -2518,10 +2567,11 @@ namespace HRSaveTimeClient
                         "WHERE VIEW_ABS.IDVIEW = ABSCENCE.VIEWID and ABSCENCE.PERNRID = '" + rowView.Pernr + "'", con);
                 using (var reader = com.ExecuteReader())
                 {
+                    Absence_dG.Items.Clear();
                     while (reader.Read())
                     {
                         var data = new Absence { View = reader[0].ToString(), DateFrom = reader[1].ToString(), DateBy = reader[2].ToString(), Document = reader[3].ToString() };
-                        MyAbsence_dG.Items.Add(data);
+                        Absence_dG.Items.Add(data);
                     }
                 }
 
@@ -2531,10 +2581,11 @@ namespace HRSaveTimeClient
                         "WHERE RFID.IDRFID = TIME_PAIRS.RFIDID and PERNR.PERSID = RFID.PERSID and TIME_PAIRS.ROOMID = ROOMS.IDROOMS and PERNR.IDPERNR = '" + rowView.Pernr + "'", con);
                 using (var reader = com.ExecuteReader())
                 {
+                    TimePairs_dG.Items.Clear();
                     while (reader.Read())
-                    {
+                    {          
                         var data = new TimePairs { DateFrom = reader[0].ToString(), DateBy = reader[1].ToString(), TimeFrom = reader[2].ToString(), TimeBy = reader[3].ToString(), Location = reader[4].ToString() };
-                        MyTimePairs_dG.Items.Add(data);
+                        TimePairs_dG.Items.Add(data);
                     }
                 }
             }
@@ -2551,6 +2602,110 @@ namespace HRSaveTimeClient
                     pass += c;
             }
             Password_pBox.Password = pass;
+        }
+
+
+        void ProcRefresh()
+        {
+            SerialPort sp = new SerialPort();
+            
+            while (true)
+            {
+                sp.PortName = "COM7";
+                sp.BaudRate = 9600;
+                sp.Open();
+                System.Threading.Thread.Sleep(500);
+                if (sp.ReadLine() != "")
+                {
+                    Dispatcher.BeginInvoke(new System.Action(() => RFID_tBox.Text = sp.ReadLine()));
+                    System.Threading.Thread.Sleep(1000);
+                    sp.Close();
+                    return;
+                }
+                sp.Close();
+            }
+        }
+
+        private void EditRFIDButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            EditRFIDButton.Visibility = System.Windows.Visibility.Collapsed;
+            OKButton.Visibility = System.Windows.Visibility.Visible;
+
+            new Thread(ProcRefresh).Start();
+
+        }
+
+        private void OKButton_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            EditRFIDButton.Visibility = System.Windows.Visibility.Visible;
+            OKButton.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void EditProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            EditProfileButton.Visibility = System.Windows.Visibility.Collapsed;
+            SaveEditProfileButton.Visibility = System.Windows.Visibility.Visible;
+            NotEditProfileButton.Visibility = System.Windows.Visibility.Visible;
+            DeleteEditProfileButton.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void Image_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void SaveViewInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBoxResult other = MessageBox.Show("Вы действительно хотите сохранить внесенные изменения?", "Сохранение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            switch (other)
+            {
+                case MessageBoxResult.Yes:
+                    {
+
+                        grid.Visibility = System.Windows.Visibility.Collapsed;
+                        grid = InquiryGrid;
+                        grid.Visibility = System.Windows.Visibility.Visible;
+                        Title.Text = "Запросы на отсутствия";
+                        UpdateTableInquiry();
+                        break;
+                    }
+                case MessageBoxResult.No: { break; }
+            }
+        }
+
+        private void CencelViewInqButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            grid.Visibility = System.Windows.Visibility.Collapsed;
+            grid = InquiryGrid;
+            grid.Visibility = System.Windows.Visibility.Visible;
+            Title.Text = "Список запросов";
+        }
+
+        private void SaveEditProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void DeleteEditProfileButton_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void TextBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            HRClentALL.Text = "X";
+            Prof.Text = "New";
+            Inq.Text = "New";
+            Rep.Text = "New";
+            GRV.Text = "New";
+            Rul.Text = "New";
+            Mon.Text = "New";
+            Ots.Text = "New";
+            TPair.Text = "New";
+            Prnr.Text = "New";
+            RF_ID.Text = "New";
+            Auth.Text = "New";
+
         }
     }
 }

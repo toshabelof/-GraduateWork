@@ -10,6 +10,7 @@ using System.Data.OleDb;
 using System.IO;
 using Oracle.DataAccess.Client;
 using System.IO.Ports;
+using System.Threading;
 
 namespace HRSaveTime_Server
 {
@@ -32,6 +33,8 @@ namespace HRSaveTime_Server
         bool Edit = false;
         bool Add = false;
         bool Del = false;
+        String SPort = null;
+        Thread InstanceCaller;
 
         public static SortedList<string, string> setting = new SortedList<string, string>();
         List<string> list = new List<string>();
@@ -73,16 +76,13 @@ namespace HRSaveTime_Server
                 setting.Add(key, value);
             }
 
-            StreamWriter sw = new StreamWriter("settings.txt");
+            StreamWriter sw = new StreamWriter("settings.txt", false);
             try
             {
                 foreach (string k in setting.Keys)
                 {
-                    foreach (string v in setting.Values)
-                    {
-                        sw.WriteLine(k);
-                        sw.WriteLine(v);
-                    }
+                    sw.WriteLine(k);
+                    sw.WriteLine(setting[k]);
                 }
                 sw.Close();
             }
@@ -153,6 +153,7 @@ namespace HRSaveTime_Server
                         }
                         j++;
                     }
+                    dataGridView1.Sort(dataGridView1.Columns[0], ListSortDirection.Ascending);
                 }
                 finally
                 {
@@ -166,7 +167,7 @@ namespace HRSaveTime_Server
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Monitor_tBox.Text = ">> System: Монитор потока данных готов к работе." + Environment.NewLine;
+            Monitor_tBox.Text = "System: Монитор потока данных готов к работе." + Environment.NewLine;
             GetSetting();
 
             var result = "";
@@ -185,9 +186,6 @@ namespace HRSaveTime_Server
                             {
                                 StatusAccesse_lebel.ForeColor = Color.Green;
                                 StatusAccesse_lebel.Text = "Connect";
-
-                                //GetLocationCB();
-                                //GetRules();
 
                                 StatusOracle_lebel.ForeColor = Color.Red;
                                 StatusOracle_lebel.Text = "Disconnect";
@@ -225,6 +223,11 @@ namespace HRSaveTime_Server
                                 StatusOracle_lebel.Text = "Disconnect";
                                 StatusOracle_lebel.ForeColor = Color.Red;
                             }
+
+                            setting.TryGetValue("COMPort", out result);
+                            ComPorts_cBox.Text = result;
+
+                            ConnectTX();
 
                             break;
                         }
@@ -288,12 +291,26 @@ namespace HRSaveTime_Server
 
         private void CheckIn_btn_Click(object sender, EventArgs e)
         {
-
+            if (ComPorts_cBox.Text != "")
+            {
+                if (CodeIn_tBox.Text != "")
+                {
+                    StatusIn_label.Text = "Disconnect";
+                    StatusIn_label.ForeColor = Color.Red;
+                }
+            }
         }
 
         private void CheckOut_btn_Click(object sender, EventArgs e)
         {
-
+            if (ComPorts_cBox.Text != "")
+            {
+                if (CodeIn_tBox.Text != "")
+                {            
+                    StatusOut_label.Text = "Disconnect";
+                    StatusOut_label.ForeColor = Color.Red;
+                }
+            }
         }
 
         private void SaveRooms_Click(object sender, EventArgs e)
@@ -311,21 +328,82 @@ namespace HRSaveTime_Server
             }
         }
 
+
         private void Send_btn_Click(object sender, EventArgs e)
         {
             String value = Inquiry_tBox.Text;
-            Monitor_tBox.Text += ">>" + value + Environment.NewLine;
+            Monitor_tBox.Text += Environment.NewLine + ">> " + value + Environment.NewLine;
 
-            String[] masS;
+            String[] masS = { };
             try
             {
                 masS = value.Split(' ');
-                String Result = inq.SendInq(masS[0], masS[1]);
-                Monitor_tBox.Text += ">> Result: " + Result + Environment.NewLine;
+                switch (masS[0])
+                {
+                    case "getPernr":
+                        {
+                            List<string> res = bd.getPernr(masS[1]);
+                            if (res.Count != 0)
+                            {
+                                Monitor_tBox.Text += "Result: " + res[0].ToString() + " " + res[1].ToString() + " " + res[2].ToString() + res[3].ToString() + Environment.NewLine;
+                            }
+                            else
+                                Monitor_tBox.Text += "RFID " + masS[1] + " не найден в системе." + Environment.NewLine;
+                            break;
+                        }
+
+                    case "getRFID":
+                        {
+                            List<string> res = bd.getRFID(masS[1]);
+                            if (res.Count != 0)
+                            {
+                                Monitor_tBox.Text += "Result: " + res[0].ToString() + " " + res[1].ToString() + " " + res[2].ToString() + res[3].ToString() + Environment.NewLine;
+                            }
+                            else
+                                Monitor_tBox.Text += "Табельный номер " + masS[1] + " не найден в системе." + Environment.NewLine;
+                            break;
+                        }
+                    case "getInfo":
+                        {
+                            List<string> res = bd.getInfo(masS[1]);
+                            if (res.Count != 0)
+                            {
+                                Monitor_tBox.Text += "Result: " + res[0].ToString() + " " + res[1].ToString() + " " + res[2].ToString() + " " + res[3].ToString() + " " + Convert.ToDateTime(res[4].ToString()).ToString("dd.MM.yyyy") + " " + res[5].ToString() +
+                                   " " + res[6].ToString() + " " + res[7].ToString() + " " + res[8].ToString() + " " + res[9].ToString() + Environment.NewLine;
+                            }
+                            else
+                                Monitor_tBox.Text += "Табельный номер " + masS[1] + " не найден в системе." + Environment.NewLine;
+                            break;
+                        }
+                    case "getStatus":
+                        {
+                            SortedList<string, string> res = bd.getINOUTROOM();
+                            if (res.Count != 0)
+                            {
+                                Monitor_tBox.Text += Environment.NewLine;
+                                foreach (string k in res.Keys)
+                                {
+                                    String[] mas = res[k].Split('/');
+                                    Monitor_tBox.Text += k + " " + mas[0].ToString() + ": Disconnect / " + mas[1].ToString() + ": Disconnect" + Environment.NewLine;
+                                }
+                            }
+                            else
+                                Monitor_tBox.Text += "В системе нет информации о датчиках." + Environment.NewLine;
+                            break;
+                        }
+                    case "help":
+                        {
+
+                            Monitor_tBox.Text += Environment.NewLine + "System: Доступный перечень команд:" + Environment.NewLine;
+                            Monitor_tBox.Text += "1. getPernr [RFID]" + Environment.NewLine + "2. getRFID [Табельный номер]" + Environment.NewLine +
+                                "3. getInfo [Табельный номер]" + Environment.NewLine + "4. getStatus" + Environment.NewLine;
+                            break;
+                        }
+                }
             }
             catch (Exception ex)
             {
-                Monitor_tBox.Text += ">> Result: " + "Команда не распознана" + Environment.NewLine;
+                Monitor_tBox.Text += "System: " + "Команда не распознана" + Environment.NewLine;
             }
         }
 
@@ -450,7 +528,7 @@ namespace HRSaveTime_Server
                     foreach (string i in DeleteIndex)
                     {
                         OracleCommand com = new OracleCommand("Delete from Rules where " +
-                        "IDRULES = '" + i + "'",
+                        "ID = '" + i + "'",
                         con);
                         com.ExecuteNonQuery();
                     }
@@ -476,44 +554,32 @@ namespace HRSaveTime_Server
                 case "A": { break; }
                 case "O":
                     {
-                        String connect = "Data Source = localhost; User ID = " + mas[1] + "; Password = " + mas[2];
-                        using (OracleConnection con = new OracleConnection(connect))
-                        {
-                            con.Open();
-                            OracleCommand com = new OracleCommand("Select INID, OUTID from Rooms where Name = '" + Rooms_cBox.Text + "'", con);
-                            using (var reader = com.ExecuteReader())
-                            {
-                                while (reader.Read())
-                                {
-                                    CodeIn_tBox.Text = reader[0].ToString();
-                                    CodeOut_tBox.Text = reader[1].ToString();
-                                }
-                            }
+                        List<string> res = bd.getINOUTROOM(Rooms_cBox.Text);
 
-                            break;
+
+                        CodeIn_tBox.Text = res[0].ToString();
+                        CodeOut_tBox.Text = res[1].ToString();
+
+
+                        if (ComPorts_cBox.Text != "")
+                        {
+                            if (CodeIn_tBox.Text != "")
+                            {
+                                StatusIn_label.Text = "Disconnect";
+                                StatusIn_label.ForeColor = Color.Red;
+                                StatusOut_label.Text = "Disconnect";
+                                StatusOut_label.ForeColor = Color.Red;
+                            }
                         }
+                        break;
                     }
             }
-
-            if (CodeIn_tBox.Text != "")
-            {
-                StatusIn_label.Text = "Disconnect";
-                StatusIn_label.ForeColor = Color.Red;
-                StatusOut_label.Text = "Disconnect";
-                StatusOut_label.ForeColor = Color.Red;
-            }
-
-            if (CodeOut_tBox.Text != "")
-            {
-                StatusOut_label.Text = "Disconnect";
-                StatusOut_label.ForeColor = Color.Red;
-            }
-
         }
+
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 17)
+            if (e.ColumnIndex == 14)
             {
                 Del = true;
                 DeleteIndex.Add(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString());
@@ -524,7 +590,7 @@ namespace HRSaveTime_Server
         private void SerchComPort_btn_Click(object sender, EventArgs e)
         {
             string[] ports = SerialPort.GetPortNames();
-
+            ComPorts_cBox.Items.Clear();
             foreach (string port in ports)
             {
                 ComPorts_cBox.Items.Add(port);
@@ -532,28 +598,106 @@ namespace HRSaveTime_Server
 
         }
 
+        bool pause = false;
         private void ConnectToSensor_btn_Click(object sender, EventArgs e)
         {
+            ConnectTX();
+        }
+
+
+        public delegate void InvokeDelegate(string sp);
+
+        public void InvokeMethod(string sp)
+        {
+            String date = DateTime.Now.ToString("dd.MM.yyyy");
+            String time = DateTime.Now.ToString("hh:mm");
+            Monitor_tBox.Text += (date + " " + time + " " + sp) + Environment.NewLine;
+        }
+
+        private void geLog()
+        {
+            SerialPort sp = new SerialPort();
+            while (true)
+            {
+                if (SPort != null)
+                {
+                    if (!pause)
+                    {
+                        sp.PortName = SPort;
+                        sp.BaudRate = 9600;
+                        sp.Open();
+                        System.Threading.Thread.Sleep(500);
+                        try
+                        {
+                            Monitor_tBox.BeginInvoke(new InvokeDelegate(InvokeMethod), sp.ReadLine());
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message.ToString(), "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        sp.Close();
+                    }
+                    else
+                        sp.Close();
+                }
+            }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (InstanceCaller != null)
+            {
+                if (InstanceCaller.IsAlive != null || InstanceCaller.IsAlive != false)
+                {
+                    InstanceCaller.IsBackground = true;
+                }
+            }
+        }
+
+        public void ConnectTX()
+        {
             String result = "";
+
             using (SerialPort sp = new SerialPort())
             {
-                sp.PortName = ComPorts_cBox.Text;
-                sp.BaudRate = 9600;
-                sp.Open();
-                System.Threading.Thread.Sleep(1000); 
-                sp.Write("1");
-                result = sp.ReadLine();
-            }
+                if (ComPorts_cBox.Text != "")
+                {
+                    sp.PortName = ComPorts_cBox.Text;
+                    sp.BaudRate = 9600;
+                    try
+                    {
+                        sp.Open();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message.ToString(), "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
 
-            if (result.Contains("1"))
-            {
-                StatusConnectToSensor_label.Text = "Connect";
-                StatusConnectToSensor_label.ForeColor = Color.Green;
-            }
-            else
-            {
-                StatusConnectToSensor_label.Text = "Disconnect";
-                StatusConnectToSensor_label.ForeColor = Color.Red;
+                    System.Threading.Thread.Sleep(500);
+                    sp.Write("1");
+                    result = sp.ReadLine();
+                    sp.Close();
+                    if (result.Contains("1"))
+                    {
+                        StatusConnectToSensor_label.Text = "Connect";
+                        StatusConnectToSensor_label.ForeColor = Color.Green;
+                        SPort = ComPorts_cBox.Text;
+                        InstanceCaller = new Thread(new ThreadStart(geLog));
+                        InstanceCaller.Start();
+
+                        SetSetting("COMPort", SPort);
+                    }
+                    else
+                    {
+                        StatusConnectToSensor_label.Text = "Disconnect";
+                        StatusConnectToSensor_label.ForeColor = Color.Red;
+                    }
+                }
+                else
+                {
+                    return;
+                }
             }
         }
     }

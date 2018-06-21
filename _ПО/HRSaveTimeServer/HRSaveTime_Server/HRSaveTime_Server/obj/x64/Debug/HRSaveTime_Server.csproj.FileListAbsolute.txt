@@ -1,10 +1,10 @@
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\bin\x64\Debug\HRSaveTime_Server.exe.config
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\bin\x64\Debug\HRSaveTime_Server.exe
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\bin\x64\Debug\HRSaveTime_Server.pdb
-D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.csprojResolveAssemblyReference.cache
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.Form1.resources
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.Properties.Resources.resources
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.SettingsRoom.resources
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.csproj.GenerateResource.Cache
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.exe
 D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.pdb
+D:\_GitHubProjects\-GraduateWork\_ПО\HRSaveTimeServer\HRSaveTime_Server\HRSaveTime_Server\obj\x64\Debug\HRSaveTime_Server.csprojResolveAssemblyReference.cache

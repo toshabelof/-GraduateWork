@@ -256,7 +256,7 @@ namespace HRSaveTimeClient
                                 gf.MyPernr_tBox.Text = lists[1];
 
                                 this.Visibility = Visibility.Hidden;
-                                gf.ShowDialog();
+                              gf.ShowDialog();
                                 this.Visibility = Visibility.Visible;
                                 return;
                             }

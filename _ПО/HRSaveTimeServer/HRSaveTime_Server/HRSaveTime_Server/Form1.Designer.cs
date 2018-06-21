@@ -800,6 +800,7 @@
             // 
             // Inquiry_tBox
             // 
+            this.Inquiry_tBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Inquiry_tBox.Location = new System.Drawing.Point(3, 366);
             this.Inquiry_tBox.Multiline = true;
             this.Inquiry_tBox.Name = "Inquiry_tBox";
@@ -808,9 +809,12 @@
             // 
             // Monitor_tBox
             // 
+            this.Monitor_tBox.BackColor = System.Drawing.Color.White;
+            this.Monitor_tBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Monitor_tBox.Location = new System.Drawing.Point(3, 3);
             this.Monitor_tBox.Multiline = true;
             this.Monitor_tBox.Name = "Monitor_tBox";
+            this.Monitor_tBox.ReadOnly = true;
             this.Monitor_tBox.Size = new System.Drawing.Size(646, 355);
             this.Monitor_tBox.TabIndex = 0;
             // 
@@ -834,6 +838,7 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "HRSaveTimeServer v1.0";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabPage4.ResumeLayout(false);
             this.groupBox5.ResumeLayout(false);

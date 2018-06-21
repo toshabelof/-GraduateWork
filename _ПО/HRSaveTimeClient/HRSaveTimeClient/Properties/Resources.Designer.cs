@@ -83,6 +83,16 @@ namespace HRSaveTimeClient.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ButtonForm {
+            get {
+                object obj = ResourceManager.GetObject("ButtonForm", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Calen {
             get {
                 object obj = ResourceManager.GetObject("Calen", resourceCulture);
@@ -126,6 +136,16 @@ namespace HRSaveTimeClient.Properties {
         internal static System.Drawing.Bitmap Edit {
             get {
                 object obj = ResourceManager.GetObject("Edit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ErrorButton {
+            get {
+                object obj = ResourceManager.GetObject("ErrorButton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -266,6 +286,16 @@ namespace HRSaveTimeClient.Properties {
         internal static System.Drawing.Bitmap OK1 {
             get {
                 object obj = ResourceManager.GetObject("OK1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap OKButton {
+            get {
+                object obj = ResourceManager.GetObject("OKButton", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
